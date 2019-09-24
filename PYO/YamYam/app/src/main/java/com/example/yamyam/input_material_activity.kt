@@ -19,6 +19,7 @@ class input_material_activity : AppCompatActivity() {
             //"nameOfMaterial" to material_text.text.toString()
             resultIntent.putExtra("nameOfMaterial", material_text.text.toString())
             setResult(RESULT_OK, resultIntent)
+
             finish()
         }
     }
