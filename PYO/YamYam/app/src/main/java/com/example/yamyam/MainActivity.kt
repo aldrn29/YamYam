@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         /* + - 버튼 클릭 리스너 */
         upperPlusButton.setOnClickListener{
-            val intent = Intent(this, input_material_activity::class.java)
+            val intent = Intent(this, InputMaterialActivity::class.java)
             startActivityForResult(intent, 0)       //request Code 0은 upperBody
         }
 
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             //textView.text = "마이너스 버튼 눌림"
         }
         lowerPlusButton.setOnClickListener{
-            val intent = Intent(this, input_material_activity::class.java)
+            val intent = Intent(this, InputMaterialActivity::class.java)
             startActivityForResult(intent, 1)       //requestCode 1은 lowerBody
         }
         upperMinusButton.setOnClickListener{
