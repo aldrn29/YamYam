@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+<!--    검색 임시버튼-->
+    <Button
+        android:id="@+id/temporaryButton"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="Recipe" />
+
     <Button
         android:id="@+id/lowerPlusButton"
         android:layout_width="50dp"
@@ -88,7 +95,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:orientation="vertical" />
+            android:orientation="vertical" >
+
+
+        </LinearLayout>
     </ScrollView>
 
     <ScrollView

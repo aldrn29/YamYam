@@ -32,6 +32,12 @@ class MainActivity : AppCompatActivity() {
             //textView.text = "마이너스 버튼 눌림"
         }
 
+//        임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
+        temporaryButton.setOnClickListener {
+            val intent = Intent(this, RecipeSerachActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
