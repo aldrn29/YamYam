@@ -1,23 +1,22 @@
 package com.example.yamyam
 
-import android.content.Intent
 import android.os.Bundle
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_input_material_activity.*
 
 class RecipeSerachActivity : AppCompatActivity(){
 
-    var recipeList = arrayListOf<RecipeData>()
+    var recipeList = arrayOf(RecipeData(name = "Spaghetti"), RecipeData(name = "Gimbab"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_search)
 
+        val list : ListView = findViewById(R.id.searchListView)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, recipeList)
 
-        val searchIntent = Intent(this, MainActivity::class.java)
+        list.adapter = adapter
 
-        addButton.setOnClickListener {
-            finish()
-        }
     }
 }
