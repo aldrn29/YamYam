@@ -16,111 +16,80 @@
     <Button
         android:id="@+id/lowerPlusButton"
         android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="276dp"
-        android:layout_marginEnd="21dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="250dp"
+        android:layout_marginTop="10dp"
         android:background="@color/colorAccent"
         android:text="@string/plusButton"
         android:textColor="@android:color/holo_blue_dark"
-        android:textColorHighlight="@color/colorAccent"
         android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintLeft_toLeftOf="@id/lowerGridView"
+        app:layout_constraintRight_toLeftOf="@id/lowerMinusButton"
+        app:layout_constraintTop_toTopOf="@id/lowerGridView" />
 
     <Button
         android:id="@+id/lowerMinusButton"
         android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="330dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="30dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:background="@color/colorAccent"
         android:text="@string/minusButton"
         android:textColor="@android:color/holo_red_dark"
         android:textColorHighlight="@color/colorAccent"
         android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintLeft_toRightOf="@id/lowerPlusButton"
+        app:layout_constraintRight_toRightOf="@id/lowerGridView"
+        app:layout_constraintTop_toTopOf="@id/lowerGridView"  />
 
     <Button
         android:id="@+id/upperPlusButton"
         android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="21dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="250dp"
+        android:layout_marginTop="10dp"
         android:background="@color/colorAccent"
         android:text="@string/plusButton"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintLeft_toLeftOf="@id/upperGridView"
+        app:layout_constraintRight_toLeftOf="@id/upperMinusButton"
+        app:layout_constraintTop_toTopOf="@id/upperGridView" />
 
     <Button
         android:id="@+id/upperMinusButton"
         android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="330dp"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="160dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:background="@color/colorAccent"
         android:text="@string/minusButton"
         android:textColor="@android:color/holo_red_dark"
         android:textColorHighlight="@color/colorAccent"
         android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintLeft_toRightOf="@id/upperPlusButton"
+        app:layout_constraintRight_toRightOf="@id/upperGridView"
+        app:layout_constraintTop_toTopOf="@id/upperGridView" />
 
-    <ScrollView
-        android:id="@+id/upperScrollView"
-        android:layout_width="390dp"
-        android:layout_height="227dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:background="@android:color/holo_blue_light"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <GridView
+        android:id="@+id/upperGridView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="10dp"
+        android:background="#03A9F4"
+        android:numColumns="4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        tools:layout_editor_absoluteX="100dp"></GridView>
 
-        <LinearLayout
-            android:id="@+id/upperBody"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:orientation="vertical" >
-
-
-        </LinearLayout>
-    </ScrollView>
-
-    <ScrollView
-        android:id="@+id/lowerScrollView"
-        android:layout_width="390dp"
-        android:layout_height="330dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="15dp"
-        android:background="@android:color/holo_blue_light"
+    <GridView
+        android:id="@+id/lowerGridView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="10dp"
+        android:background="#03A9F4"
+        android:numColumns="4"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:id="@+id/lowerBody"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:orientation="vertical" />
-
-    </ScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/upperGridView"
+        app:layout_constraintVertical_bias="0.01"
+        tools:layout_editor_absoluteX="100dp"></GridView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

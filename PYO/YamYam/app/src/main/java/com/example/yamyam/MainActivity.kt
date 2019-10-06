@@ -14,7 +14,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         /* + - 버튼 클릭 리스너 */
         upperPlusButton.setOnClickListener{
             val intent = Intent(this, InputMaterialActivity::class.java)
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity() {
             //textView.text = "마이너스 버튼 눌림"
         }
         lowerPlusButton.setOnClickListener{
-            val intent = Intent(this, InputMaterialActivity::class.java)
+            val intent = Intent(    this, InputMaterialActivity::class.java)
             startActivityForResult(intent, 1)       //requestCode 1은 lowerBody
         }
         upperMinusButton.setOnClickListener{
@@ -37,35 +36,31 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RecipeSerachActivity::class.java)
             startActivity(intent)
         }
-
-
-
     }
 
+    var upperAdapter: MaterialAdapter? = null
+    var lowerAdapter: MaterialAdapter? = null
+    var upperMaterialsList = ArrayList<Material>()
+    var lowerMaterialsList = ArrayList<Material>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val upperTextView = TextView(this)
-        val lowerTextView = TextView(this)
-        upperBody.addView(upperTextView, 0)
-        lowerBody.addView(lowerTextView, 0)
+        val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
+        upperAdapter = MaterialAdapter(this, upperMaterialsList)
+        lowerAdapter = MaterialAdapter(this, lowerMaterialsList)
+        upperGridView.adapter = upperAdapter
+        lowerGridView.adapter = lowerAdapter
 
         //upperBody 에 추가
         if (resultCode == RESULT_OK && requestCode == 0){
-            val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
-
             Toast.makeText(this,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
-            upperTextView.text = "$nameOfMaterial"
+            upperMaterialsList.add(Material(nameOfMaterial.toString(), R.drawable.coffee_pot))              //inputMaterialActivity 에서 넘긴 이름과, 임시 이미지
         }
-
         //lowerBody 에 추가
         else if(resultCode == RESULT_OK && requestCode == 1){
-            //인텐트에서 nameOfMaterial 받아와서
-            val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
-
             Toast.makeText(this,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
-            lowerTextView.text = "$nameOfMaterial"
+            lowerMaterialsList.add(Material(nameOfMaterial.toString(), R.drawable.coffee_pot))
         }
 
     }
