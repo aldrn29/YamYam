@@ -7,11 +7,19 @@
     tools:context=".MainActivity">
 
 <!--    검색 임시버튼-->
+
+
     <Button
         android:id="@+id/temporaryButton"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="Recipe" />
+        android:text="Recipe"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.798" />
 
     <Button
         android:id="@+id/lowerPlusButton"
@@ -83,13 +91,24 @@
     <GridView
         android:id="@+id/lowerGridView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:layout_margin="10dp"
         android:background="#03A9F4"
         android:numColumns="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upperGridView"
-        app:layout_constraintVertical_bias="0.01"
-        tools:layout_editor_absoluteX="100dp"></GridView>
+        app:layout_constraintVertical_bias="0.051"
+        tools:layout_editor_absoluteX="-16dp"></GridView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.204"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:menu="@menu/menu_bottomnavigationview"  />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

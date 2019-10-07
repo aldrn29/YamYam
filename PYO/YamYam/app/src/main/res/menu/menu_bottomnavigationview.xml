@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+<item
+    android:id="@+id/fridgeItem"
+    android:icon="@drawable/fridge"
+    android:title="냉장고" />
+<item
+    android:id="@+id/heartItem"
+    android:icon="@drawable/heart"
+    android:title="위시리스트" />
+<item
+    android:id="@+id/searchItem"
+    android:icon="@drawable/search"
+    android:title="검색" />
+</menu>
