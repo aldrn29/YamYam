@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/act_fragment">
 
-<!--    검색 임시버튼-->
 
-
+    <!--검색 임시버튼-->
     <Button
         android:id="@+id/temporaryButton"
         android:layout_width="80dp"
