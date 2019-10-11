@@ -26,14 +26,19 @@ class MainActivity : AppCompatActivity() {
                     transaction.add(R.id.act_fragment, FridgeFragment())
                     transaction.commit()
                 }
-                R.id.heartItem -> {
+                R.id.wishlistItem -> {
                     val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-                    transaction.add(R.id.act_fragment, HeartFragment())
+                    transaction.add(R.id.act_fragment, WishListFragment())
                     transaction.commit()
                 }
                 R.id.searchItem -> {
                     val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
                     transaction.add(R.id.act_fragment, SearchFragment())
+                    transaction.commit()
+                }
+                R.id.tipItem -> {
+                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    transaction.add(R.id.act_fragment, TipFragment())
                     transaction.commit()
                 }
             }

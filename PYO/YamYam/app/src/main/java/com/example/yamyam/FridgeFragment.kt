@@ -61,7 +61,7 @@ class FridgeFragment : Fragment() {
     }
 
 
-    /*
+
     var upperAdapter: MaterialAdapter? = null
     var lowerAdapter: MaterialAdapter? = null
     var upperMaterialsList = ArrayList<Material>()
@@ -71,10 +71,10 @@ class FridgeFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
-        upperAdapter = MaterialAdapter(this, upperMaterialsList)
-        lowerAdapter = MaterialAdapter(this, lowerMaterialsList)
-        upperGridView.adapter = upperAdapter
-        lowerGridView.adapter = lowerAdapter
+        //upperAdapter = MaterialAdapter(this, upperMaterialsList)
+        //lowerAdapter = MaterialAdapter(this, lowerMaterialsList)
+        //upperGridView.adapter = upperAdapter
+        //lowerGridView.adapter = lowerAdapter
 
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
@@ -87,7 +87,6 @@ class FridgeFragment : Fragment() {
             lowerMaterialsList.add(Material(nameOfMaterial.toString(), R.drawable.coffee_pot))
         }
 
-    }*/
-
+    }
 
 }
