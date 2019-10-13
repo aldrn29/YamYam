@@ -1,3 +1,5 @@
+<!--* 10.14 액션바 지움-->
+
 <resources>
 
     <!-- Base application theme. -->
@@ -6,6 +8,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!-- No Title Bar-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>

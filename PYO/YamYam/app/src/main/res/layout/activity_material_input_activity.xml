@@ -18,6 +18,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/expirationDate_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint = "유통 기한"
+        app:layout_constraintTop_toBottomOf="@id/material_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
     <Button
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
@@ -38,5 +49,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.38" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:max="1000"
+        android:progress="0"
+        android:thumb="@drawable/seekbar_seekbar1_thumb"
+        android:progressDrawable="@drawable/seekbar_seekbar1"
+        app:layout_constraintTop_toBottomOf="@id/gridViewCategory"
+         />
 </androidx.constraintlayout.widget.ConstraintLayout>
