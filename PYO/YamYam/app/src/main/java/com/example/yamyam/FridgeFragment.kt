@@ -3,7 +3,6 @@ package com.example.yamyam
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,15 +12,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.fragment_fridge.*
 
-/**
- * A simple [Fragment] subclass.
- */
+
 class FridgeFragment : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_fridge, container, false)
 
@@ -33,7 +27,7 @@ class FridgeFragment : Fragment() {
 
         /* + - 버튼 클릭 리스너 */
         upperPlusButton.setOnClickListener {
-            val intent = Intent(activity, InputMaterialActivity::class.java)
+            val intent = Intent(activity, MaterialInputActivity::class.java)
             startActivityForResult(intent, 0)       //request Code 0은 upperBody
         }
         upperMinusButton.setOnClickListener{
@@ -41,7 +35,7 @@ class FridgeFragment : Fragment() {
         }
 
         lowerPlusButton.setOnClickListener{
-            val intent = Intent(activity, InputMaterialActivity::class.java)
+            val intent = Intent(activity, MaterialInputActivity::class.java)
             startActivityForResult(intent, 1)       //requestCode 1은 lowerBody
         }
         lowerMinusButton.setOnClickListener{
@@ -54,12 +48,9 @@ class FridgeFragment : Fragment() {
             startActivity(intent)
         }
 
-
-
         // Inflate the layout for this fragment
         return view
     }
-
 
 
     var upperAdapter: MaterialAdapter? = null
@@ -71,10 +62,10 @@ class FridgeFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
-        //upperAdapter = MaterialAdapter(this, upperMaterialsList)
-        //lowerAdapter = MaterialAdapter(this, lowerMaterialsList)
-        //upperGridView.adapter = upperAdapter
-        //lowerGridView.adapter = lowerAdapter
+        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
+        lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList)
+        upperGridView.adapter = upperAdapter
+        lowerGridView.adapter = lowerAdapter
 
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){

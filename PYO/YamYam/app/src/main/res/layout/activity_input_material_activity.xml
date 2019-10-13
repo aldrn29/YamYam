@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InputMaterialActivity">
+    tools:context=".MaterialInputActivity">
 
     <EditText
         android:id="@+id/material_text"
@@ -27,4 +27,16 @@
         android:text="추가"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <GridView
+        android:id="@+id/gridViewCategory"
+        android:layout_width="400dp"
+        android:layout_height="300dp"
+        android:background="@android:color/darker_gray"
+        android:numColumns="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

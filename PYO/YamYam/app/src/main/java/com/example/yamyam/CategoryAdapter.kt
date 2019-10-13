@@ -1,7 +1,7 @@
 package com.example.yamyam
 
-/*10.07 MaterialAdapter 정의
-* 일단 name 과 image 만 intent 에 담아서 넘기도록 정의했는데 필요에 따라 늘릴 수 있음*/
+/*10.13 CategoryAdapter 정의
+* */
 
 import android.content.Context
 import android.content.Intent
@@ -9,36 +9,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import kotlinx.android.synthetic.main.entry_category.view.*
 import kotlinx.android.synthetic.main.entry_material.view.*
 
 
 
-class MaterialAdapter : BaseAdapter {
-    var materialsList = ArrayList<Material>()
+class CategoryAdapter : BaseAdapter {
+    var categoryList = ArrayList<Category>()
     var context: Context? = null
 
-    constructor(context: Context?, materialList: ArrayList<Material>) : super() {
+    constructor(context: Context?, CategoryList: ArrayList<Category>) : super() {
         this.context = context
-        this.materialsList = materialList
+        this.categoryList = CategoryList
     }
 
     override fun getCount(): Int {
-        return materialsList.size
+        return categoryList.size
     }
     override fun getItem(position: Int): Any {
-        return materialsList[position]
+        return categoryList[position]
     }
     override fun getItemId(position: Int): Long{
         return position.toLong()
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val material = this.materialsList[position]
+        val category = this.categoryList[position]
 
         var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        var materialView = inflator.inflate(R.layout.entry_material, null)
+        var CategoryView = inflator.inflate(R.layout.entry_category, null)
+        CategoryView.imgCategory.setImageResource(category.image!!)
+        CategoryView.categoryName.text = category.name
 
-        materialView.imgMaterial.setOnClickListener {
-            val intent = Intent(context, MainActivity::class.java)
+        return CategoryView
+    }
+/*
+        CategoryView.imgCategory.setOnClickListener {
+            val intent = Intent(context, MaterialInputActivity::class.java)
             intent.putExtra("name", material.name)
             intent.putExtra("image", material.image!!)
             context!!.startActivity(intent)
@@ -47,5 +53,5 @@ class MaterialAdapter : BaseAdapter {
         materialView.tvName.text = material.name!!
 
         return materialView
-    }
+    }*/
 }
