@@ -40,16 +40,32 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <GridView
-        android:id="@+id/gridViewCategory"
-        android:layout_width="400dp"
-        android:layout_height="300dp"
+        android:id="@+id/foodCategory"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginStart="100dp"
         android:background="@android:color/darker_gray"
         android:numColumns="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.38" />
+        app:layout_constraintVertical_bias="0.50"
+        app:layout_goneMarginLeft="30dp" />
+
+    <GridView
+        android:id="@+id/category"
+        android:layout_width="100dp"
+        android:layout_height="400dp"
+        android:background="@android:color/holo_green_light"
+        android:numColumns="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/foodCategory"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        />
+
 
     <SeekBar
         android:id="@+id/seekBar"
@@ -60,6 +76,7 @@
         android:progress="0"
         android:thumb="@drawable/seekbar_seekbar1_thumb"
         android:progressDrawable="@drawable/seekbar_seekbar1"
-        app:layout_constraintTop_toBottomOf="@id/gridViewCategory"
+        app:layout_constraintTop_toBottomOf="@id/foodCategory"
          />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
