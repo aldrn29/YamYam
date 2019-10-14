@@ -1,4 +1,4 @@
-package com.example.Fridge
+package com.example.fridge
 
 
 import android.content.Intent
@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.Recipe.RecipeSerachActivity
+import com.example.recipe.RecipeSerachActivity
 import com.example.yamyam.R
 import kotlinx.android.synthetic.main.fragment_fridge.*
 

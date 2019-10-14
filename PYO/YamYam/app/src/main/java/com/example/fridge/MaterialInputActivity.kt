@@ -1,4 +1,4 @@
-package com.example.Fridge
+package com.example.fridge
 /*10.13 카테고리 추가
 * 10.14 seekBar 추가*/
 

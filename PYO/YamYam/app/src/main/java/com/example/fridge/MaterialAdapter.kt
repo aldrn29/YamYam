@@ -1,4 +1,4 @@
-package com.example.Fridge
+package com.example.fridge
 
 /*10.07 MaterialAdapter 정의
 * 일단 name 과 image 만 intent 에 담아서 넘기도록 정의했는데 필요에 따라 늘릴 수 있음*/
