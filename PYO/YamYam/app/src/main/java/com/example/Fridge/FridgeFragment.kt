@@ -1,4 +1,4 @@
-package com.example.yamyam
+package com.example.Fridge
 
 
 import android.content.Intent
@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.Recipe.RecipeSerachActivity
+import com.example.yamyam.R
 import kotlinx.android.synthetic.main.fragment_fridge.*
 
 
@@ -70,12 +72,22 @@ class FridgeFragment : Fragment() {
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
-            upperMaterialsList.add(Material(nameOfMaterial.toString(), R.drawable.coffee_pot))              //inputMaterialActivity 에서 넘긴 이름과, 임시 이미지
+            upperMaterialsList.add(
+                Material(
+                    nameOfMaterial.toString(),
+                    R.drawable.coffee_pot
+                )
+            )              //inputMaterialActivity 에서 넘긴 이름과, 임시 이미지
         }
         //lowerBody 에 추가
         else if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 1){
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
-            lowerMaterialsList.add(Material(nameOfMaterial.toString(), R.drawable.coffee_pot))
+            lowerMaterialsList.add(
+                Material(
+                    nameOfMaterial.toString(),
+                    R.drawable.coffee_pot
+                )
+            )
         }
 
     }

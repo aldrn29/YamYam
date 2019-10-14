@@ -1,4 +1,4 @@
-package com.example.yamyam
+package com.example.Fridge
 
 /*10.07 MaterialAdapter 정의
 * 일단 name 과 image 만 intent 에 담아서 넘기도록 정의했는데 필요에 따라 늘릴 수 있음*/
@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.example.yamyam.MainActivity
+import com.example.yamyam.R
 import kotlinx.android.synthetic.main.entry_material.view.*
 
 

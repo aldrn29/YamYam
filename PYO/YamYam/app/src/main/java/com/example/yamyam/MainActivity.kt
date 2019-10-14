@@ -1,10 +1,10 @@
 package com.example.yamyam
 
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import android.view.MenuItem
+import com.example.Fridge.FridgeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 

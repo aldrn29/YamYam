@@ -1,14 +1,16 @@
-package com.example.yamyam
+package com.example.Recipe
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.yamyam.R
 import kotlinx.android.synthetic.main.activity_recipe_search.*
 
 class RecipeSerachActivity : AppCompatActivity(){
 
     var recipeList = arrayListOf<Recipe>(
         Recipe("Hamburger", "hamburger"),
-        Recipe("Lazania", "lazania"))
+        Recipe("Lazania", "lazania")
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

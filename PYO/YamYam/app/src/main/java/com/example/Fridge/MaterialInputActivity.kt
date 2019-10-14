@@ -1,4 +1,4 @@
-package com.example.yamyam
+package com.example.Fridge
 /*10.13 카테고리 추가
 * 10.14 seekBar 추가*/
 
@@ -8,6 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.Toast
+import com.example.yamyam.Category
+import com.example.yamyam.CategoryAdapter
+import com.example.yamyam.MainActivity
+import com.example.yamyam.R
 import kotlinx.android.synthetic.main.activity_material_input_activity.*
 
 class MaterialInputActivity : AppCompatActivity() {
@@ -46,7 +50,7 @@ class MaterialInputActivity : AppCompatActivity() {
             }
         })
 
-        val resultIntent = Intent(this,MainActivity::class.java)
+        val resultIntent = Intent(this, MainActivity::class.java)
         addButton.setOnClickListener{
             resultIntent.putExtra("nameOfMaterial", material_text.text.toString())
             setResult(RESULT_OK, resultIntent)

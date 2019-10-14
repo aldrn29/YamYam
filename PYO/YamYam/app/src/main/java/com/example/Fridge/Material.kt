@@ -1,4 +1,4 @@
-package com.example.yamyam
+package com.example.Fridge
 /*10.07 Material 클래스 정의
 * Material 에 필드 추가 가능*/
 

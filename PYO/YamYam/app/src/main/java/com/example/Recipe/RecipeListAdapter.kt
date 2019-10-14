@@ -1,4 +1,4 @@
-package com.example.yamyam
+package com.example.Recipe
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.yamyam.R
 
 class RecipeListAdapter(val context: Context, val recipeList: ArrayList<Recipe>) : BaseAdapter() {
     //xml 파일의 View와 데이터를 연결하는 핵심 역할을 하는 메소드
