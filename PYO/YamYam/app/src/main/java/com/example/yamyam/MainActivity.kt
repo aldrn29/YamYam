@@ -37,11 +37,6 @@ class MainActivity : AppCompatActivity() {
                     transaction.add(R.id.act_fragment, SearchFragment())
                     transaction.commit()
                 }
-                R.id.tipItem -> {
-                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-                    transaction.add(R.id.act_fragment, TipFragment())
-                    transaction.commit()
-                }
             }
             return@setOnNavigationItemSelectedListener true
         }

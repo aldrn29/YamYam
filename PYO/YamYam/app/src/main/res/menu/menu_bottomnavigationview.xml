@@ -16,8 +16,4 @@
     android:id="@+id/searchItem"
     android:icon="@drawable/search"
     android:title="검색" />
-    <item
-        android:id="@+id/tipItem"
-        android:icon="@drawable/tip"
-        android:title="Tip!" />
 </menu>
