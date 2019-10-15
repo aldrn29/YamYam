@@ -1,4 +1,4 @@
-package com.example.yamyam
+package com.example.fridge
 
 class Category {
     var name: String? = null

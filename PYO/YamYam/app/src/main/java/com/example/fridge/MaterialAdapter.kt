@@ -39,15 +39,14 @@ class MaterialAdapter : BaseAdapter {
         var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var materialView = inflator.inflate(R.layout.entry_material, null)
 
-        materialView.imgMaterial.setOnClickListener {
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("name", material.name)
-            intent.putExtra("image", material.image!!)
-            context!!.startActivity(intent)
-        }
         materialView.imgMaterial.setImageResource(material.image!!)
         materialView.tvName.text = material.name!!
 
         return materialView
+    }
+
+    fun removeItem(position : Int){
+        materialsList.removeAt(position)
+        notifyDataSetChanged()
     }
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,12 +15,27 @@ import com.example.recipe.RecipeSerachActivity
 import com.example.yamyam.R
 import kotlinx.android.synthetic.main.fragment_fridge.*
 
-
+/* 10.16
+임시 이미지가 아닌 MaterialInputActivity에서 선택된 foodimage가 들어가도록 변경
+ */
 class FridgeFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    var upperAdapter: MaterialAdapter? = null
+    var lowerAdapter: MaterialAdapter? = null
+    var upperMaterialsList = ArrayList<Material>()
+    var lowerMaterialsList = ArrayList<Material>()
+    var upperMinusButtonClicked: Boolean = false
+    var lowerMinusButtonClicked: Boolean = false
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_fridge, container, false)
+        // Inflate the layout for this fragment
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val upperPlusButton : Button = view.findViewById(R.id.upperPlusButton)
         val upperMinusButton : Button = view.findViewById(R.id.upperMinusButton)
@@ -32,16 +48,30 @@ class FridgeFragment : Fragment() {
             val intent = Intent(activity, MaterialInputActivity::class.java)
             startActivityForResult(intent, 0)       //request Code 0은 upperBody
         }
-        upperMinusButton.setOnClickListener{
-            //textView.text = "마이너스 버튼 눌림"
+
+        upperMinusButton.setOnClickListener {
+            Toast.makeText(activity, "마이너스 버튼 눌림", Toast.LENGTH_SHORT).show()
+            if (upperMinusButtonClicked == false) {  //안눌린 상태
+                upperMinusButton.setBackgroundColor(-0x777778)  //gray
+            } else if (upperMinusButtonClicked == true) {    //눌린상태
+                upperMinusButton.setBackgroundColor(-0x1)   //white
+            }
+            upperMinusButtonClicked = true
         }
 
         lowerPlusButton.setOnClickListener{
             val intent = Intent(activity, MaterialInputActivity::class.java)
             startActivityForResult(intent, 1)       //requestCode 1은 lowerBody
         }
+
         lowerMinusButton.setOnClickListener{
-            //textView.text = "마이너스 버튼 눌림"
+            Toast.makeText(activity,"마이너스 버튼 눌림", Toast.LENGTH_SHORT).show()
+            if(lowerMinusButtonClicked == false){
+                lowerMinusButton.setBackgroundColor(-0x777778)
+            } else if(lowerMinusButtonClicked == true) {
+                lowerMinusButton.setBackgroundColor(-0x1)
+            }
+            lowerMinusButtonClicked = true
         }
 
         //임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
@@ -49,47 +79,57 @@ class FridgeFragment : Fragment() {
             val intent = Intent(activity, RecipeSerachActivity::class.java)
             startActivity(intent)
         }
-
-        // Inflate the layout for this fragment
-        return view
     }
 
-
-    var upperAdapter: MaterialAdapter? = null
-    var lowerAdapter: MaterialAdapter? = null
-    var upperMaterialsList = ArrayList<Material>()
-    var lowerMaterialsList = ArrayList<Material>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
-        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
+        val image: Int = data!!.getIntExtra("selectedFoodImage", 0)
+        upperAdapter= MaterialAdapter(requireContext(), upperMaterialsList)
         lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList)
         upperGridView.adapter = upperAdapter
         lowerGridView.adapter = lowerAdapter
 
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
+            //inputMaterialActivity 에서 넘긴 이름과, foodImage
+            upperMaterialsList.add(Material(nameOfMaterial.toString(), image))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
-            upperMaterialsList.add(
-                Material(
-                    nameOfMaterial.toString(),
-                    R.drawable.coffee_pot
-                )
-            )              //inputMaterialActivity 에서 넘긴 이름과, 임시 이미지
         }
         //lowerBody 에 추가
         else if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 1){
+            //inputMaterialActivity 에서 넘긴 이름과, foodImage
+            lowerMaterialsList.add(Material(nameOfMaterial.toString(), image))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
-            lowerMaterialsList.add(
-                Material(
-                    nameOfMaterial.toString(),
-                    R.drawable.coffee_pot
-                )
-            )
         }
+        //삭제
+        upperGridView.onItemClickListener = object : AdapterView.OnItemClickListener{
+            override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                //삭제모드(마이너스 버튼 눌렸을 때)
+                if(upperMinusButtonClicked == true) {
+                    upperAdapter!!.removeItem(position)
+                    Toast.makeText(activity, "$nameOfMaterial 제거됨", Toast.LENGTH_SHORT).show()
+                    upperMinusButtonClicked = false
+                    upperMinusButton.setBackgroundColor(-0x1)
+                }//그냥 선택모드
+                else if(upperMinusButtonClicked == false) {
+                }
 
+            }
+        }
+        lowerGridView.onItemClickListener = object : AdapterView.OnItemClickListener{
+            override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if(lowerMinusButtonClicked == true) {
+                    lowerAdapter!!.removeItem(position)
+                    Toast.makeText(activity, "$nameOfMaterial 제거됨", Toast.LENGTH_SHORT).show()
+                    lowerMinusButtonClicked = false
+                }
+                else if(lowerMinusButtonClicked==false){
+                }
+            }
+        }
     }
 
 }

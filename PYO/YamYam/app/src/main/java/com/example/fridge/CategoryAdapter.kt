@@ -1,17 +1,15 @@
-package com.example.yamyam
+package com.example.fridge
 
 /*10.13 CategoryAdapter 정의
 * */
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.example.yamyam.R
 import kotlinx.android.synthetic.main.entry_category.view.*
-import kotlinx.android.synthetic.main.entry_material.view.*
-
 
 
 class CategoryAdapter : BaseAdapter {

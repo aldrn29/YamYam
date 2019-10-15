@@ -11,8 +11,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.SeekBar
 import android.widget.Toast
-import com.example.yamyam.Category
-import com.example.yamyam.CategoryAdapter
 import com.example.yamyam.MainActivity
 import com.example.yamyam.R
 import kotlinx.android.synthetic.main.activity_material_input_activity.*
@@ -23,65 +21,29 @@ class MaterialInputActivity : AppCompatActivity() {
     var categoryAdapter: CategoryAdapter? = null
     var foodList = ArrayList<Category>()        //gridViewCategory(오른쪽)에 표시되는 음식리스트
     var categoryList = ArrayList<Category>()    //category(왼쪽)에 표시되는 카테고리 리스트
-
+    var selectedFoodPosition: Int = 0           //선택된 foodImage 포지션
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_material_input_activity)
 
-        //food image load(오른쪽), 기본값이 육류
-        foodList.add(Category("소고기", R.drawable.one))
-        foodList.add(Category("돼지고기", R.drawable.two))
-        foodCategoryAdapter = CategoryAdapter(this, foodList)
-        foodCategory.adapter = foodCategoryAdapter
 
-        //category image load(왼쪽)
-        categoryList.add(Category("육류", R.drawable.one))
-        categoryList.add(Category("어패류", R.drawable.two))
-        categoryList.add(Category("유제품", R.drawable.three))
-        categoryList.add(Category("야채", R.drawable.four))
-        categoryAdapter = CategoryAdapter(this, categoryList)
-        category.adapter = categoryAdapter
+        //초기 이미지 load
+        initialImageLoad()
 
+        //category 아이템 클릭
         category.onItemClickListener = object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                // val selectedItem = parent.getItemAtPosition(position).toString()
                 //Toast.makeText(applicationContext,"$position",Toast.LENGTH_SHORT).show()
-
-                //좌측 카테고리에서 육류 선택시
-                if(position == 0){
-                    foodList.removeAll(foodList)
-                    foodList.add(Category("소고기", R.drawable.one))
-                    foodList.add(Category("돼지고기", R.drawable.two))
-                    foodCategoryAdapter?.notifyDataSetChanged()                     //Item을 remove하고 나서 다시 알려줘야 refresh됨
-                }
-                //어패류
-                else if(position==1){
-                    foodList.removeAll(foodList)
-                    foodList.add(Category("고등어", R.drawable.one))
-                    foodList.add(Category("바지락", R.drawable.two))
-                    foodCategoryAdapter?.notifyDataSetChanged()
-                }
-                //유제품
-                else if(position==2){
-                    foodList.removeAll(foodList)
-                    foodList.add(Category("우유", R.drawable.one))
-                    foodList.add(Category("계란", R.drawable.two))
-                    foodCategoryAdapter?.notifyDataSetChanged()
-                }
-                //야채
-                else if(position==3){
-                    foodList.removeAll(foodList)
-                    foodList.add(Category("상추", R.drawable.one))
-                    foodList.add(Category("사과", R.drawable.two))
-                    foodCategoryAdapter?.notifyDataSetChanged()
-                }
+                categoryItemClicked(position)               //클릭된 카테고리에 따라 이미지 load
             }
         }
-
-
-
-
+        foodCategory.onItemClickListener = object : AdapterView.OnItemClickListener {
+            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedFoodPosition = position
+            }
+        }
 
         //seekBar 값 받아서 expirationDate_text 텍스트뷰에 표시
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
@@ -98,9 +60,58 @@ class MaterialInputActivity : AppCompatActivity() {
         val resultIntent = Intent(this, MainActivity::class.java)
         addButton.setOnClickListener{
             resultIntent.putExtra("nameOfMaterial", material_text.text.toString())
+            resultIntent.putExtra("selectedFoodImage", foodList[selectedFoodPosition].image)        //선택된 food image를 넘긴다
             setResult(RESULT_OK, resultIntent)
 
             finish()
         }
+    }
+
+    private fun initialImageLoad() {
+        //food image load(오른쪽), 기본값이 육류
+        foodList.add(Category("소고기", R.drawable.one))
+        foodList.add(Category("돼지고기", R.drawable.two))
+        foodCategoryAdapter = CategoryAdapter(this, foodList)
+        foodCategory.adapter = foodCategoryAdapter
+
+        //category image load(왼쪽)
+        categoryList.add(Category("육류", R.drawable.one))
+        categoryList.add(Category("어패류", R.drawable.two))
+        categoryList.add(Category("유제품", R.drawable.three))
+        categoryList.add(Category("야채", R.drawable.four))
+        categoryList.add(Category("가공식품", R.drawable.five))
+        categoryAdapter = CategoryAdapter(this, categoryList)
+        category.adapter = categoryAdapter
+    }
+
+    private fun categoryItemClicked(position: Int) {
+        //좌측 카테고리에서 육류 선택시
+        when(position) {
+            0 -> {
+                foodList.removeAll(foodList)
+                foodList.add(Category("소고기", R.drawable.one))
+                foodList.add(Category("돼지고기", R.drawable.two))
+            } //어패류
+            1 -> {
+                foodList.removeAll(foodList)
+                foodList.add(Category("고등어", R.drawable.one))
+                foodList.add(Category("바지락", R.drawable.two))
+                foodList.add(Category("꽁치", R.drawable.three))
+            } //유제품
+            2 -> {
+                foodList.removeAll(foodList)
+                foodList.add(Category("우유", R.drawable.one))
+                foodList.add(Category("계란", R.drawable.two))
+                foodList.add(Category("치즈", R.drawable.three))
+            } //야채
+            3 -> {
+                foodList.removeAll(foodList)
+                foodList.add(Category("상추", R.drawable.one))
+                foodList.add(Category("토마토", R.drawable.two))
+                foodList.add(Category("깻잎", R.drawable.three))
+                foodList.add(Category("부추", R.drawable.four))
+            }
+        }
+        foodCategoryAdapter?.notifyDataSetChanged()                     //Item을 remove하고 나서 다시 알려줘야 refresh됨
     }
 }
