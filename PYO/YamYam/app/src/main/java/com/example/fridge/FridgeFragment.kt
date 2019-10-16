@@ -3,6 +3,7 @@ package com.example.fridge
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,10 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.recipe.RecipeSerachActivity
-import com.example.yamyam.R
 import kotlinx.android.synthetic.main.fragment_fridge.*
+import kotlin.collections.ArrayList
+
+
 
 /* 10.16
 임시 이미지가 아닌 MaterialInputActivity에서 선택된 foodimage가 들어가도록 변경
@@ -22,26 +25,29 @@ class FridgeFragment : Fragment() {
 
     var upperAdapter: MaterialAdapter? = null
     var lowerAdapter: MaterialAdapter? = null
-    var upperMaterialsList = ArrayList<Material>()
+    var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
     var lowerMaterialsList = ArrayList<Material>()
     var upperMinusButtonClicked: Boolean = false
     var lowerMinusButtonClicked: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_fridge, container, false)
+        val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
         // Inflate the layout for this fragment
+        //Toast.makeText(activity,"들어옴0", Toast.LENGTH_SHORT).show()//
+        if(savedInstanceState != null){
 
+        }
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val upperPlusButton : Button = view.findViewById(R.id.upperPlusButton)
-        val upperMinusButton : Button = view.findViewById(R.id.upperMinusButton)
-        val lowerPlusButton : Button = view.findViewById(R.id.lowerPlusButton)
-        val lowerMinusButton : Button = view.findViewById(R.id.lowerMinusButton)
-        val temporaryButton : Button = view.findViewById(R.id.temporaryButton)
+        val upperPlusButton : Button = view.findViewById(com.example.yamyam.R.id.upperPlusButton)
+        val upperMinusButton : Button = view.findViewById(com.example.yamyam.R.id.upperMinusButton)
+        val lowerPlusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerPlusButton)
+        val lowerMinusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerMinusButton)
+        val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
 
         /* + - 버튼 클릭 리스너 */
         upperPlusButton.setOnClickListener {
@@ -87,7 +93,7 @@ class FridgeFragment : Fragment() {
 
         val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
         val image: Int = data!!.getIntExtra("selectedFoodImage", 0)
-        upperAdapter= MaterialAdapter(requireContext(), upperMaterialsList)
+        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
         lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList)
         upperGridView.adapter = upperAdapter
         lowerGridView.adapter = lowerAdapter
@@ -95,7 +101,7 @@ class FridgeFragment : Fragment() {
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
-            upperMaterialsList.add(Material(nameOfMaterial.toString(), image))
+                upperMaterialsList.add(Material(nameOfMaterial.toString(), image))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
         //lowerBody 에 추가
@@ -125,11 +131,27 @@ class FridgeFragment : Fragment() {
                     lowerAdapter!!.removeItem(position)
                     Toast.makeText(activity, "$nameOfMaterial 제거됨", Toast.LENGTH_SHORT).show()
                     lowerMinusButtonClicked = false
+                    upperMinusButton.setBackgroundColor(-0x1)
                 }
                 else if(lowerMinusButtonClicked==false){
                 }
             }
         }
+    }
+
+    //얘는 다른 액티비티로 넘어갈 때 실행됨
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Toast.makeText(activity,"저장됨", Toast.LENGTH_SHORT).show()//
+        outState.putParcelableArrayList("upperMaterialsList", upperMaterialsList)
+    }
+
+
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+       // Toast.makeText(activity,"저장됨1", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(activity,"들어옴1", Toast.LENGTH_SHORT).show()//
     }
 
 }

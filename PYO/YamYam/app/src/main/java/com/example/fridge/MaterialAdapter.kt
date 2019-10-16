@@ -16,10 +16,10 @@ import kotlinx.android.synthetic.main.entry_material.view.*
 
 
 class MaterialAdapter : BaseAdapter {
-    var materialsList = ArrayList<Material>()
+    var materialsList : java.util.ArrayList<Material>  = ArrayList<Material>()
     var context: Context? = null
 
-    constructor(context: Context?, materialList: ArrayList<Material>) : super() {
+    constructor(context: Context?, materialList: java.util.ArrayList<Material> ) : super() {
         this.context = context
         this.materialsList = materialList
     }
