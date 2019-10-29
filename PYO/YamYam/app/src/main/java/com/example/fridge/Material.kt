@@ -9,7 +9,7 @@ import android.os.Parcelable
 class Material() : Parcelable {
     var name: String? = null
     var image: Int? = null
-
+    
     /*
     constructor(parcel: Parcel) : this() {
         name = parcel.readString()
@@ -26,6 +26,7 @@ class Material() : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeValue(image)
+
     }
 
     override fun describeContents(): Int {
