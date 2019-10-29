@@ -13,7 +13,7 @@
     android:icon="@drawable/heart"
     android:title="WishList" />
 <item
-    android:id="@+id/searchItem"
+    android:id="@+id/recipeItem"
     android:icon="@drawable/search"
     android:title="검색" />
 </menu>
