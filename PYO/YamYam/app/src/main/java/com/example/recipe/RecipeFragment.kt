@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_recipe.*
 class RecipeFragment : Fragment() {
 
     var recipeAdapter : RecipeListAdapter? = null
-    var recipeList = arrayListOf<Recipe>()
+    var recipeList = arrayListOf<RecipeSource>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,8 +27,8 @@ class RecipeFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        recipeList.add(Recipe("Hamburger", "hamburger"))
-        recipeList.add(Recipe("Lazania", "lazania"))
+        recipeList.add(RecipeSource("Hamburger", "hamburger"))
+        recipeList.add(RecipeSource("Lazania", "lazania"))
 
         recipeAdapter = RecipeListAdapter(requireContext(), recipeList)
         recipeView.adapter = recipeAdapter

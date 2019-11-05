@@ -1,10 +1,22 @@
 package com.example.recipe
 
-class Recipe (name: String, image: String) {
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.yamyam.R
 
-    val name = name
-    val image = image
+class Recipe : AppCompatActivity() {
+    var materialArr = arrayListOf<RecipeSource>(
 
-    //레시피 activity를 위한 생성자 따로 구현해야함
+    )
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_recipe)
+
+//        val recipeImg = findViewById<ImageView>(R.id.recipeImg)
+//        val recipeName = findViewById<TextView>(R.id.recipeName)
+//        val materialArr = findViewById<TextView>(R.id.materialArr)
+//        val cookingDescription = findViewById<TextView>(R.id.cookingDescription)
+    }
 
 }
