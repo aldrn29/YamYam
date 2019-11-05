@@ -40,7 +40,7 @@ class MaterialAdapter : BaseAdapter {
         var materialView = inflator.inflate(R.layout.entry_material, null)
 
         materialView.imgMaterial.setImageResource(material.image!!)
-        materialView.tvName.text = material.name!!
+        materialView.nameMaterial.text = material.name!!
 
         return materialView
     }

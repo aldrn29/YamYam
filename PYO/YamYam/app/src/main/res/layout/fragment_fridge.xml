@@ -79,7 +79,7 @@
         app:layout_constraintRight_toRightOf="@id/upperGridView"
         app:layout_constraintTop_toTopOf="@id/upperGridView" />
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/upperGridView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -88,7 +88,7 @@
         android:numColumns="4"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="100dp"></GridView>
+        tools:layout_editor_absoluteX="100dp"/>
 
     <GridView
         android:id="@+id/lowerGridView"

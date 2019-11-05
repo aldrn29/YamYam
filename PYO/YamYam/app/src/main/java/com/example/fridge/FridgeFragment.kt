@@ -10,9 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipe.RecipeFragment
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import kotlin.collections.ArrayList
@@ -26,7 +29,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
  */
 class FridgeFragment : Fragment() {
 
-    var upperAdapter: MaterialAdapter? = null
+    //var upperAdapter: MaterialAdapter? = null
     var lowerAdapter: MaterialAdapter? = null
     var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
     var lowerMaterialsList = ArrayList<Material>()
@@ -110,15 +113,20 @@ class FridgeFragment : Fragment() {
 
         val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
         val image: Int = data!!.getIntExtra("selectedFoodImage", 0)
-        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
+       // upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
         lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList)
+        val upperAdapter = tmpMaterialAdapter(requireContext(), upperMaterialsList)
         upperGridView.adapter = upperAdapter
         lowerGridView.adapter = lowerAdapter
+
+        //sapnCount 가 열 개수인듯
+        upperGridView.layoutManager = GridLayoutManager(requireContext(),3)
+        upperGridView.setHasFixedSize(true)
 
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
-                upperMaterialsList.add(Material(nameOfMaterial.toString(), image))
+            upperMaterialsList.add(Material(nameOfMaterial.toString(), image))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
         //lowerBody 에 추가
@@ -128,6 +136,7 @@ class FridgeFragment : Fragment() {
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
         //삭제
+        /*
         upperGridView.onItemClickListener = object : AdapterView.OnItemClickListener{
             override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 //삭제모드(마이너스 버튼 눌렸을 때)
@@ -141,7 +150,7 @@ class FridgeFragment : Fragment() {
                 }
 
             }
-        }
+        }*/
         lowerGridView.onItemClickListener = object : AdapterView.OnItemClickListener{
             override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 if(lowerMinusButtonClicked == true) {
