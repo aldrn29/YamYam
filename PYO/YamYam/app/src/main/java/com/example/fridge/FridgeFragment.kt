@@ -159,7 +159,7 @@ class FridgeFragment : Fragment() {
     //얘는 다른 액티비티로 넘어갈 때 실행됨
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Toast.makeText(activity,"저장됨", Toast.LENGTH_SHORT).show()//
+        //Toast.makeText(activity,"저장됨", Toast.LENGTH_SHORT).show()//
         outState.putParcelableArrayList("upperMaterialsList", upperMaterialsList)
     }
 

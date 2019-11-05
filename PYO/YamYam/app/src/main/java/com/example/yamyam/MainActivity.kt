@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import android.view.MenuItem
 import com.example.fridge.FridgeFragment
+import com.example.recipe.RecipeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -32,9 +33,9 @@ class MainActivity : AppCompatActivity() {
                     transaction.add(R.id.act_fragment, WishListFragment())
                     transaction.commit()
                 }
-                R.id.searchItem -> {
+                R.id.recipeItem -> {
                     val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-                    transaction.add(R.id.act_fragment, SearchFragment())
+                    transaction.add(R.id.act_fragment, RecipeFragment())
                     transaction.commit()
                 }
             }
