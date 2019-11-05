@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "664555698989",
+    "firebase_url": "https://yamyam-6690a.firebaseio.com",
+    "project_id": "yamyam-6690a",
+    "storage_bucket": "yamyam-6690a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664555698989:android:54980c4329dba51448f1a4",
+        "android_client_info": {
+          "package_name": "com.example.yamyam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "664555698989-oic67c4i670qtk4k5eroh90p67k5t06r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yamyam",
+            "certificate_hash": "80a26b03e486a5ef3c26830cba70002697fed462"
+          }
+        },
+        {
+          "client_id": "664555698989-f9f71ia9fl9f69qhcsuffdnjnpac34ke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-E5jAyjWU2JjHmDgQ6M6VFsHVGHevLaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "664555698989-f9f71ia9fl9f69qhcsuffdnjnpac34ke.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
