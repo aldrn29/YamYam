@@ -12,10 +12,13 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.recipe.RecipeSerachActivity
+import androidx.fragment.app.FragmentTransaction
+import com.example.recipe.RecipeFragment
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import kotlin.collections.ArrayList
-
+import com.example.yamyam.MainActivity
+import com.example.yamyam.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 /* 10.16
@@ -46,11 +49,11 @@ class FridgeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val upperPlusButton : Button = view.findViewById(com.example.yamyam.R.id.upperPlusButton)
-        val upperMinusButton : Button = view.findViewById(com.example.yamyam.R.id.upperMinusButton)
-        val lowerPlusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerPlusButton)
-        val lowerMinusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerMinusButton)
-        val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
+        val upperPlusButton : Button = view.findViewById(R.id.upperPlusButton)
+        val upperMinusButton : Button = view.findViewById(R.id.upperMinusButton)
+        val lowerPlusButton : Button = view.findViewById(R.id.lowerPlusButton)
+        val lowerMinusButton : Button = view.findViewById(R.id.lowerMinusButton)
+        val temporaryButton : Button = view.findViewById(R.id.temporaryButton)
 
         /* + - 버튼 클릭 리스너 */
         upperPlusButton.setOnClickListener {
@@ -85,8 +88,19 @@ class FridgeFragment : Fragment() {
 
         //임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
         temporaryButton.setOnClickListener {
-            val intent = Intent(activity, RecipeSerachActivity::class.java)
-            startActivity(intent)
+            // RecipeSerachActivity로 이동
+            //val intent = Intent(activity, RecipeSerachActivity::class.java)
+            //startActivity(intent)
+
+            // 탭 메뉴 변경
+            val bottomNavigationView : BottomNavigationView = (activity as MainActivity).findViewById(
+                R.id.navigationView)
+            bottomNavigationView.menu.findItem(R.id.recipeItem).isChecked = true
+
+            // RecipeFragment로 화면이동
+            val transaction : FragmentTransaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
+            transaction.add(R.id.act_fragment, RecipeFragment())
+            transaction.commit()
         }
     }
 
