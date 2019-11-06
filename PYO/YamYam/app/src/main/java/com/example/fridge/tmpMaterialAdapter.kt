@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.MainActivity
 import com.example.yamyam.R
@@ -54,5 +55,24 @@ class tmpMaterialAdapter (val context: Context, val upperMaterialsList : ArrayLi
     fun removeItem(position : Int){
         upperMaterialsList.removeAt(position)
         notifyDataSetChanged()
+    }
+
+    //아이템 스왑
+    fun swapItems(fromPosition: Int, toPosition: Int) {
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                upperMaterialsList[i + 1] = upperMaterialsList[i]
+                upperMaterialsList[i] = upperMaterialsList[i + 1]
+                Toast.makeText(context,"fromPosition : $fromPosition, toPosition: $toPosition", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            for (i in fromPosition..toPosition + 1) {
+                upperMaterialsList[i - 1] = upperMaterialsList[i]
+                upperMaterialsList[i] = upperMaterialsList[i + 1]
+                Toast.makeText(context,"fromPosition : $fromPosition, toPosition: $toPosition", Toast.LENGTH_SHORT).show()
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition)
+        //notifyDataSetChanged()
     }
 }

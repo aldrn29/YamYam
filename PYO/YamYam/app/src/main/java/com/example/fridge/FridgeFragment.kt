@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipe.RecipeFragment
 import kotlinx.android.synthetic.main.fragment_fridge.*
@@ -31,6 +32,7 @@ class FridgeFragment : Fragment() {
 
     //var upperAdapter: MaterialAdapter? = null
     var lowerAdapter: MaterialAdapter? = null
+    var upperAdapter : tmpMaterialAdapter? = null
     var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
     var lowerMaterialsList = ArrayList<Material>()
     var upperMinusButtonClicked: Boolean = false
@@ -115,13 +117,21 @@ class FridgeFragment : Fragment() {
         val image: Int = data!!.getIntExtra("selectedFoodImage", 0)
        // upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
         lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList)
-        val upperAdapter = tmpMaterialAdapter(requireContext(), upperMaterialsList)
+        upperAdapter = tmpMaterialAdapter(requireContext(), upperMaterialsList)
         upperGridView.adapter = upperAdapter
         lowerGridView.adapter = lowerAdapter
 
         //sapnCount 가 열 개수인듯
-        upperGridView.layoutManager = GridLayoutManager(requireContext(),3)
+        val manager = GridLayoutManager(requireContext(), 3)
+        //upperGridView.layoutManager = GridLayoutManager(requireContext(),3)
+        //상하좌우우 드래그설정
+        val callback = MaterialItemTouchHelper(upperAdapter!!, requireContext(), ItemTouchHelper.UP.or(ItemTouchHelper.DOWN).or(ItemTouchHelper.LEFT).or(ItemTouchHelper.RIGHT), -1)
+        val helper = ItemTouchHelper(callback)
+        upperGridView.layoutManager = manager
+        helper.attachToRecyclerView(upperGridView)
         upperGridView.setHasFixedSize(true)
+
+
 
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){

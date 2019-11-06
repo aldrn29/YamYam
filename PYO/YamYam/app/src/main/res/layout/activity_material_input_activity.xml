@@ -14,6 +14,7 @@
         android:ems="10"
         android:hint="재료 이름"
         android:inputType="textPersonName"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,11 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint = "유통 기한"
-        app:layout_constraintTop_toBottomOf="@id/material_text"
+        android:hint="유통 기한"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/material_text" />
 
     <Button
         android:id="@+id/addButton"
