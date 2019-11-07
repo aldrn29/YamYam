@@ -12,7 +12,6 @@ import com.example.yamyam.R
 
 class RecipeFragment : Fragment() {
 
-//    var recipeAdapter : RecipeListAdapter? = null
     var recipeList = arrayListOf<RecipeSource>()
     lateinit var recyclerView1: RecyclerView
 
