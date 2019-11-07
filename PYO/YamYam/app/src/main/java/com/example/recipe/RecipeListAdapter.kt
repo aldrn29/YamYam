@@ -36,7 +36,7 @@ class RecipeListAdapter(val context: Context, val recipeList: ArrayList<RecipeSo
         //bind 함수는 ViewHolder와 클래스의 각 변수를 연동하는 역할을 함
         fun bind (recipeSource: RecipeSource, context: Context) {
 
-            //dogPhoto의 setImageResource에 들어갈 이미지의 id를 파일명(String)으로 찾고,
+            //foodImg의 setImageResource에 들어갈 이미지의 id를 파일명(String)으로 찾고,
             //이미지가 없는 경우 안드로이드 기본 아이콘을 표시한다
             if (recipeSource.image != "") {
                 val resourceId = context.resources.getIdentifier(recipeSource.image, "drawable", context.packageName)

@@ -7,7 +7,7 @@
     android:background="@color/cardview_light_background">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recipeView"
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,7 +25,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/recipeView"
+        app:layout_constraintBottom_toTopOf="@+id/searchView"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -35,7 +35,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="10dp"
         android:text="Search"
-        app:layout_constraintBottom_toTopOf="@+id/recipeView"
+        app:layout_constraintBottom_toTopOf="@+id/searchView"
         app:layout_constraintStart_toEndOf="@+id/editText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
