@@ -1,5 +1,6 @@
 package com.example.recipe
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,40 +16,21 @@ class RecipeFragment : Fragment() {
     var recipeList = arrayListOf<RecipeSource>()
     lateinit var recyclerView1: RecyclerView
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        var viewInflater = inflater.inflate(R.layout.fragment_recipe, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+        var viewInflater = inflater.inflate(R.layout.fragment_recipe_list, container, false)
         recipeList.add(RecipeSource("Hamburger","hamburger"/*,"재료배열","요리법"*/))
         recipeList.add(RecipeSource("Lazania", "lazania"))
 
-
-
         recyclerView1 = viewInflater.findViewById(R.id.searchView)as RecyclerView
         recyclerView1.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView1.adapter = RecipeListAdapter(requireContext(), recipeList)
+        recyclerView1.adapter = RecipeListAdapter(requireContext(), recipeList,{recipeSource: RecipeSource ->  itemClicked()})
 
         return viewInflater
     }
-
-
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        recipeList.add(RecipeSource("Hamburger", "hamburger"))
-//        recipeList.add(RecipeSource("Lazania", "lazania"))
-//
-//        recipeAdapter = RecipeListAdapter(requireContext(), recipeList)
-//        searchView.adapter = recipeAdapter
-//
-//        val lm = LinearLayoutManager(activity)
-//        searchView.layoutManager = lm
-//        searchView.setHasFixedSize(true)
-//
-//
-//    }
+    private fun itemClicked(){
+        val intent = Intent(requireContext(), Recipe::class.java)
+        startActivity(intent)
+    }
 
 
 }
