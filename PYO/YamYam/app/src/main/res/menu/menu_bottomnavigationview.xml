@@ -4,16 +4,16 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-<item
-    android:id="@+id/fridgeItem"
-    android:icon="@drawable/fridge"
-    android:title="냉장고" />
-<item
-    android:id="@+id/wishlistItem"
-    android:icon="@drawable/heart"
-    android:title="WishList" />
-<item
-    android:id="@+id/recipeItem"
-    android:icon="@drawable/search"
-    android:title="검색" />
+    <item
+        android:id="@+id/fridgeItem"
+        android:icon="@drawable/fridge"
+        android:title="냉장고" />
+    <item
+        android:id="@+id/wishlistItem"
+        android:icon="@drawable/heart"
+        android:title="WishList" />
+    <item
+        android:id="@+id/recipeItem"
+        android:icon="@drawable/search"
+        android:title="검색" />
 </menu>

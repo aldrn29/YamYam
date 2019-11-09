@@ -84,22 +84,25 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_margin="10dp"
-        android:background="#03A9F4"
+        android:background="@drawable/round_corner"
         android:numColumns="4"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="100dp"/>
+        tools:layout_editor_absoluteX="100dp"
+        />
+
+
 
     <GridView
         android:id="@+id/lowerGridView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="350dp"
         android:layout_margin="10dp"
-        android:background="#03A9F4"
+        android:background="@drawable/round_corner"
         android:numColumns="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upperGridView"
         app:layout_constraintVertical_bias="0.051"
-        tools:layout_editor_absoluteX="-16dp"></GridView>
+        tools:layout_editor_absoluteX="-16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
