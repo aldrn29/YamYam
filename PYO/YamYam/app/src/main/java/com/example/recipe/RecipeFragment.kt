@@ -12,17 +12,22 @@ import com.example.yamyam.R
 
 class RecipeFragment : Fragment() {
 
-    var recipeList = arrayListOf<RecipeSource>()
+    var recipeList = arrayListOf<RecipeDB>()
     lateinit var recyclerView1: RecyclerView
+
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         var viewInflater = inflater.inflate(R.layout.fragment_recipe_list, container, false)
-        recipeList.add(RecipeSource("Hamburger","hamburger"/*,"재료배열","요리법"*/))
-        recipeList.add(RecipeSource("Lazania", "lazania"))
+        recipeList.add(RecipeDB("Hamburger","hamburger"/*,"재료배열","요리법"*/))
+        recipeList.add(RecipeDB("Lazania", "lazania"))
 
         recyclerView1 = viewInflater.findViewById(R.id.searchView)as RecyclerView
         recyclerView1.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView1.adapter = RecipeListAdapter(requireContext(), recipeList,{recipeSource: RecipeSource ->  itemClicked()})
+        recyclerView1.adapter = RecipeListAdapter(requireContext(), recipeList,{recipeSource: RecipeDB ->  itemClicked()})
+
+        //데이터베이스 인스턴스
 
         return viewInflater
     }
@@ -30,6 +35,12 @@ class RecipeFragment : Fragment() {
         val intent = Intent(requireContext(), Recipe::class.java)
         startActivity(intent)
     }
+
+    private fun editBtnClicked() {
+        val intent = Intent(requireContext(), EditRecipe::class.java)
+        startActivity(intent)
+    }
+
 
 
 }
