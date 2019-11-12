@@ -9,7 +9,7 @@ import com.example.yamyam.R
 import kotlinx.android.synthetic.main.activity_recipe_item.view.*
 
 //리사이클러뷰 어뎁터 타입안에 홀더가 들어간다. 여기선 이너클래스로 만들었으므로 RecipeListAdapter.Holder
-class RecipeListAdapter(val context: Context, val recipeList: ArrayList<RecipeDB>, val itemClickListener: (RecipeDB) -> Unit) : RecyclerView.Adapter<RecipeListAdapter.Holder>() {
+class RecipeListAdapter(val context: Context, val recipeList: ArrayList<RecipeSource>, val itemClickListener: (RecipeSource) -> Unit) : RecyclerView.Adapter<RecipeListAdapter.Holder>() {
 
     //필수 오버라이드
     //화면을 최초 로딩하여 만들어진 뷰가 없는경우 xml파일을 inflate하여 뷰홀더를 생성
@@ -32,7 +32,7 @@ class RecipeListAdapter(val context: Context, val recipeList: ArrayList<RecipeDB
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         //bind 함수는 ViewHolder와 클래스의 각 변수를 연동하는 역할을 함
-        fun bind (recipeSource: RecipeDB, context: Context, itemClickListener: (RecipeDB) -> Unit) {
+        fun bind (recipeSource: RecipeSource, context: Context, itemClickListener: (RecipeSource) -> Unit) {
 
             //foodImg의 setImageResource에 들어갈 이미지의 id를 파일명(String)으로 찾고,
             //이미지가 없는 경우 안드로이드 기본 아이콘을 표시한다
@@ -43,6 +43,7 @@ class RecipeListAdapter(val context: Context, val recipeList: ArrayList<RecipeDB
             } else {
                 itemView.recipeItemImg.setImageResource(R.mipmap.ic_launcher)
             }
+
 
             itemView.recipeItemName.text = recipeSource.name
             itemView.setOnClickListener{itemClickListener(recipeSource)}
