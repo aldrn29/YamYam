@@ -8,8 +8,8 @@
 
     <!--    TextView와 scrollView위에 버튼필요 editText 삭제-->
 
-    <ImageButton
-        android:id="@+id/editImageBtn"
+    <ImageView
+        android:id="@+id/selectedImg"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginTop="28dp"
@@ -17,6 +17,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/editImgBtn"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/transparent" />
 
     <EditText
         android:id="@+id/editName"
@@ -29,7 +39,7 @@
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editImageBtn"/>
+        app:layout_constraintTop_toBottomOf="@+id/selectedImg"/>
 
     <EditText
         android:id="@+id/editMaterial"
@@ -66,4 +76,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editDescription" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
