@@ -17,7 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.MainActivity
 import com.example.yamyam.R
 import kotlinx.android.synthetic.main.entry_material.view.*
-
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class tmpMaterialAdapter (val context: Context, val upperMaterialsList : ArrayList<Material>) : RecyclerView.Adapter<tmpMaterialAdapter.Holder>() {
@@ -57,22 +58,39 @@ class tmpMaterialAdapter (val context: Context, val upperMaterialsList : ArrayLi
         notifyDataSetChanged()
     }
 
+    fun swapItems(fromPosition: Int, toPosition: Int) {
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition - 1) {
+                upperMaterialsList[i] = upperMaterialsList[i+1]
+                //upperMaterialsList.set(i, upperMaterialsList.set(i+1, upperMaterialsList.get(i)));
+                Toast.makeText(context,"오른쪽으로 되긴 되는데 왜 되다 안되다 이러지", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            for (i in fromPosition..toPosition + 1) {
+                upperMaterialsList.set(i, upperMaterialsList.set(i-1, upperMaterialsList.get(i)));
+                Toast.makeText(context,"왼쪽으로 되긴 되는데 왜 되다 안되다 이러지", Toast.LENGTH_SHORT).show()
+            }
+        }
+        notifyDataSetChanged()
+        notifyItemMoved(fromPosition, toPosition)
+    }
+/*
     //아이템 스왑
     fun swapItems(fromPosition: Int, toPosition: Int) {
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
                 upperMaterialsList[i + 1] = upperMaterialsList[i]
                 upperMaterialsList[i] = upperMaterialsList[i + 1]
-                Toast.makeText(context,"fromPosition : $fromPosition, toPosition: $toPosition", Toast.LENGTH_SHORT).show()
             }
         } else {
             for (i in fromPosition..toPosition + 1) {
                 upperMaterialsList[i - 1] = upperMaterialsList[i]
                 upperMaterialsList[i] = upperMaterialsList[i + 1]
-                Toast.makeText(context,"fromPosition : $fromPosition, toPosition: $toPosition", Toast.LENGTH_SHORT).show()
             }
         }
         notifyItemMoved(fromPosition, toPosition)
-        //notifyDataSetChanged()
+        notifyDataSetChanged()
     }
+
+ */
 }

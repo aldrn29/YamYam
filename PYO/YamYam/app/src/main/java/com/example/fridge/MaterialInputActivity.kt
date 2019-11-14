@@ -2,7 +2,8 @@ package com.example.fridge
 /*10.13 푸드카테고리 추가
 * 10.14 seekBar 추가
 * 10.15 카테고리 추가
-* 10.30 seekbar 범위 조절, 유통기한 날짜로 표시, 임시이미지가 아닌 이미지로 변경*/
+* 10.30 seekbar 범위 조절, 유통기한 날짜로 표시, 임시이미지가 아닌 이미지로 변경
+* 11.15 foodList(오른쪽이미지)클릭시 텍스트 바로 들어가도록 설정*/
 
 
 import android.content.Intent
@@ -42,10 +43,12 @@ class MaterialInputActivity : AppCompatActivity() {
                 categoryItemClicked(position)               //클릭된 카테고리에 따라 이미지 load
             }
         }
-
+        //foodList(오른쪽 음식 이미지) 클릭
         foodCategory.onItemClickListener = object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 selectedFoodPosition = position
+                material_text.setText(foodList[selectedFoodPosition].name)      //오른쪽 클리하면 그냥 텍스트가 바로 들어가도록 설정
+
             }
         }
 
@@ -54,7 +57,7 @@ class MaterialInputActivity : AppCompatActivity() {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 val cal = Calendar.getInstance()
                 cal.time = Date()
-                val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+                val df: DateFormat = SimpleDateFormat("yyyy-MM-dd") as DateFormat
                 //유통기한 증가 범위 조절
                 if(p1<100)
                     cal.add(Calendar.DATE, p1/2)

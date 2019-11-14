@@ -122,10 +122,12 @@ class FridgeFragment : Fragment() {
         lowerGridView.adapter = lowerAdapter
 
         //sapnCount 가 열 개수인듯
-        val manager = GridLayoutManager(requireContext(), 3)
+        val manager = GridLayoutManager(requireContext(), 6)
         //upperGridView.layoutManager = GridLayoutManager(requireContext(),3)
-        //상하좌우우 드래그설정
-        val callback = MaterialItemTouchHelper(upperAdapter!!, requireContext(), ItemTouchHelper.UP.or(ItemTouchHelper.DOWN).or(ItemTouchHelper.LEFT).or(ItemTouchHelper.RIGHT), -1)
+
+        /* MaterialItemTouchHelper 에 callback 을 등록, recycler 뷰에 붙여줌
+        *  상하좌우 드래그설정*/
+        val callback = MaterialItemTouchHelper(upperAdapter!!, requireContext(), ItemTouchHelper.UP.or(ItemTouchHelper.DOWN).or(ItemTouchHelper.LEFT).or(ItemTouchHelper.RIGHT).or(ItemTouchHelper.ANIMATION_TYPE_DRAG), -1)
         val helper = ItemTouchHelper(callback)
         upperGridView.layoutManager = manager
         helper.attachToRecyclerView(upperGridView)

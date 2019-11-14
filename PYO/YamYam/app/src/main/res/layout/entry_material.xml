@@ -20,5 +20,5 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="nameOfMaterial"
-        android:textSize="15sp" />
+        android:textSize="7sp" />
 </LinearLayout>
