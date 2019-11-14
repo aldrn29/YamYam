@@ -4,10 +4,8 @@ package com.example.fridge
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.LinearLayout
@@ -21,8 +19,8 @@ import com.example.recipe.RecipeFragment
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import kotlin.collections.ArrayList
 import com.example.yamyam.MainActivity
-import com.example.yamyam.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.appcompat.app.ActionBar
 
 
 /* 10.16
@@ -48,17 +46,48 @@ class FridgeFragment : Fragment() {
             var tmpList: java.util.ArrayList<Material>? = savedInstanceState.getParcelableArrayList<Material>("upperMaterialsList")
             upperMaterialsList.add(Material(tmpList.get(0).name, tmpList.get(0).image))
         }*/
+
+
+
         return view
     }
+
+    /*
+    // 버그 - 아이콘이 계속 추가됨
+    // 툴바로 바꿔서 작업해보기 (액션바 비활성화)
+    //enable options menu in this fragment
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
+    //inflate the menu
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(com.example.yamyam.R.menu.menu_actionbar, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    //handle item clicks of menu
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            com.example.yamyam.R.id.plusItem -> {
+                Toast.makeText(activity, "추가", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    */
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val upperPlusButton : Button = view.findViewById(R.id.upperPlusButton)
-        val upperMinusButton : Button = view.findViewById(R.id.upperMinusButton)
-        val lowerPlusButton : Button = view.findViewById(R.id.lowerPlusButton)
-        val lowerMinusButton : Button = view.findViewById(R.id.lowerMinusButton)
-        val temporaryButton : Button = view.findViewById(R.id.temporaryButton)
+        val upperPlusButton : Button = view.findViewById(com.example.yamyam.R.id.upperPlusButton)
+        val upperMinusButton : Button = view.findViewById(com.example.yamyam.R.id.upperMinusButton)
+        val lowerPlusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerPlusButton)
+        val lowerMinusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerMinusButton)
+        val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
 
         /* + - 버튼 클릭 리스너 */
         upperPlusButton.setOnClickListener {
@@ -99,12 +128,12 @@ class FridgeFragment : Fragment() {
 
             // 탭 메뉴 변경
             val bottomNavigationView : BottomNavigationView = (activity as MainActivity).findViewById(
-                R.id.navigationView)
-            bottomNavigationView.menu.findItem(R.id.recipeItem).isChecked = true
+                com.example.yamyam.R.id.navigationView)
+            bottomNavigationView.menu.findItem(com.example.yamyam.R.id.recipeItem).isChecked = true
 
             // RecipeFragment로 화면이동
             val transaction : FragmentTransaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
-            transaction.add(R.id.act_fragment, RecipeFragment())
+            transaction.add(com.example.yamyam.R.id.act_fragment, RecipeFragment())
             transaction.commit()
         }
     }

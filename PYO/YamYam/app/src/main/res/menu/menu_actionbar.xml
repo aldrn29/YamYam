@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <item
+        android:id="@+id/plusItem"
+        android:icon="@drawable/plus"
+        android:title="재료추가"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/minusItem"
+        android:icon="@drawable/tip"
+        android:title="재료삭제"
+        app:showAsAction="always"/>
+
+</menu>
