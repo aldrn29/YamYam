@@ -10,4 +10,11 @@
         android:icon="@drawable/plus"
         android:title="재료추가"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/minusItem"
+        android:icon="@drawable/tip"
+        android:title="재료삭제"
+        app:showAsAction="always"/>
+
 </menu>
