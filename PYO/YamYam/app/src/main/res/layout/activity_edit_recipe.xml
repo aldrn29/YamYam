@@ -8,21 +8,26 @@
 
     <!--    TextView와 scrollView위에 버튼필요 editText 삭제-->
 
-    <ImageView
-        android:id="@+id/selectedImg"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginTop="28dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+<!--    <ImageView-->
+<!--        android:id="@+id/selectedImg"-->
+<!--        android:layout_width="160dp"-->
+<!--        android:layout_height="160dp"-->
+<!--        android:layout_marginTop="28dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:srcCompat="@tools:sample/avatars" />-->
+
+
+<!--    android:padding="0sp"-->
+<!--    android:adjustViewBounds="true" 쓰레기-->
 
     <ImageButton
         android:id="@+id/editImgBtn"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginTop="28dp"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +44,7 @@
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectedImg"/>
+        app:layout_constraintTop_toBottomOf="@+id/editImgBtn"/>
 
     <EditText
         android:id="@+id/editMaterial"
