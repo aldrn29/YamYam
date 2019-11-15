@@ -1,12 +1,16 @@
 package com.example.yamyam
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.fridge.FridgeFragment
 import com.example.recipe.RecipeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.fragment_fridge.*
 
 /* 11.15 fragment 왔다갔다 해도 유지되도록 설정 */
 class MainActivity : AppCompatActivity() {
@@ -64,5 +68,12 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_actionbar, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
 
 }

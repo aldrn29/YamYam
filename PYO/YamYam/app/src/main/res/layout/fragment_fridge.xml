@@ -9,21 +9,32 @@
     android:background="@color/cardview_light_background"> <!--수정-->
 
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="20dp"
+        android:background="@color/cardview_light_background"
+        app:layout_constraintBottom_toTopOf="@id/upperRecyclerView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" >
 
-        <androidx.appcompat.widget.Toolbar
+        <TextView
+            android:id="@+id/toolbar_title"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintBottom_toBottomOf="@id/upperRecyclerView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="나의 냉장고"
+            android:textColor="#111111"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText"
+            android:paddingStart="38dp"
+            android:paddingLeft="38dp"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <!--검색 임시버튼-->
     <Button
@@ -109,7 +120,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lowerRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="310dp"
         android:layout_margin="10dp"
         android:background="@drawable/round_corner"
         android:numColumns="4"

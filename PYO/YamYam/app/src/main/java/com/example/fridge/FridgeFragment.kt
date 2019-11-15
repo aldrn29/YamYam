@@ -34,22 +34,14 @@ class FridgeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
 
-        return view
-    }
-
-    /*
-    // 버그 - 아이콘이 계속 추가됨
-    // 툴바로 바꿔서 작업해보기 (액션바 비활성화)
-    //enable options menu in this fragment
-    override fun onCreate(savedInstanceState: Bundle?) {
+        // toolbar 초기화
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(com.example.yamyam.R.id.toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        //(activity as AppCompatActivity).supportActionBar?.title = "냉장고"
         setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
-    }
 
-    //inflate the menu
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(com.example.yamyam.R.menu.menu_actionbar, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+
+        return view
     }
 
     //handle item clicks of menu
@@ -58,12 +50,20 @@ class FridgeFragment : Fragment() {
         when (item.itemId) {
             com.example.yamyam.R.id.plusItem -> {
                 Toast.makeText(activity, "추가", Toast.LENGTH_SHORT).show()
+
+                // + 버튼 이벤트 추가하기
+                // 냉장고 상/하 구분짓기
+
+
+                
+
+
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
-    */
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
