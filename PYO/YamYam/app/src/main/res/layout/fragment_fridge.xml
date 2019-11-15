@@ -9,21 +9,32 @@
     android:background="@color/cardview_light_background"> <!--수정-->
 
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/cardview_light_background"
+        app:layout_constraintBottom_toTopOf="@id/upperGridView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:titleTextColor="@android:color/white"
+        app:contentInsetStart="0dp"
+        android:elevation="20dp">
 
-        <androidx.appcompat.widget.Toolbar
+        <TextView
+            android:id="@+id/text_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintBottom_toBottomOf="@id/upperGridView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="나의 냉장고"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:paddingLeft="48dp"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.appcompat.widget.Toolbar>>
 
     <!--검색 임시버튼-->
     <Button
@@ -111,7 +122,7 @@
     <GridView
         android:id="@+id/lowerGridView"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="310dp"
         android:layout_margin="10dp"
         android:background="@drawable/round_corner"
         android:numColumns="4"

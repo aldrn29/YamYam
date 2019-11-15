@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.fragment_fridge.*
 import kotlin.collections.ArrayList
 import com.example.yamyam.MainActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.ActionBar
 
 
 /* 10.16
@@ -47,24 +46,13 @@ class FridgeFragment : Fragment() {
             upperMaterialsList.add(Material(tmpList.get(0).name, tmpList.get(0).image))
         }*/
 
-
+        // toolbar 초기화
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(com.example.yamyam.R.id.toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        //(activity as AppCompatActivity).supportActionBar?.title = "나의 냉장고"
+        setHasOptionsMenu(true)
 
         return view
-    }
-
-    /*
-    // 버그 - 아이콘이 계속 추가됨
-    // 툴바로 바꿔서 작업해보기 (액션바 비활성화)
-    //enable options menu in this fragment
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
-    }
-
-    //inflate the menu
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(com.example.yamyam.R.menu.menu_actionbar, menu)
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     //handle item clicks of menu
@@ -73,27 +61,29 @@ class FridgeFragment : Fragment() {
         when (item.itemId) {
             com.example.yamyam.R.id.plusItem -> {
                 Toast.makeText(activity, "추가", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(activity, MaterialInputActivity::class.java)
+                startActivityForResult(intent, 0)
+
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
-    */
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val upperPlusButton : Button = view.findViewById(com.example.yamyam.R.id.upperPlusButton)
         val upperMinusButton : Button = view.findViewById(com.example.yamyam.R.id.upperMinusButton)
         val lowerPlusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerPlusButton)
         val lowerMinusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerMinusButton)
         val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
 
         /* + - 버튼 클릭 리스너 */
-        upperPlusButton.setOnClickListener {
-            val intent = Intent(activity, MaterialInputActivity::class.java)
-            startActivityForResult(intent, 0)       //request Code 0은 upperBody
-        }
+//        upperPlusButton.setOnClickListener {
+//            val intent = Intent(activity, MaterialInputActivity::class.java)
+//            startActivityForResult(intent, 0)      //request Code 0은 upperBody
+//        }
 
         upperMinusButton.setOnClickListener {
             Toast.makeText(activity, "마이너스 버튼 눌림", Toast.LENGTH_SHORT).show()

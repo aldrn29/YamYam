@@ -1,12 +1,16 @@
 package com.example.yamyam
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.fridge.FridgeFragment
 import com.example.recipe.RecipeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.fragment_fridge.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,24 +28,31 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.fridgeItem -> {
-                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-                    transaction.add(R.id.act_fragment, FridgeFragment())
-                    transaction.commit()
+                    val tr : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    tr.add(R.id.act_fragment, FridgeFragment())
+                    tr.commit()
                 }
                 R.id.wishlistItem -> {
-                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-                    transaction.add(R.id.act_fragment, WishListFragment())
-                    transaction.commit()
+                    val tr : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    tr.add(R.id.act_fragment, WishListFragment())
+                    tr.commit()
                 }
                 R.id.recipeItem -> {
-                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-                    transaction.add(R.id.act_fragment, RecipeFragment())
-                    transaction.commit()
+                    val tr : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    tr.add(R.id.act_fragment, RecipeFragment())
+                    tr.commit()
                 }
             }
             return@setOnNavigationItemSelectedListener true
         }
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_actionbar, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
 
 }
