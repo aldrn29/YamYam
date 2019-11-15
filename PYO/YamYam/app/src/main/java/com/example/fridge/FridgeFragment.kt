@@ -170,7 +170,7 @@ class FridgeFragment : Fragment() {
         upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
         upperRecyclerView.adapter = upperAdapter
         lowerRecyclerView.adapter = lowerAdapter
-        upperAdapter!!.notifyDataSetChanged()   //이새끼 여기가 답이였네, 왜 드래그로 위치 바꿔도 안바뀌나 3일 내내 고민
+        upperAdapter!!.notifyDataSetChanged()   //여기가 답이였네, 왜 드래그로 위치 바꿔도 안바뀌나 3일 내내 고민
     }
 
 }
