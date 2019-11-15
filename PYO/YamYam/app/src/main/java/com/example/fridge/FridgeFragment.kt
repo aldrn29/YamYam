@@ -3,18 +3,15 @@ package com.example.fridge
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.AdapterView
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipe.RecipeFragment
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import kotlin.collections.ArrayList
@@ -24,33 +21,25 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /* 10.16
 임시 이미지가 아닌 MaterialInputActivity에서 선택된 foodimage가 들어가도록 변경
+11.15 코드정리, 위아래 모두 리사이클러뷰로 변경
  */
 class FridgeFragment : Fragment() {
 
-    //var upperAdapter: MaterialAdapter? = null
+    //var upperAdapter: notUseMaterialAdapter? = null
     var lowerAdapter: MaterialAdapter? = null
-    var upperAdapter : tmpMaterialAdapter? = null
+    var upperAdapter : MaterialAdapter? = null
     var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
     var lowerMaterialsList = ArrayList<Material>()
-    var upperMinusButtonClicked: Boolean = false
-    var lowerMinusButtonClicked: Boolean = false
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
-        // Inflate the layout for this fragment
-        //Toast.makeText(activity,"들어옴0", Toast.LENGTH_SHORT).show()//
-        /*
-        if(savedInstanceState != null){
-            var tmpList: java.util.ArrayList<Material>? = savedInstanceState.getParcelableArrayList<Material>("upperMaterialsList")
-            upperMaterialsList.add(Material(tmpList.get(0).name, tmpList.get(0).image))
-        }*/
 
         // toolbar 초기화
         val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(com.example.yamyam.R.id.toolbar)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        //(activity as AppCompatActivity).supportActionBar?.title = "나의 냉장고"
+        //(activity as AppCompatActivity).supportActionBar?.title = "냉장고"
         setHasOptionsMenu(true)
+
 
         return view
     }
@@ -62,8 +51,12 @@ class FridgeFragment : Fragment() {
             com.example.yamyam.R.id.plusItem -> {
                 Toast.makeText(activity, "추가", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(activity, MaterialInputActivity::class.java)
-                startActivityForResult(intent, 0)
+                // + 버튼 이벤트 추가하기
+                // 냉장고 상/하 구분짓기
+
+
+                
+
 
                 return true
             }
@@ -71,44 +64,13 @@ class FridgeFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val upperMinusButton : Button = view.findViewById(com.example.yamyam.R.id.upperMinusButton)
-        val lowerPlusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerPlusButton)
-        val lowerMinusButton : Button = view.findViewById(com.example.yamyam.R.id.lowerMinusButton)
         val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
 
-        /* + - 버튼 클릭 리스너 */
-//        upperPlusButton.setOnClickListener {
-//            val intent = Intent(activity, MaterialInputActivity::class.java)
-//            startActivityForResult(intent, 0)      //request Code 0은 upperBody
-//        }
-
-        upperMinusButton.setOnClickListener {
-            Toast.makeText(activity, "마이너스 버튼 눌림", Toast.LENGTH_SHORT).show()
-            if (upperMinusButtonClicked == false) {  //안눌린 상태
-                upperMinusButton.setBackgroundColor(-0x777778)  //gray
-            } else if (upperMinusButtonClicked == true) {    //눌린상태
-                upperMinusButton.setBackgroundColor(-0x1)   //white
-            }
-            upperMinusButtonClicked = true
-        }
-
-        lowerPlusButton.setOnClickListener{
-            val intent = Intent(activity, MaterialInputActivity::class.java)
-            startActivityForResult(intent, 1)       //requestCode 1은 lowerBody
-        }
-
-        lowerMinusButton.setOnClickListener{
-            Toast.makeText(activity,"마이너스 버튼 눌림", Toast.LENGTH_SHORT).show()
-            if(lowerMinusButtonClicked == false){
-                lowerMinusButton.setBackgroundColor(-0x777778)
-            } else if(lowerMinusButtonClicked == true) {
-                lowerMinusButton.setBackgroundColor(-0x1)
-            }
-            lowerMinusButtonClicked = true
-        }
+        /* set + - 버튼 클릭 리스너 */
+        setClickListenerToButtons()
 
         //임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
         temporaryButton.setOnClickListener {
@@ -126,92 +88,89 @@ class FridgeFragment : Fragment() {
             transaction.add(com.example.yamyam.R.id.act_fragment, RecipeFragment())
             transaction.commit()
         }
-    }
 
+        /*위 아래 리사이클러 뷰에 어댑터 붙임*/
+        setAdapter()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val nameOfMaterial = data?.getStringExtra("nameOfMaterial")
+        val nameOfMaterial : String? = data?.getStringExtra("nameOfMaterial")
         val image: Int = data!!.getIntExtra("selectedFoodImage", 0)
-       // upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
-        lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList)
-        upperAdapter = tmpMaterialAdapter(requireContext(), upperMaterialsList)
-        upperGridView.adapter = upperAdapter
-        lowerGridView.adapter = lowerAdapter
 
-        //sapnCount 가 열 개수인듯
-        val manager = GridLayoutManager(requireContext(), 6)
-        //upperGridView.layoutManager = GridLayoutManager(requireContext(),3)
+        /* 아이템 터치 헬퍼 붙임 */
+        setItemTouchHelper(requestCode, resultCode, nameOfMaterial!!, image)
+    }
 
+
+    private fun setItemTouchHelper(requestCode: Int, resultCode: Int, nameOfMaterial : String, image: Int){
         /* MaterialItemTouchHelper 에 callback 을 등록, recycler 뷰에 붙여줌
-        *  상하좌우 드래그설정*/
-        val callback = MaterialItemTouchHelper(upperAdapter!!, requireContext(), ItemTouchHelper.UP.or(ItemTouchHelper.DOWN).or(ItemTouchHelper.LEFT).or(ItemTouchHelper.RIGHT).or(ItemTouchHelper.ANIMATION_TYPE_DRAG), -1)
-        val helper = ItemTouchHelper(callback)
-        upperGridView.layoutManager = manager
-        helper.attachToRecyclerView(upperGridView)
-        upperGridView.setHasFixedSize(true)
+        *  상하좌우 드래그설정
+        sapnCount 가 열 개수인듯*/
+        val upperManager = GridLayoutManager(requireContext(), 6)
+        val upperCallBack = MaterialItemTouchHelper(upperAdapter!!, requireContext(), (ItemTouchHelper.ANIMATION_TYPE_DRAG), -1)
+        val upperHelper = ItemTouchHelper(upperCallBack)
+        upperRecyclerView.layoutManager = upperManager
+        upperHelper.attachToRecyclerView(upperRecyclerView)
+        upperRecyclerView.setHasFixedSize(true)
 
-
-
+        val lowerManager = GridLayoutManager(requireContext(), 6)
+        val lowerCallBack = MaterialItemTouchHelper(lowerAdapter!!, requireContext(), (ItemTouchHelper.ANIMATION_TYPE_DRAG), -1)
+        val lowerHelper = ItemTouchHelper(lowerCallBack)
+        lowerRecyclerView.layoutManager = lowerManager
+        lowerHelper.attachToRecyclerView(lowerRecyclerView)
+        lowerRecyclerView.setHasFixedSize(true)
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
-            upperMaterialsList.add(Material(nameOfMaterial.toString(), image))
+            upperMaterialsList.add(Material(nameOfMaterial, image))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
         //lowerBody 에 추가
         else if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 1){
-            //inputMaterialActivity 에서 넘긴 이름과, foodImage
-            lowerMaterialsList.add(Material(nameOfMaterial.toString(), image))
-            Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
-        }
-        //삭제
-        /*
-        upperGridView.onItemClickListener = object : AdapterView.OnItemClickListener{
-            override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                //삭제모드(마이너스 버튼 눌렸을 때)
-                if(upperMinusButtonClicked == true) {
-                    upperAdapter!!.removeItem(position)
-                    Toast.makeText(activity, "$nameOfMaterial 제거됨", Toast.LENGTH_SHORT).show()
-                    upperMinusButtonClicked = false
-                    upperMinusButton.setBackgroundColor(-0x1)
-                }//그냥 선택모드
-                else if(upperMinusButtonClicked == false) {
-                }
-
-            }
-        }*/
-        lowerGridView.onItemClickListener = object : AdapterView.OnItemClickListener{
-            override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                if(lowerMinusButtonClicked == true) {
-                    lowerAdapter!!.removeItem(position)
-                    Toast.makeText(activity, "$nameOfMaterial 제거됨", Toast.LENGTH_SHORT).show()
-                    lowerMinusButtonClicked = false
-                    upperMinusButton.setBackgroundColor(-0x1)
-                }
-                else if(lowerMinusButtonClicked==false){
-                }
-            }
+        //inputMaterialActivity 에서 넘긴 이름과, foodImage
+        lowerMaterialsList.add(Material(nameOfMaterial, image))
+        Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
     }
-/*
-    //얘는 다른 액티비티로 넘어갈 때 실행됨
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        //Toast.makeText(activity,"저장됨", Toast.LENGTH_SHORT).show()//
-        outState.putParcelableArrayList("upperMaterialsList", upperMaterialsList)
+
+    private fun setClickListenerToButtons(){
+        upperPlusButton.setOnClickListener {
+        val intent = Intent(activity, MaterialInputActivity::class.java)
+        startActivityForResult(intent, 0)       //request Code 0은 upperBody
+        }
+        upperMinusButton.setOnClickListener {
+            if (upperAdapter?.isClicked == false) {  //안눌린 상태
+                upperMinusButton.setBackgroundColor(-0x777778)  //gray
+                upperAdapter?.setIsClicked(true)
+            } else if (upperAdapter?.isClicked == true) {    //눌린상태
+                upperMinusButton.setBackgroundColor(-0x1)   //white
+                upperAdapter?.setIsClicked(false)
+            }
+        }
+
+        lowerPlusButton.setOnClickListener{
+        val intent = Intent(activity, MaterialInputActivity::class.java)
+        startActivityForResult(intent, 1)       //requestCode 1은 lowerBody
+        }
+        lowerMinusButton.setOnClickListener {
+            if (lowerAdapter?.isClicked == false) {  //안눌린 상태
+                lowerMinusButton.setBackgroundColor(-0x777778)  //gray
+                lowerAdapter?.setIsClicked(true)
+            } else if (lowerAdapter?.isClicked == true) {    //눌린상태
+                lowerMinusButton.setBackgroundColor(-0x1)   //white
+                lowerAdapter?.setIsClicked(false)
+            }
+        }
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.putParcelableArrayList("upperMaterialsList", upperMaterialsList)
-        //var tmpMaterial : Material
-        //for(tmpMaterial in upperMaterialsList){
-
-       // Toast.makeText(activity,"저장됨1", Toast.LENGTH_SHORT).show()
-        //Toast.makeText(activity,"들어옴1", Toast.LENGTH_SHORT).show()//
+    private fun setAdapter(){
+        lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList)
+        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
+        upperRecyclerView.adapter = upperAdapter
+        lowerRecyclerView.adapter = lowerAdapter
+        upperAdapter!!.notifyDataSetChanged()   //이새끼 여기가 답이였네, 왜 드래그로 위치 바꿔도 안바뀌나 3일 내내 고민
     }
 
- */
 }
