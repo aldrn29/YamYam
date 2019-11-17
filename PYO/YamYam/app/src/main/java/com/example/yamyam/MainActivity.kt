@@ -36,8 +36,10 @@ class MainActivity : AppCompatActivity() {
                         fridgeFragment = FridgeFragment()
                         transaction.add(R.id.act_fragment, fridgeFragment!!)
                     }
-                    if(wishListFragment!= null) transaction.hide(wishListFragment!!)
-                    if(recipeFragment != null) transaction.hide(recipeFragment!!)
+                    if(wishListFragment!= null)
+                        transaction.hide(wishListFragment!!)
+                    if(recipeFragment != null)
+                        transaction.hide(recipeFragment!!)
                     transaction.show(fridgeFragment!!)
                     transaction.commit()
                 }
@@ -47,8 +49,10 @@ class MainActivity : AppCompatActivity() {
                         wishListFragment = WishListFragment()
                         transaction.add(R.id.act_fragment, wishListFragment!!)
                     }
-                    if(fridgeFragment!= null) transaction.hide(fridgeFragment!!)
-                    if(recipeFragment != null) transaction.hide(recipeFragment!!)
+                    if(fridgeFragment!= null)
+                        transaction.hide(fridgeFragment!!)
+                    if(recipeFragment != null)
+                        transaction.hide(recipeFragment!!)
                     transaction.show(wishListFragment!!)
                     transaction.commit()
                 }
@@ -58,8 +62,10 @@ class MainActivity : AppCompatActivity() {
                         recipeFragment = RecipeFragment()
                         transaction.add(R.id.act_fragment, recipeFragment!!)
                     }
-                    if(fridgeFragment!= null) transaction.hide(fridgeFragment!!)
-                    if(wishListFragment != null) transaction.hide(wishListFragment!!)
+                    if(fridgeFragment!= null)
+                        transaction.hide(fridgeFragment!!)
+                    if(wishListFragment != null)
+                        transaction.hide(wishListFragment!!)
                     transaction.show(recipeFragment!!)
                     transaction.commit()
                 }

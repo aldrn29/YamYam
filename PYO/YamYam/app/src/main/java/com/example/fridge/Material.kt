@@ -2,14 +2,16 @@ package com.example.fridge
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.*
 
 /*10.07 Material 클래스 정의
-* Material 에 필드 추가 가능*/
+* Material 에 필드 추가 가능
+* 11.17 유통기한 필드추가 */
 
 class Material() : Parcelable {
     var name: String? = null
     var image: Int? = null
-    
+    var expirationDate: FridgeFragment.compareDate? = null
     /*
     constructor(parcel: Parcel) : this() {
         name = parcel.readString()
@@ -18,15 +20,16 @@ class Material() : Parcelable {
 
      */
 
-    constructor(name: String, image: Int) : this() {
+    constructor(name: String, image: Int, expirationDate: FridgeFragment.compareDate?) : this() {
         this.name = name
         this.image = image
+        this.expirationDate = expirationDate
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeValue(image)
-
+        //parcel.writeInt(expirationDate)
     }
 
     override fun describeContents(): Int {
