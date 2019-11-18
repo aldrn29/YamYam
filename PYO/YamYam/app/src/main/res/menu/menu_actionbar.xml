@@ -6,9 +6,16 @@
     android:layout_width="match_parent">
 
     <item
+        android:id="@+id/minusItem"
+        android:icon="@drawable/minus"
+        android:title="minus"
+        app:iconTint="#7099CC"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/plusItem"
         android:icon="@drawable/plus"
-        android:title="@string/plus"
+        android:title="plus"
         app:iconTint="#7099CC"
         app:showAsAction="always"/>
 
