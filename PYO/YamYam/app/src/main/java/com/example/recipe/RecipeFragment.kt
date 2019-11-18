@@ -10,35 +10,43 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.activity_recipe_item.*
 
 class RecipeFragment : Fragment() {
 
-    var recipeList = arrayListOf<RecipeSource>()
     lateinit var recyclerView1: RecyclerView
-    lateinit var dataBaseRef : DatabaseReference
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        //start recipe value event listener
-//        val recipeListener = object : ValueEventListener {
-//            override fun onDataChange(p0: DataSnapshot) {
-//                //get post object and use the values to update the UI
-//                val recipe = p0.getValue(RecipeSource::class.java)
-//                //start exclude
-//                recipe?.let {
-//                    img.text = it.img
-//                }
-//            }
-//
-//        }
+        var recipeList = arrayListOf<RecipeSource>()
+
+        val dataBaseRef = FirebaseDatabase.getInstance().getReference().child("recipes")
+        dataBaseRef.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+                throw databaseError.toException()
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (recipeSnapshot in dataSnapshot.children) {
+                    val recipeSource = recipeSnapshot.getValue(RecipeSource::class.java)
+
+                    recipeSource?.let {
+//                        recipeItemImg.text = it.img
+                        recipeItemName.text = it.name
+                    }
+
+                    recipeList.add(recipeSource!!)
+                }
+            }
+        })
+
 
         var viewInflater = inflater.inflate(R.layout.fragment_recipe_list, container, false)
 
-//        dataBaseRef = FirebaseDatabase.getInstance().getReference().child("recipes")
 //        recipeList.add(RecipeSource("Hamburger", "hamburger","Hamburger"/*,"재료배열","요리법"*/))
-//        recipeList.add(RecipeSource("Lazania", "lazania", "Lazania"))
-
 
         recyclerView1 = viewInflater.findViewById(R.id.searchView)as RecyclerView
         recyclerView1.layoutManager = LinearLayoutManager(requireContext())
@@ -47,7 +55,7 @@ class RecipeFragment : Fragment() {
         return viewInflater
     }
     private fun itemClicked(){
-        val intent = Intent(activity, Recipe::class.java)
+        val intent = Intent(activity, RecipeActivity::class.java)
         startActivity(intent)
     }
 
@@ -58,15 +66,11 @@ class RecipeFragment : Fragment() {
 
         val editBtn : Button = view.findViewById(R.id.editBtn)
         editBtn.setOnClickListener {
-            val editIntent = Intent(activity, EditRecipe::class.java)
+            val editIntent = Intent(activity, EditRecipeActivity::class.java)
 //            startActivityForResult(editIntent,1)
             startActivity(editIntent)
         }
     }
-
-
-
-
 
 
 }

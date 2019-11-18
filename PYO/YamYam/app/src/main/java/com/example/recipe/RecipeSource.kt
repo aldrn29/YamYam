@@ -5,7 +5,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class RecipeSource(
-    var img : String = "",
+    var img : String = "" ,
     var name : String = "",
     var description: String = ""
 ) {

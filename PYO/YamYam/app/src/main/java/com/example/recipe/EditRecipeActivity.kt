@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_edit_recipe.*
 import java.io.ByteArrayOutputStream
 
-class EditRecipe : AppCompatActivity() {
+class EditRecipeActivity : AppCompatActivity() {
     //데이터베이스 인스턴스
     private lateinit var image : String
     private lateinit var recipeDB: DatabaseReference
@@ -44,6 +44,7 @@ class EditRecipe : AppCompatActivity() {
         creatBtn.setOnClickListener {
             writeRecipe(image,editName.text.toString(),editDescription.text.toString())
         }
+//        finish()
 
     }
 
@@ -65,8 +66,7 @@ class EditRecipe : AppCompatActivity() {
         val recipeValues = recipe.toMap()
 
         val childUpdates = HashMap<String, Any>()
-        childUpdates["/recipes/$name/$key"] = recipeValues
-        childUpdates["/recipes/$name/$key"] = recipeValues
+        childUpdates["/recipes/$key/$name"] = recipeValues
 
         recipeDB.updateChildren(childUpdates)
     }
@@ -98,7 +98,7 @@ class EditRecipe : AppCompatActivity() {
 
     // companion object 내에 선언된 속성과 함수는 {클래스명}.{필드/함수 이름} 형태로 바로 호출할 수 있다. 자바 static 개념
     companion object {
-        private const val TAG = "EditRecipe"
+        private const val TAG = "EditRecipeActivity"
     }
 
 }
