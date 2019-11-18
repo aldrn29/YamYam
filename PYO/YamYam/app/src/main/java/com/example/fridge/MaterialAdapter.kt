@@ -22,7 +22,7 @@ import java.io.File
 import kotlin.collections.ArrayList
 
 
-class MaterialAdapter (val context: Context, private val MaterialsList : ArrayList<Material>) : RecyclerView.Adapter<MaterialAdapter.Holder>() {
+class MaterialAdapter (val context: Context, private val MaterialsList : ArrayList<Material>, val fileName: String) : RecyclerView.Adapter<MaterialAdapter.Holder>() {
     //화면을 최초 로딩하여 만들어진 View 가 없는 경우, xml 파일을 inflate 하여 ViewHolder 를 생성한다.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         //val materialView = LayoutInflater.from(context).inflate(R.layout.entry_material, parent, false)
@@ -71,7 +71,7 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
         notifyDataSetChanged()
         //삭제 결과를 또 jsonFIle 에 저장
         //얘가 덮어쓰기를 하나? 그런듯
-        writeJSONtoFile("savedMaterial.json")
+        writeJSONtoFile(fileName)
     }
 
     /*아이템 스왑*/
@@ -91,7 +91,7 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
             MaterialsList[toPosition] = tmpMaterial
         }
         notifyItemMoved(fromPosition, toPosition)
-        writeJSONtoFile("savedMaterial.json")
+        writeJSONtoFile(fileName)
     }
 
     /* JSONFile에서 load 하는 함수 */
@@ -110,11 +110,8 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
             MaterialsList.add(i)
         }
         notifyDataSetChanged()
-        //Toast.makeText(activity,"${post[0].name}", Toast.LENGTH_SHORT).show()
     }
 
-    //위 아래 따로저장하기위해서 파일 두개 만들어야 하나? 그러지뭐 좀이따
-    //requestCode 가 0 이면 위에 1이면 아래
     /* JSONFile 에 write 하는 함수 */
     fun writeJSONtoFile(fileName: String){
         var gson = Gson()
