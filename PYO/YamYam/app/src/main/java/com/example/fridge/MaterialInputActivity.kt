@@ -4,7 +4,8 @@ package com.example.fridge
 * 10.15 카테고리 추가
 * 10.30 seekbar 범위 조절, 유통기한 날짜로 표시, 임시이미지가 아닌 이미지로 변경
 * 11.14 foodList(오른쪽이미지)클릭시 텍스트 바로 들어가도록
-* 11.15 코드 정리*/
+* 11.15 코드 정리
+* 11.17 cal 를 쪼개서 year, month, date 로 넘김*/
 
 
 import android.content.Intent
@@ -29,6 +30,7 @@ class MaterialInputActivity : AppCompatActivity() {
     var foodList = ArrayList<Category>()        //gridViewCategory(오른쪽)에 표시되는 음식리스트
     var categoryList = ArrayList<Category>()    //category(왼쪽)에 표시되는 카테고리 리스트
     var selectedFoodPosition: Int = 0           //선택된 foodImage 포지션
+    val cal : Calendar = Calendar.getInstance()            //유통기한 표시용 날짜
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +43,14 @@ class MaterialInputActivity : AppCompatActivity() {
         //seekBar 설정
         setSeekBar()
 
+
         val resultIntent = Intent(this, MainActivity::class.java)
         addButton.setOnClickListener{
             resultIntent.putExtra("nameOfMaterial", material_text.text.toString())
-            resultIntent.putExtra("selectedFoodImage", foodList[selectedFoodPosition].image)        //선택된 food image를 넘긴다
+            resultIntent.putExtra("selectedFoodImage", foodList[selectedFoodPosition].image) //선택된 food image 를 넘긴다
+            resultIntent.putExtra("expirationDate_year", cal.time.year)
+            resultIntent.putExtra("expirationDate_month", cal.time.month)
+            resultIntent.putExtra("expirationDate_date", cal.time.date)               //유통기한 쪼개서 넘기자 get~~Extra 로 calendar 못가져오는것 같음
             setResult(RESULT_OK, resultIntent)
 
             finish()
@@ -134,7 +140,6 @@ class MaterialInputActivity : AppCompatActivity() {
     private fun setSeekBar(){
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                val cal = Calendar.getInstance()
                 cal.time = Date()
                 val df: DateFormat = SimpleDateFormat("yyyy-MM-dd") as DateFormat
                 //유통기한 증가 범위 조절

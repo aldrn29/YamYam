@@ -3,6 +3,7 @@ package com.example.fridge
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.AdapterView
@@ -17,11 +18,22 @@ import kotlinx.android.synthetic.main.fragment_fridge.*
 import kotlin.collections.ArrayList
 import com.example.yamyam.MainActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_material_input_activity.*
+import kotlinx.android.synthetic.main.entry_material.view.*
+import java.io.BufferedReader
+import java.io.File
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.exp
 
 
 /* 10.16
 임시 이미지가 아닌 MaterialInputActivity에서 선택된 foodimage가 들어가도록 변경
 11.15 코드정리, 위아래 모두 리사이클러뷰로 변경
+11.17 객체생성할때 날짜도 받아서 생성하도록 만듦
+Intent로 넘겨받은 year,month,date를 한번에 쓰기위한 data class materialExpirationDate 정의
  */
 class FridgeFragment : Fragment() {
 
@@ -30,6 +42,9 @@ class FridgeFragment : Fragment() {
     var upperAdapter : MaterialAdapter? = null
     var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
     var lowerMaterialsList = ArrayList<Material>()
+        //"/storage/emulated/savedMaterial.json"
+    //var file : File? = null
+    //val filePath = file.absolutePath
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
@@ -39,7 +54,6 @@ class FridgeFragment : Fragment() {
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         //(activity as AppCompatActivity).supportActionBar?.title = "냉장고"
         setHasOptionsMenu(true)
-
 
         return view
     }
@@ -95,7 +109,7 @@ class FridgeFragment : Fragment() {
                 com.example.yamyam.R.id.navigationView)
             bottomNavigationView.menu.findItem(com.example.yamyam.R.id.recipeItem).isChecked = true
 
-            // RecipeFragment로 화면이동
+            // RecipeFragment 로 화면이동
             val transaction : FragmentTransaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
             transaction.add(com.example.yamyam.R.id.act_fragment, RecipeFragment())
             transaction.commit()
@@ -109,17 +123,22 @@ class FridgeFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         val nameOfMaterial : String? = data?.getStringExtra("nameOfMaterial")
-        val image: Int = data!!.getIntExtra("selectedFoodImage", 0)
+        val image : Int = data!!.getIntExtra("selectedFoodImage", 0)
+        val expirationDate_year=  data.getIntExtra("expirationDate_year",0)
+        val expirationDate_month=  data.getIntExtra("expirationDate_month",0)
+        val expirationDate_date=  data.getIntExtra("expirationDate_date",0)
 
+        //loadMaterialList(file)
+        //나중에 변수명 바꿀것, 변수명뭐로하지
+        var tmpDate = materialExpirationDate(expirationDate_year, expirationDate_month, expirationDate_date)
         /* 아이템 터치 헬퍼 붙임 */
-        setItemTouchHelper(requestCode, resultCode, nameOfMaterial!!, image)
+        setItemTouchHelper(requestCode, resultCode, nameOfMaterial!!, image, tmpDate)
     }
 
-
-    private fun setItemTouchHelper(requestCode: Int, resultCode: Int, nameOfMaterial : String, image: Int){
+    private fun setItemTouchHelper(requestCode: Int, resultCode: Int, nameOfMaterial : String, image: Int, expirationDate : materialExpirationDate){
         /* MaterialItemTouchHelper 에 callback 을 등록, recycler 뷰에 붙여줌
         *  상하좌우 드래그설정
-        sapnCount 가 열 개수인듯*/
+        spanCount 가 열 개수인듯*/
         val upperManager = GridLayoutManager(requireContext(), 6)
         val upperCallBack = MaterialItemTouchHelper(upperAdapter!!, requireContext(), (ItemTouchHelper.ANIMATION_TYPE_DRAG), -1)
         val upperHelper = ItemTouchHelper(upperCallBack)
@@ -133,18 +152,23 @@ class FridgeFragment : Fragment() {
         lowerRecyclerView.layoutManager = lowerManager
         lowerHelper.attachToRecyclerView(lowerRecyclerView)
         lowerRecyclerView.setHasFixedSize(true)
+
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
-            upperMaterialsList.add(Material(nameOfMaterial, image))
+            upperMaterialsList.add(Material(nameOfMaterial, image, expirationDate))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
         //lowerBody 에 추가
         else if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 1){
-        //inputMaterialActivity 에서 넘긴 이름과, foodImage
-        lowerMaterialsList.add(Material(nameOfMaterial, image))
-        Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
+            //inputMaterialActivity 에서 넘긴 이름과, foodImage
+            lowerMaterialsList.add(Material(nameOfMaterial, image, expirationDate))
+            Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
+
+        val file = File(context?.cacheDir, "savedMaterial.json")    //자꾸 fileNotFoundException (Read-only file system) 랑 permission denied 떠서 권한이 없는줄알고
+        writeJSONtoFile(file)
+        loadMaterialList(file)
     }
 
     private fun setClickListenerToButtons(){
@@ -185,4 +209,38 @@ class FridgeFragment : Fragment() {
         upperAdapter!!.notifyDataSetChanged()   //여기가 답이였네, 왜 드래그로 위치 바꿔도 안바뀌나 3일 내내 고민
     }
 
+    /*유통기간 체크하는 함수 마테리얼 넘겨서 비교하자*/
+    private fun checkExpirationDate(material: Material){
+        var cal : Calendar = Calendar.getInstance()
+        cal.time = Date()
+        /*
+        if(//3일밖에 유통기한이 안남았다면))
+        {
+            //배경 노란색으로 변경
+        }
+        else if(3~7일 남았다면){
+            //배경 주황생으로 변경
+        }
+        */
+    }
+
+    //private fun saveData
+
+    /* 인텐트로 넘겨받은 날짜 한 데 모아둘 데이터클래스 */
+    data class materialExpirationDate(var year: Int, var month: Int, var date: Int)
+
+
+    private fun loadMaterialList(fileName: File){
+        var gson = Gson()
+        var post = gson.fromJson(fileName.readText(), Array<Material>::class.java)
+        Toast.makeText(activity,"${post.toString()}o", Toast.LENGTH_SHORT).show()
+
+    }
+
+    private fun writeJSONtoFile(fileName: File){
+        var gson = Gson()
+        var jsonString:String = gson.toJson(upperMaterialsList)
+        //Toast.makeText(activity,"$jsonString", Toast.LENGTH_SHORT).show()
+        fileName.writeText(jsonString)
+    }
 }
