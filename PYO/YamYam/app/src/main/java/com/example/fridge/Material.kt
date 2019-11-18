@@ -11,7 +11,7 @@ import java.util.*
 class Material() : Parcelable {
     var name: String? = null
     var image: Int? = null
-    var expirationDate: FridgeFragment.compareDate? = null
+    var expirationDate: FridgeFragment.materialExpirationDate? = null
     /*
     constructor(parcel: Parcel) : this() {
         name = parcel.readString()
@@ -20,7 +20,7 @@ class Material() : Parcelable {
 
      */
 
-    constructor(name: String, image: Int, expirationDate: FridgeFragment.compareDate?) : this() {
+    constructor(name: String, image: Int, expirationDate: FridgeFragment.materialExpirationDate?) : this() {
         this.name = name
         this.image = image
         this.expirationDate = expirationDate

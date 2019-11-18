@@ -3,6 +3,7 @@ package com.example.fridge
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.AdapterView
@@ -17,7 +18,11 @@ import kotlinx.android.synthetic.main.fragment_fridge.*
 import kotlin.collections.ArrayList
 import com.example.yamyam.MainActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_material_input_activity.*
+import kotlinx.android.synthetic.main.entry_material.view.*
+import java.io.BufferedReader
+import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,6 +42,9 @@ class FridgeFragment : Fragment() {
     var upperAdapter : MaterialAdapter? = null
     var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
     var lowerMaterialsList = ArrayList<Material>()
+        //"/storage/emulated/savedMaterial.json"
+    //var file : File? = null
+    //val filePath = file.absolutePath
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
@@ -46,7 +54,6 @@ class FridgeFragment : Fragment() {
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         //(activity as AppCompatActivity).supportActionBar?.title = "냉장고"
         setHasOptionsMenu(true)
-
 
         return view
     }
@@ -109,6 +116,7 @@ class FridgeFragment : Fragment() {
         val expirationDate_month=  data.getIntExtra("expirationDate_month",0)
         val expirationDate_date=  data.getIntExtra("expirationDate_date",0)
 
+        //loadMaterialList(file)
         //나중에 변수명 바꿀것, 변수명뭐로하지
         var tmpDate = materialExpirationDate(expirationDate_year, expirationDate_month, expirationDate_date)
         /* 아이템 터치 헬퍼 붙임 */
@@ -145,6 +153,10 @@ class FridgeFragment : Fragment() {
             lowerMaterialsList.add(Material(nameOfMaterial, image, expirationDate))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
+
+        val file = File(context?.cacheDir, "savedMaterial.json")    //자꾸 fileNotFoundException (Read-only file system) 랑 permission denied 떠서 권한이 없는줄알고
+        writeJSONtoFile(file)
+        loadMaterialList(file)
     }
 
     private fun setClickListenerToButtons(){
@@ -204,4 +216,19 @@ class FridgeFragment : Fragment() {
 
     /* 인텐트로 넘겨받은 날짜 한 데 모아둘 데이터클래스 */
     data class materialExpirationDate(var year: Int, var month: Int, var date: Int)
+
+
+    private fun loadMaterialList(fileName: File){
+        var gson = Gson()
+        var post = gson.fromJson(fileName.readText(), Array<Material>::class.java)
+        Toast.makeText(activity,"${post.toString()}o", Toast.LENGTH_SHORT).show()
+
+    }
+
+    private fun writeJSONtoFile(fileName: File){
+        var gson = Gson()
+        var jsonString:String = gson.toJson(upperMaterialsList)
+        //Toast.makeText(activity,"$jsonString", Toast.LENGTH_SHORT).show()
+        fileName.writeText(jsonString)
+    }
 }
