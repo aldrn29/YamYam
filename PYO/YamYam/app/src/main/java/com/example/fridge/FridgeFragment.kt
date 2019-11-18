@@ -60,6 +60,18 @@ class FridgeFragment : Fragment() {
 
                 return true
             }
+            com.example.yamyam.R.id.minusItem -> {
+                Toast.makeText(activity, "삭제", Toast.LENGTH_SHORT).show()
+
+                // - 버튼 이벤트 추가하기
+                // 냉장고 상/하 구분짓기
+
+
+
+
+
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
