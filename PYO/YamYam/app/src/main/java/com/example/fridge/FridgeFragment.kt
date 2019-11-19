@@ -30,8 +30,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.exp
 
-
-
 /* 10.16
 임시 이미지가 아닌 MaterialInputActivity 에서 선택된 foodimage 가 들어가도록 변경
 11.15 코드정리, 위아래 모두 리사이클러뷰로 변경
@@ -177,7 +175,7 @@ class FridgeFragment : Fragment() {
         else if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 1){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
             lowerMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
-            Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
         upperAdapter!!.notifyDataSetChanged()
     }

@@ -7,6 +7,7 @@ package com.example.fridge
 * 11.18 gson 을 사용하여 Material write, load 하는 함수 Adapter 에 정의
 * 11.19 유통기한을 체크해서 남은 기간에 따른 배경색 변경 함수
 *       bind 에서 유통기한 체크
+*       유통기한 체크함수 배경색이 i-1따라가는 문제 해결
 * */
 
 import android.content.Context
@@ -42,8 +43,8 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
     //위의 onCreateViewHolder 에서 만든 view 와 실제 입력되는 각각의 데이터를 연결한다.
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.bind(MaterialsList[position], context, MaterialsList)
-        //여기서 유통기한 체크하니까 이상하게 꼬이던게 없어졌네?
-        holder.checkExpirationDate(MaterialsList[position])
+        //여기서 유통기한 체크하니까 이상하게 꼬이던게 없어졌네? 응아니야~
+        //holder.checkExpirationDate(MaterialsList[position])
     }
 
     inner class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
@@ -60,11 +61,12 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
             itemView.setOnClickListener{
                 if(isClicked == true) {
                     //Toast.makeText(itemView.context, "클릭함", Toast.LENGTH_SHORT).show()
-                    checkExpirationDateList(MaterialsList, itemView)
+                    //checkExpirationDateList(MaterialsList, itemView)
                     removeItem(material)
+                    checkExpirationDate(material, itemView)
                 }
-
             }
+            checkExpirationDate(material, itemView)
         }
         fun checkExpirationDate(material: Material){
             checkExpirationDate(material, itemView)
@@ -137,87 +139,35 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
     fun checkExpirationDate(material: Material, itemView: View){
         var cal : Calendar = Calendar.getInstance()
         cal.time = Date()                               //현재 날짜 가져옴
+        itemView.setBackgroundColor(Color.argb(0,0,0,0))        // 기본 백그라운드 색상을 공백으로
 
-            /*유통기한이 지났으면 */
-            if(material.expirationDate!!.year < cal.time.year ) {
-                // 배경 검은색
+        /*유통기한이 지났으면 */
+        if(material.expirationDate!!.year < cal.time.year ){
+            // 배경 검은색
+            Toast.makeText(context, "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남", Toast.LENGTH_SHORT).show()
+            itemView.setBackgroundColor(Color.BLACK)
+        }
+        else if(material.expirationDate!!.year == cal.time.year){
+            if(material.expirationDate!!.month < cal.time.month){
+                itemView.setBackgroundColor(Color.BLACK)
                 Toast.makeText(context, "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남", Toast.LENGTH_SHORT).show()
-                itemView.setBackgroundColor(Color.BLACK)
-            }
-            else if(material.expirationDate!!.year == cal.time.year){
-                if(material.expirationDate!!.month < cal.time.month){
-                    itemView.setBackgroundColor(Color.BLACK)
-                    Toast.makeText(context, "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            if( (material.expirationDate!!.year == cal.time.year) and  (material.expirationDate!!.month == cal.time.month)){
-                /* 유통기한 3일 이내 */
-                if( (material.expirationDate!!.date - cal.time.date) <= 3) {
-                    Toast.makeText(context,"name : ${material.name} month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date} 유통기한이 3일 이내로 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
-                    itemView.setBackgroundColor(Color.YELLOW)
-                }
-                /* 유통기한 3~7일 남았다면 */
-                else if((material.expirationDate!!.date - cal.time.date) <= 7) {
-                    Toast.makeText(context, "year: ${material.expirationDate!!.year}. ${material.expirationDate!!.month}. ${material.expirationDate!!.date}" +
-                            "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
-                    //Toast.makeText(context, "year: ${cal.time.year}. ${cal.time.month}. ${cal.time.date}" +
-                      //      "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
-                    itemView.setBackgroundColor(Color.GRAY)
-                }
             }
         }
-
-    fun checkExpirationDateList(MaterialsList: ArrayList<Material>, itemView: View) {
-        var cal: Calendar = Calendar.getInstance()
-        cal.time = Date()                               //현재 날짜 가져옴
-
-        for (material in MaterialsList) {
-            /*유통기한이 지났으면 */
-            if (material.expirationDate!!.year < cal.time.year) {
-                // 배경 검은색
-                Toast.makeText(
-                    context,
-                    "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남",
-                    Toast.LENGTH_SHORT
-                ).show()
-                itemView.setBackgroundColor(Color.BLACK)
-            } else if (material.expirationDate!!.year == cal.time.year) {
-                if (material.expirationDate!!.month < cal.time.month) {
-                    itemView.setBackgroundColor(Color.BLACK)
-                    Toast.makeText(
-                        context,
-                        "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+        if( (material.expirationDate!!.year == cal.time.year) and  (material.expirationDate!!.month == cal.time.month)){
+            /* 유통기한 3일 이내 */
+            if( (material.expirationDate!!.date - cal.time.date) <= 3){
+                Toast.makeText(context,"name : ${material.name} month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date} 유통기한이 3일 이내로 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                itemView.setBackgroundColor(Color.YELLOW)
             }
-
-            if ((material.expirationDate!!.year == cal.time.year) and (material.expirationDate!!.month == cal.time.month)) {
-                /* 유통기한 3일 이내 */
-                if ((material.expirationDate!!.date - cal.time.date) <= 3) {
-                    Toast.makeText(
-                        context,
-                        "name : ${material.name} month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date} 유통기한이 3일 이내로 남은 재료가 있습니다",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    itemView.setBackgroundColor(Color.YELLOW)
-                }
-                /* 유통기한 3~7일 남았다면 */
-                else if ((material.expirationDate!!.date - cal.time.date) <= 7) {
-                    Toast.makeText(
-                        context,
-                        "year: ${material.expirationDate!!.year}. ${material.expirationDate!!.month}. ${material.expirationDate!!.date}" +
-                                "유통기한이 3~7일 남은 재료가 있습니다",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    //Toast.makeText(context, "year: ${cal.time.year}. ${cal.time.month}. ${cal.time.date}" +
-                    //      "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
-                    itemView.setBackgroundColor(Color.GRAY)
-                }
+            /* 유통기한 3~7일 남았다면 */
+            else if((material.expirationDate!!.date - cal.time.date) <= 7){
+                Toast.makeText(context, "year: ${material.expirationDate!!.year}. ${material.expirationDate!!.month}. ${material.expirationDate!!.date}" +
+                        "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "year: ${cal.time.year}. ${cal.time.month}. ${cal.time.date}" +
+                //      "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                itemView.setBackgroundColor(Color.GRAY)
             }
         }
-        notifyDataSetChanged()
     }
 
 }
