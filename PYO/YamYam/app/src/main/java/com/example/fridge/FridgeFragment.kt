@@ -2,6 +2,7 @@ package com.example.fridge
 
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.view.*
@@ -17,6 +18,7 @@ import com.example.recipe.RecipeFragment
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import kotlin.collections.ArrayList
 import com.example.yamyam.MainActivity
+import com.example.yamyam.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_material_input_activity.*
@@ -29,12 +31,14 @@ import java.util.*
 import kotlin.math.exp
 
 
+
 /* 10.16
-임시 이미지가 아닌 MaterialInputActivity에서 선택된 foodimage가 들어가도록 변경
+임시 이미지가 아닌 MaterialInputActivity 에서 선택된 foodimage 가 들어가도록 변경
 11.15 코드정리, 위아래 모두 리사이클러뷰로 변경
 11.17 객체생성할때 날짜도 받아서 생성하도록 만듦
-Intent로 넘겨받은 year,month,date를 한번에 쓰기위한 data class materialExpirationDate 정의
+    Intent 로 넘겨받은 year,month,date를 한번에 쓰기위한 data class materialExpirationDate 정의
 11.18 gson 사용하여 파일 저장, load 가능
+11.19 저장된 파일에서 불러오는 거 함수 따로 정의, 처음 실행시 Material 이 load 되지 않았던 문제 해결
  */
 
 class FridgeFragment : Fragment() {
@@ -118,24 +122,10 @@ class FridgeFragment : Fragment() {
         setClickListenerToButtons()
         /*위 아래 리사이클러 뷰에 어댑터 붙임*/
         setAdapter()
-
-
-        /* 처음 어플을 실행하는 경우 아직 파일을 쓰지 않았으므로 */
-        if(File(context?.cacheDir, upperFileName).exists()) {
-            /* json 파일에서 저장되었던 material Lists 불러옴 */
-            upperAdapter!!.loadMaterialList(upperFileName)
-            upperAdapter!!.notifyDataSetChanged()
-            //upperAdapter!!.notifyItemRangeChanged(0, upperMaterialsList.size)
-            //upperRecyclerView.scrollToPosition(0);
-            //upperRecyclerView.scrollBy(0,0) 이거 스왑에다 적으면 되겠는데?
-            Toast.makeText(activity,"로딩 했는데?", Toast.LENGTH_SHORT).show()
-            //upperRecyclerView.adapter = upperAdapter
-        }
-
-        if(File(context?.cacheDir, lowerFileName).exists()) {
-            lowerAdapter!!.loadMaterialList(lowerFileName)
-            lowerAdapter!!.notifyDataSetChanged()
-        }
+        /* 저장된 파일에서 불러옴 */
+        loadFromSavedFile()
+        /* 여기서 먼저 임시로 ItemTouchHelper 를 붙여야 맨 처음 어플 실행시 이미지가 정상적으로 로딩된다 */
+        setItemTouchHelper(null, null, null, null, null)
 
     }
 
@@ -158,7 +148,7 @@ class FridgeFragment : Fragment() {
         lowerAdapter!!.writeJSONtoFile(lowerFileName)
     }
 
-    private fun setItemTouchHelper(requestCode: Int, resultCode: Int, nameOfMaterial : String, image: Int, expirationDate : materialExpirationDate){
+    private fun setItemTouchHelper(requestCode: Int?, resultCode: Int?, nameOfMaterial : String?, image: Int?, expirationDate : materialExpirationDate?){
         /* MaterialItemTouchHelper 에 callback 을 등록, recycler 뷰에 붙여줌
         *  상하좌우 드래그설정
         spanCount 가 열 개수인듯*/
@@ -179,15 +169,17 @@ class FridgeFragment : Fragment() {
         //upperBody 에 추가
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
-            upperMaterialsList.add(Material(nameOfMaterial, image, expirationDate))
-            Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
+            upperMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
+            //Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
+            // upperAdapter!!.checkExpirationDate(Material(nameOfMaterial!!, image!!, expirationDate))        //추가하고 유통기한 체크
         }
         //lowerBody 에 추가
         else if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 1){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
-            lowerMaterialsList.add(Material(nameOfMaterial, image, expirationDate))
+            lowerMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
+        upperAdapter!!.notifyDataSetChanged()
     }
 
     private fun setClickListenerToButtons(){
@@ -229,22 +221,26 @@ class FridgeFragment : Fragment() {
         lowerAdapter!!.notifyDataSetChanged()
     }
 
-    /*유통기간 체크하는 함수 마테리얼 넘겨서 비교하자*/
-    private fun checkExpirationDate(material: Material){
-        var cal : Calendar = Calendar.getInstance()
-        cal.time = Date()
-        /*
-        if(//3일밖에 유통기한이 안남았다면))
-        {
-            //배경 노란색으로 변경
+    /* 처음에 저장된 파일에서 불러오는 함수 */
+    private fun loadFromSavedFile()
+    {
+        /* 처음 어플을 실행하는 경우 아직 파일을 쓰지 않았으므로 */
+        if(File(context?.cacheDir, upperFileName).exists()) {
+            /* json 파일에서 저장되었던 material Lists 불러옴 */
+            upperAdapter!!.loadMaterialList(upperFileName)
+            upperAdapter!!.notifyDataSetChanged()
+            //upperAdapter!!.notifyItemRangeChanged(0, upperMaterialsList.size)
+            //upperRecyclerView.scrollToPosition(0);
+            //upperRecyclerView.scrollBy(0,0) 이거 스왑에다 적으면 되겠는데?
+            //upperRecyclerView.adapter = upperAdapter
         }
-        else if(3~7일 남았다면){
-            //배경 주황생으로 변경
+
+        if(File(context?.cacheDir, lowerFileName).exists()) {
+            lowerAdapter!!.loadMaterialList(lowerFileName)
+            lowerAdapter!!.notifyDataSetChanged()
         }
-        */
     }
 
-    //private fun saveData
 
     /* 인텐트로 넘겨받은 날짜 한 데 모아둘 데이터클래스 */
     data class materialExpirationDate(var year: Int, var month: Int, var date: Int)

@@ -5,9 +5,12 @@ package com.example.fridge
 * 11.10~15 아이템 스왑처리
 * 11.15 bind 에서 아이템 삭제처리
 * 11.18 gson 을 사용하여 Material write, load 하는 함수 Adapter 에 정의
+* 11.19 유통기한을 체크해서 남은 기간에 따른 배경색 변경 함수
+*       bind 에서 유통기한 체크
 * */
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +22,8 @@ import com.example.yamyam.R
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.File
+import java.util.*
+import java.util.zip.Inflater
 import kotlin.collections.ArrayList
 
 
@@ -36,26 +41,33 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
     }
     //위의 onCreateViewHolder 에서 만든 view 와 실제 입력되는 각각의 데이터를 연결한다.
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder?.bind(MaterialsList[position], context)
+        holder.bind(MaterialsList[position], context, MaterialsList)
+        //여기서 유통기한 체크하니까 이상하게 꼬이던게 없어졌네?
+        holder.checkExpirationDate(MaterialsList[position])
     }
-
 
     inner class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
         val materialImg = itemView?.findViewById<ImageView>(R.id.imgMaterial)
         val materialName = itemView?.findViewById<TextView>(R.id.nameMaterial)
 
         /* bind 함수는 ViewHolder 와 클래스의 각 변수를 연동하는 역할을 한다 */
-        fun bind(material: Material, context: Context) {
+        fun bind(material: Material, context: Context, MaterialsList: ArrayList<Material> ) {
             materialImg?.setImageResource(material.image!!)
             materialName?.text = material.name
+
 
             /*여기서 아이템 삭제 처리*/
             itemView.setOnClickListener{
                 if(isClicked == true) {
-                    Toast.makeText(itemView.context, "클릭함", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(itemView.context, "클릭함", Toast.LENGTH_SHORT).show()
+                    checkExpirationDateList(MaterialsList, itemView)
                     removeItem(material)
                 }
+
             }
+        }
+        fun checkExpirationDate(material: Material){
+            checkExpirationDate(material, itemView)
         }
     }
 
@@ -68,9 +80,9 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
     /* 아이템삭제함수*/
     fun removeItem(rmMaterial: Material){
         MaterialsList.remove(rmMaterial)
-        notifyDataSetChanged()
         //삭제 결과를 또 jsonFIle 에 저장
         //얘가 덮어쓰기를 하나? 그런듯
+        notifyDataSetChanged()
         writeJSONtoFile(fileName)
     }
 
@@ -120,4 +132,92 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
         val file = File(context?.cacheDir, fileName)
         file.writeText(jsonString)
     }
+
+    /*유통기간 체크하는 함수 마테리얼 넘겨서 비교하자*/
+    fun checkExpirationDate(material: Material, itemView: View){
+        var cal : Calendar = Calendar.getInstance()
+        cal.time = Date()                               //현재 날짜 가져옴
+
+            /*유통기한이 지났으면 */
+            if(material.expirationDate!!.year < cal.time.year ) {
+                // 배경 검은색
+                Toast.makeText(context, "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남", Toast.LENGTH_SHORT).show()
+                itemView.setBackgroundColor(Color.BLACK)
+            }
+            else if(material.expirationDate!!.year == cal.time.year){
+                if(material.expirationDate!!.month < cal.time.month){
+                    itemView.setBackgroundColor(Color.BLACK)
+                    Toast.makeText(context, "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            if( (material.expirationDate!!.year == cal.time.year) and  (material.expirationDate!!.month == cal.time.month)){
+                /* 유통기한 3일 이내 */
+                if( (material.expirationDate!!.date - cal.time.date) <= 3) {
+                    Toast.makeText(context,"name : ${material.name} month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date} 유통기한이 3일 이내로 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                    itemView.setBackgroundColor(Color.YELLOW)
+                }
+                /* 유통기한 3~7일 남았다면 */
+                else if((material.expirationDate!!.date - cal.time.date) <= 7) {
+                    Toast.makeText(context, "year: ${material.expirationDate!!.year}. ${material.expirationDate!!.month}. ${material.expirationDate!!.date}" +
+                            "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "year: ${cal.time.year}. ${cal.time.month}. ${cal.time.date}" +
+                      //      "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                    itemView.setBackgroundColor(Color.GRAY)
+                }
+            }
+        }
+
+    fun checkExpirationDateList(MaterialsList: ArrayList<Material>, itemView: View) {
+        var cal: Calendar = Calendar.getInstance()
+        cal.time = Date()                               //현재 날짜 가져옴
+
+        for (material in MaterialsList) {
+            /*유통기한이 지났으면 */
+            if (material.expirationDate!!.year < cal.time.year) {
+                // 배경 검은색
+                Toast.makeText(
+                    context,
+                    "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남",
+                    Toast.LENGTH_SHORT
+                ).show()
+                itemView.setBackgroundColor(Color.BLACK)
+            } else if (material.expirationDate!!.year == cal.time.year) {
+                if (material.expirationDate!!.month < cal.time.month) {
+                    itemView.setBackgroundColor(Color.BLACK)
+                    Toast.makeText(
+                        context,
+                        "month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date}유통기한이 지남",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            if ((material.expirationDate!!.year == cal.time.year) and (material.expirationDate!!.month == cal.time.month)) {
+                /* 유통기한 3일 이내 */
+                if ((material.expirationDate!!.date - cal.time.date) <= 3) {
+                    Toast.makeText(
+                        context,
+                        "name : ${material.name} month : ${material.expirationDate!!.month} date : ${material.expirationDate!!.date} 유통기한이 3일 이내로 남은 재료가 있습니다",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    itemView.setBackgroundColor(Color.YELLOW)
+                }
+                /* 유통기한 3~7일 남았다면 */
+                else if ((material.expirationDate!!.date - cal.time.date) <= 7) {
+                    Toast.makeText(
+                        context,
+                        "year: ${material.expirationDate!!.year}. ${material.expirationDate!!.month}. ${material.expirationDate!!.date}" +
+                                "유통기한이 3~7일 남은 재료가 있습니다",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    //Toast.makeText(context, "year: ${cal.time.year}. ${cal.time.month}. ${cal.time.date}" +
+                    //      "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                    itemView.setBackgroundColor(Color.GRAY)
+                }
+            }
+        }
+        notifyDataSetChanged()
+    }
+
 }
