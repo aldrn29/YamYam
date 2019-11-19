@@ -34,7 +34,9 @@ import kotlin.math.exp
 11.15 코드정리, 위아래 모두 리사이클러뷰로 변경
 11.17 객체생성할때 날짜도 받아서 생성하도록 만듦
 Intent로 넘겨받은 year,month,date를 한번에 쓰기위한 data class materialExpirationDate 정의
+11.18 gson 사용하여 파일 저장, load 가능
  */
+
 class FridgeFragment : Fragment() {
 
     //var upperAdapter: notUseMaterialAdapter? = null
@@ -42,9 +44,8 @@ class FridgeFragment : Fragment() {
     var upperAdapter : MaterialAdapter? = null
     var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
     var lowerMaterialsList = ArrayList<Material>()
-        //"/storage/emulated/savedMaterial.json"
-    //var file : File? = null
-    //val filePath = file.absolutePath
+    val upperFileName = "upperSavedMaterial.json"    //자꾸 fileNotFoundException (Read-only file system) 랑 permission denied 떠서 권한이 없는줄알고
+    val lowerFileName = "lowerSavedMaterial.json"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
@@ -58,6 +59,7 @@ class FridgeFragment : Fragment() {
         return view
     }
 
+    /*
     //handle item clicks of menu
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
@@ -88,15 +90,12 @@ class FridgeFragment : Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
+    }*/
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
-
-        /* set + - 버튼 클릭 리스너 */
-        setClickListenerToButtons()
 
         //임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
         temporaryButton.setOnClickListener {
@@ -115,8 +114,29 @@ class FridgeFragment : Fragment() {
             transaction.commit()
         }
 
+        /* set + - 버튼 클릭 리스너 */
+        setClickListenerToButtons()
         /*위 아래 리사이클러 뷰에 어댑터 붙임*/
         setAdapter()
+
+
+        /* 처음 어플을 실행하는 경우 아직 파일을 쓰지 않았으므로 */
+        if(File(context?.cacheDir, upperFileName).exists()) {
+            /* json 파일에서 저장되었던 material Lists 불러옴 */
+            upperAdapter!!.loadMaterialList(upperFileName)
+            upperAdapter!!.notifyDataSetChanged()
+            //upperAdapter!!.notifyItemRangeChanged(0, upperMaterialsList.size)
+            //upperRecyclerView.scrollToPosition(0);
+            //upperRecyclerView.scrollBy(0,0) 이거 스왑에다 적으면 되겠는데?
+            Toast.makeText(activity,"로딩 했는데?", Toast.LENGTH_SHORT).show()
+            //upperRecyclerView.adapter = upperAdapter
+        }
+
+        if(File(context?.cacheDir, lowerFileName).exists()) {
+            lowerAdapter!!.loadMaterialList(lowerFileName)
+            lowerAdapter!!.notifyDataSetChanged()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -133,6 +153,9 @@ class FridgeFragment : Fragment() {
         var tmpDate = materialExpirationDate(expirationDate_year, expirationDate_month, expirationDate_date)
         /* 아이템 터치 헬퍼 붙임 */
         setItemTouchHelper(requestCode, resultCode, nameOfMaterial!!, image, tmpDate)
+        //json 파일에 upperMaterials 리스트를 저장하자
+        upperAdapter!!.writeJSONtoFile(upperFileName)
+        lowerAdapter!!.writeJSONtoFile(lowerFileName)
     }
 
     private fun setItemTouchHelper(requestCode: Int, resultCode: Int, nameOfMaterial : String, image: Int, expirationDate : materialExpirationDate){
@@ -165,10 +188,6 @@ class FridgeFragment : Fragment() {
             lowerMaterialsList.add(Material(nameOfMaterial, image, expirationDate))
             Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
-
-        val file = File(context?.cacheDir, "savedMaterial.json")    //자꾸 fileNotFoundException (Read-only file system) 랑 permission denied 떠서 권한이 없는줄알고
-        writeJSONtoFile(file)
-        loadMaterialList(file)
     }
 
     private fun setClickListenerToButtons(){
@@ -202,11 +221,12 @@ class FridgeFragment : Fragment() {
     }
 
     private fun setAdapter(){
-        lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList)
-        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList)
+        lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList, lowerFileName)
+        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList, upperFileName)
         upperRecyclerView.adapter = upperAdapter
         lowerRecyclerView.adapter = lowerAdapter
         upperAdapter!!.notifyDataSetChanged()   //여기가 답이였네, 왜 드래그로 위치 바꿔도 안바뀌나 3일 내내 고민
+        lowerAdapter!!.notifyDataSetChanged()
     }
 
     /*유통기간 체크하는 함수 마테리얼 넘겨서 비교하자*/
@@ -229,18 +249,4 @@ class FridgeFragment : Fragment() {
     /* 인텐트로 넘겨받은 날짜 한 데 모아둘 데이터클래스 */
     data class materialExpirationDate(var year: Int, var month: Int, var date: Int)
 
-
-    private fun loadMaterialList(fileName: File){
-        var gson = Gson()
-        var post = gson.fromJson(fileName.readText(), Array<Material>::class.java)
-        Toast.makeText(activity,"${post.toString()}o", Toast.LENGTH_SHORT).show()
-
-    }
-
-    private fun writeJSONtoFile(fileName: File){
-        var gson = Gson()
-        var jsonString:String = gson.toJson(upperMaterialsList)
-        //Toast.makeText(activity,"$jsonString", Toast.LENGTH_SHORT).show()
-        fileName.writeText(jsonString)
-    }
 }
