@@ -6,14 +6,14 @@
 
     <item
         android:id="@+id/fridgeItem"
-        android:icon="@drawable/fridge"
+        android:icon="@drawable/tab_fridge"
         android:title="냉장고" />
     <item
         android:id="@+id/wishlistItem"
-        android:icon="@drawable/heart"
+        android:icon="@drawable/tab_heart"
         android:title="WishList" />
     <item
         android:id="@+id/recipeItem"
-        android:icon="@drawable/search"
+        android:icon="@drawable/tab_search"
         android:title="검색" />
 </menu>

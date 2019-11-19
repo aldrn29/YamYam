@@ -67,11 +67,11 @@ class MaterialInputActivity : AppCompatActivity() {
         foodCategory.adapter = foodCategoryAdapter
 
         //category image load(왼쪽)
-        categoryList.add(Category("육류", R.drawable.meat))
+        categoryList.add(Category("육류", R.drawable.meat2))
         categoryList.add(Category("어패류", R.drawable.fish))
         categoryList.add(Category("유제품", R.drawable.milk))
         categoryList.add(Category("야채", R.drawable.vegetable))
-        categoryList.add(Category("과일", R.drawable.banana2))
+        categoryList.add(Category("과일", R.drawable.apple))
         categoryAdapter = CategoryAdapter(this, categoryList)
         category.adapter = categoryAdapter
     }
@@ -87,9 +87,9 @@ class MaterialInputActivity : AppCompatActivity() {
                 foodList.add(Category("닭고기", R.drawable.chicken))
             } //어패류
             1 -> {
-                foodList.add(Category("고등어", R.drawable.one))
-                foodList.add(Category("바지락", R.drawable.two))
-                foodList.add(Category("꽁치", R.drawable.three))
+                foodList.add(Category("새우", R.drawable.shrimp))
+                foodList.add(Category("랍스터", R.drawable.lobster))
+                foodList.add(Category("꽃게", R.drawable.crab))
             } //유제품
             2 -> {
                 foodList.add(Category("우유", R.drawable.milk))
@@ -97,20 +97,14 @@ class MaterialInputActivity : AppCompatActivity() {
                 foodList.add(Category("치즈", R.drawable.cheese))
             } //야채
             3 -> {
-                foodList.add(Category("상추", R.drawable.sang_chu))
                 foodList.add(Category("토마토", R.drawable.tomato))
-                foodList.add(Category("파", R.drawable.green_onion))
                 foodList.add(Category("양파", R.drawable.onion))
-                foodList.add(Category("샐러드", R.drawable.salad))
             } //과일
             4 -> {
-                foodList.add(Category("사과", R.drawable.red_apple))
+                foodList.add(Category("사과", R.drawable.apple))
+                foodList.add(Category("배", R.drawable.pear))
                 foodList.add(Category("오렌지", R.drawable.orange))
-                foodList.add(Category("복숭아", R.drawable.peach))
                 foodList.add(Category("딸기", R.drawable.strawberry))
-                foodList.add(Category("파인애플", R.drawable.pine_apple))
-                foodList.add(Category("바나나", R.drawable.banana))
-                foodList.add(Category("체리", R.drawable.cherry))
                 foodList.add(Category("포도", R.drawable.grape))
                 foodList.add(Category("수박", R.drawable.watermelon))
            }
