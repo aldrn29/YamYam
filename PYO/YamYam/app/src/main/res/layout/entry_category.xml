@@ -12,7 +12,7 @@
         android:id="@+id/imgCategory"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        app:srcCompat="@drawable/one" />
+        app:srcCompat="@drawable/apple" />
 
     <TextView
         android:id="@+id/categoryName"

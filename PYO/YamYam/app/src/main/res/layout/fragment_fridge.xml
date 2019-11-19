@@ -27,11 +27,10 @@
             android:gravity="center"
             android:text="나의 냉장고"
             android:textColor="#111111"
-            android:textSize="20sp"
+            android:textSize="19sp"
             android:textStyle="bold"
-            tools:ignore="HardcodedText"
-            android:paddingStart="38dp"
-            android:paddingLeft="38dp"/>
+            tools:ignore="HardcodedText,RtlSymmetry"
+            android:paddingStart="80dp"/>
 
 
     </androidx.appcompat.widget.Toolbar>
