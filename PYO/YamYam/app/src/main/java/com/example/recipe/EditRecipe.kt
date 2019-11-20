@@ -54,19 +54,19 @@ class EditRecipe : AppCompatActivity() {
     }
 
 
-    private fun writeRecipe(img : String, name : String, description : String) {
+    private fun writeRecipe(image : String, name : String, description: String) {
         val key = recipeDB.child("recipes").push().key
         if (key == null) {
             Log.w(TAG, "Couldn't get push key for recipes")
             return
         }
 
-        val recipe = RecipeSource(img, name, description)
+        val recipe = RecipeSource(image, name, description)
         val recipeValues = recipe.toMap()
 
         val childUpdates = HashMap<String, Any>()
-        childUpdates["/recipes/$name/$key"] = recipeValues
-        childUpdates["/recipes/$name/$key"] = recipeValues
+        childUpdates["/recipes/$key"] = recipeValues
+//        childUpdates["/recipes/$name/$key"] = recipeValues
 
         recipeDB.updateChildren(childUpdates)
     }

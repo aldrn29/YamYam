@@ -6,57 +6,104 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
-import com.google.firebase.database.DatabaseReference
+import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 
 class RecipeFragment : Fragment() {
 
-    var recipeList = arrayListOf<RecipeSource>()
-    lateinit var recyclerView1: RecyclerView
-    lateinit var dataBaseRef : DatabaseReference
+    private var mRecylerview : RecyclerView? = null
+    private var linearLayoutManager : LinearLayoutManager? = null
 
+    lateinit var ref: DatabaseReference
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        //start recipe value event listener
-//        val recipeListener = object : ValueEventListener {
-//            override fun onDataChange(p0: DataSnapshot) {
-//                //get post object and use the values to update the UI
-//                val recipe = p0.getValue(RecipeSource::class.java)
-//                //start exclude
-//                recipe?.let {
-//                    img.text = it.img
-//                }
-//            }
+    lateinit var show_progress: ProgressBar
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        firebaseData()
 //
-//        }
+//    }
 
-        var viewInflater = inflater.inflate(R.layout.fragment_recipe_list, container, false)
+    //리사이클러뷰 초기화 하고 레이아웃을 초기화 해야함
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?
+    ): View? {
+        var viewInflater: View = inflater.inflate(R.layout.fragment_recipelist, container, false)
 
-//        dataBaseRef = FirebaseDatabase.getInstance().getReference().child("recipes")
-//        recipeList.add(RecipeSource("Hamburger", "hamburger","Hamburger"/*,"재료배열","요리법"*/))
-//        recipeList.add(RecipeSource("Lazania", "lazania", "Lazania"))
 
+        linearLayoutManager = LinearLayoutManager(activity)
+        mRecylerview = viewInflater.findViewById(R.id.recipe_list) as RecyclerView
+        mRecylerview?.layoutManager = linearLayoutManager
 
-        recyclerView1 = viewInflater.findViewById(R.id.searchView)as RecyclerView
-        recyclerView1.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView1.adapter = RecipeListAdapter(requireContext(), recipeList,{recipeSource: RecipeSource ->  itemClicked()})
+        ref = FirebaseDatabase.getInstance().getReference().child("recipes")
+
+        show_progress = viewInflater.findViewById(R.id.progress_bar)
+
+        firebaseData()
 
         return viewInflater
     }
-    private fun itemClicked(){
-        val intent = Intent(activity, Recipe::class.java)
-        startActivity(intent)
+
+
+
+    private fun firebaseData() {
+
+
+        val option = FirebaseRecyclerOptions.Builder<RecipeSource>()
+            .setQuery(ref, RecipeSource::class.java)
+            .setLifecycleOwner(this)
+            .build()
+
+
+        val firebaseRecyclerAdapter = object: FirebaseRecyclerAdapter<RecipeSource, MyViewHolder>(option) {
+
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+                val itemView = LayoutInflater.from(context).inflate(R.layout.cardview,parent,false)
+                return MyViewHolder(itemView)
+            }
+
+            override fun onBindViewHolder(holder: MyViewHolder, position: Int, model: RecipeSource) {
+                val placeid = getRef(position).key.toString()
+
+                ref.child(placeid).addValueEventListener(object: ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        show_progress.visibility = if(itemCount == 0) View.VISIBLE else View.GONE
+                        holder.itemName.setText(model.name)
+                        Picasso.get().load(model.img).into(holder.itemImg)
+
+//                        holder.itemView.setOnClickListener{
+//                            val intent = Intent(activity, Recipe::class.java)
+//                        }
+
+                    }
+
+                })
+            }
+        }
+
+        mRecylerview!!.adapter = firebaseRecyclerAdapter
+
+        firebaseRecyclerAdapter.startListening()
     }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val editBtn : Button = view.findViewById(R.id.editBtn)
+        val editBtn: Button = view.findViewById(R.id.editBtn)
         editBtn.setOnClickListener {
             val editIntent = Intent(activity, EditRecipe::class.java)
 //            startActivityForResult(editIntent,1)
@@ -64,8 +111,18 @@ class RecipeFragment : Fragment() {
         }
     }
 
+//    private fun itemClicked(){
+//        val intent = Intent(activity, Recipe::class.java)
+//        startActivity(intent)
+//    }
+
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        internal var itemName: TextView = itemView.findViewById(R.id.recipeItemName)
+        internal var itemImg: ImageView = itemView.findViewById(R.id.recipeItemImg)
 
 
+    }
 
 
 

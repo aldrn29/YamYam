@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.recipe.RecipeFragment"
+    android:background="@color/cardview_light_background">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipe_list"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="64dp"
+        android:scrollbars="vertical"/>
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />-->
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="200dp"
+        android:layout_height="44dp"
+        android:layout_alignStart="@+id/recipe_list"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/searchBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginBottom="13dp"
+        android:layout_toEndOf="@+id/editText"
+        android:text="Search" />
+
+    <Button
+        android:id="@+id/editBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginBottom="13dp"
+        android:layout_toEndOf="@+id/searchBtn"
+        android:text="Edit" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="127dp"
+        android:layout_marginTop="336dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="168dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="168dp"/>
+
+</RelativeLayout>
