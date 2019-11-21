@@ -2,33 +2,16 @@ package com.example.fridge
 
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Environment
-import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.example.recipe.RecipeFragment
 import kotlinx.android.synthetic.main.fragment_fridge.*
-import kotlin.collections.ArrayList
-import com.example.yamyam.MainActivity
-import com.example.yamyam.R
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_material_input_activity.*
-import kotlinx.android.synthetic.main.entry_material.view.*
-import java.io.BufferedReader
 import java.io.File
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.exp
 
 /* 10.16
 임시 이미지가 아닌 MaterialInputActivity 에서 선택된 foodimage 가 들어가도록 변경
@@ -97,24 +80,24 @@ class FridgeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
-
-        //임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
-        temporaryButton.setOnClickListener {
-            // RecipeSerachActivity로 이동
-            //val intent = Intent(activity, RecipeSerachActivity::class.java)
-            //startActivity(intent)
-
-            // 탭 메뉴 변경
-            val bottomNavigationView : BottomNavigationView = (activity as MainActivity).findViewById(
-                com.example.yamyam.R.id.navigationView)
-            bottomNavigationView.menu.findItem(com.example.yamyam.R.id.recipeItem).isChecked = true
-
-            // RecipeFragment 로 화면이동
-            val transaction : FragmentTransaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
-            transaction.add(com.example.yamyam.R.id.act_fragment, RecipeFragment())
-            transaction.commit()
-        }
+//        val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
+//
+//        //임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
+//        temporaryButton.setOnClickListener {
+//            // RecipeSerachActivity로 이동
+//            //val intent = Intent(activity, RecipeSerachActivity::class.java)
+//            //startActivity(intent)
+//
+//            // 탭 메뉴 변경
+//            val bottomNavigationView : BottomNavigationView = (activity as MainActivity).findViewById(
+//                com.example.yamyam.R.id.navigationView)
+//            bottomNavigationView.menu.findItem(com.example.yamyam.R.id.recipeItem).isChecked = true
+//
+//            // RecipeFragment 로 화면이동
+//            val transaction : FragmentTransaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
+//            transaction.add(com.example.yamyam.R.id.act_fragment, RecipeFragment())
+//            transaction.commit()
+//        }
 
         /* set + - 버튼 클릭 리스너 */
         setClickListenerToButtons()

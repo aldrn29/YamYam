@@ -43,6 +43,7 @@ class EditRecipe : AppCompatActivity() {
 //        creat 버튼 누를시 입력된 값으로 객체 생성해야함
         creatBtn.setOnClickListener {
             writeRecipe(image,editName.text.toString(),editDescription.text.toString())
+            finish()
         }
 
     }
