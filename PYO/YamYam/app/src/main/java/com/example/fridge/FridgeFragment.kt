@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.yamyam.R
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import java.io.File
 
@@ -34,12 +36,6 @@ class FridgeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
-
-        // toolbar 초기화
-        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(com.example.yamyam.R.id.toolbar)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        //(activity as AppCompatActivity).supportActionBar?.title = "냉장고"
-        setHasOptionsMenu(true)
 
         return view
     }
@@ -80,6 +76,13 @@ class FridgeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // toolbar 초기화
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(com.example.yamyam.R.id.toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        //(activity as AppCompatActivity).supportActionBar?.title = "냉장고"
+        setHasOptionsMenu(true)
+
+
 //        val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
 //
 //        //임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
@@ -99,6 +102,8 @@ class FridgeFragment : Fragment() {
 //            transaction.commit()
 //        }
 
+        /* 툴바 아이템 클릭 리스너 */
+        setToolBarItemClickListener()
         /* set + - 버튼 클릭 리스너 */
         setClickListenerToButtons()
         /*위 아래 리사이클러 뷰에 어댑터 붙임*/
@@ -107,7 +112,6 @@ class FridgeFragment : Fragment() {
         loadFromSavedFile()
         /* 여기서 먼저 임시로 ItemTouchHelper 를 붙여야 맨 처음 어플 실행시 이미지가 정상적으로 로딩된다 */
         setItemTouchHelper(null, null, null, null, null)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -163,10 +167,32 @@ class FridgeFragment : Fragment() {
         upperAdapter!!.notifyDataSetChanged()
     }
 
+    private fun setToolBarItemClickListener(){
+        toolbar.setOnMenuItemClickListener {
+            if(it.itemId == R.id.plusItem){
+                val intent = Intent(activity, MaterialInputActivity::class.java)
+                startActivityForResult(intent, 0)       //request Code 0은 upperBody
+            }
+            else if(it.itemId == R.id.minusItem){
+                if (upperAdapter?.isClicked == false) {  //안눌린 상태
+                    view?.setBackgroundColor(-0x777778)
+                    upperAdapter?.setIsClicked(true)
+                    lowerAdapter?.setIsClicked(true)
+                }
+                else if (upperAdapter?.isClicked == true) { //눌린상태
+                    view?.setBackgroundColor(-0x1)
+                    upperAdapter?.setIsClicked(false)
+                    lowerAdapter?.setIsClicked(false)
+                }
+            }
+            true
+        }
+    }
+
     private fun setClickListenerToButtons(){
         upperPlusButton.setOnClickListener {
-        val intent = Intent(activity, MaterialInputActivity::class.java)
-        startActivityForResult(intent, 0)       //request Code 0은 upperBody
+            val intent = Intent(activity, MaterialInputActivity::class.java)
+            startActivityForResult(intent, 0)       //request Code 0은 upperBody
         }
         upperMinusButton.setOnClickListener {
             if (upperAdapter?.isClicked == false) {  //안눌린 상태
@@ -179,8 +205,8 @@ class FridgeFragment : Fragment() {
         }
 
         lowerPlusButton.setOnClickListener{
-        val intent = Intent(activity, MaterialInputActivity::class.java)
-        startActivityForResult(intent, 1)       //requestCode 1은 lowerBody
+            val intent = Intent(activity, MaterialInputActivity::class.java)
+            startActivityForResult(intent, 1)       //requestCode 1은 lowerBody
         }
         lowerMinusButton.setOnClickListener {
             if (lowerAdapter?.isClicked == false) {  //안눌린 상태
