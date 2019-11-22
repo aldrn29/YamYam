@@ -28,10 +28,10 @@ class MaterialInputActivity : AppCompatActivity() {
 
     var foodCategoryAdapter: CategoryAdapter? = null
     var categoryAdapter: CategoryAdapter? = null
-    var foodList = ArrayList<Category>()        //gridViewCategory(오른쪽)에 표시되는 음식리스트
-    var categoryList = ArrayList<Category>()    //category(왼쪽)에 표시되는 카테고리 리스트
-    var selectedFoodPosition: Int = 0           //선택된 foodImage 포지션
-    val cal : Calendar = Calendar.getInstance()            //유통기한 표시용 날짜
+    var foodList = ArrayList<Category>()                   //gridViewCategory(오른쪽)에 표시되는 음식리스트
+    var categoryList = ArrayList<Category>()               //category(왼쪽)에 표시되는 카테고리 리스트
+    var selectedFoodPosition: Int = 0                      //선택된 foodImage 포지션
+    var upperOrLowerChecked :Int? = null                   //냉장(upper) == 0  냉동(lower) == 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,20 +42,27 @@ class MaterialInputActivity : AppCompatActivity() {
         //셋 리스너
         setListenerToCategorys()
         //seekBar 설정
-        setSeekBar()
+        val cal : Calendar = Calendar.getInstance()            //유통기한 표시용 날짜
+        setSeekBar(cal)
         //checkBox 리스너 설정
         setListenersToCheckBoxes()
 
+        //추가
         val resultIntent = Intent(this, MainActivity::class.java)
         addButton.setOnClickListener{
-            resultIntent.putExtra("nameOfMaterial", material_text.text.toString())
-            resultIntent.putExtra("selectedFoodImage", foodList[selectedFoodPosition].image) //선택된 food image 를 넘긴다
-            resultIntent.putExtra("expirationDate_year", cal.time.year)
-            resultIntent.putExtra("expirationDate_month", cal.time.month)
-            resultIntent.putExtra("expirationDate_date", cal.time.date)               //유통기한 쪼개서 넘기자 get~~Extra 로 calendar 못가져오는것 같음
-            setResult(RESULT_OK, resultIntent)
-
-            finish()
+            if(upperOrLowerChecked == null){
+                Toast.makeText(applicationContext, "냉동, 냉장을 선택해 주십시오",Toast.LENGTH_SHORT).show()
+            }
+            else{
+                resultIntent.putExtra("nameOfMaterial", material_text.text.toString())
+                resultIntent.putExtra("selectedFoodImage", foodList[selectedFoodPosition].image) //선택된 food image 를 넘긴다
+                resultIntent.putExtra("expirationDate_year", cal.time.year)
+                resultIntent.putExtra("expirationDate_month", cal.time.month)
+                resultIntent.putExtra("expirationDate_date", cal.time.date) //유통기한 쪼개서 넘기자 get~~Extra 로 calendar 못가져오는것 같음
+                resultIntent.putExtra("upperOrLower", upperOrLowerChecked!!)
+                setResult(RESULT_OK, resultIntent)
+                finish()
+            }
         }
     }
 
@@ -136,18 +143,21 @@ class MaterialInputActivity : AppCompatActivity() {
     private fun setListenersToCheckBoxes() {
         /* 냉동 냉장 둘 중 하나만 선택가능 하도록 */
         upperCheckBox.setOnClickListener {
-            if(lowerCheckBox.isChecked)
+            if(lowerCheckBox.isChecked) {
                 lowerCheckBox.isChecked = false
-
+            }
+            upperOrLowerChecked = 0               //0은 냉장(upper)
         }
         lowerCheckBox.setOnClickListener {
-            if(upperCheckBox.isChecked)
+            if(upperCheckBox.isChecked){
                 upperCheckBox.isChecked = false
+            }
+            upperOrLowerChecked = 1               //1은 냉동(lower)
         }
     }
 
     /*SeekBar 설정 */
-    private fun setSeekBar(){
+    private fun setSeekBar(cal : Calendar){
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 cal.time = Date()

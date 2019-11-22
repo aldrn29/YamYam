@@ -22,6 +22,8 @@ import java.io.File
     Intent 로 넘겨받은 year,month,date를 한번에 쓰기위한 data class materialExpirationDate 정의
 11.18 gson 사용하여 파일 저장, load 가능
 11.19 저장된 파일에서 불러오는 거 함수 따로 정의, 처음 실행시 Material 이 load 되지 않았던 문제 해결
+11.22 MaterialInputActivity 에서 냉동 냉장 체크박스 체크내용 Intent 로 받아와서 냉동/냉장에 추가되도록 설정
+    기존 + - 버튼 기능제거(주석)
  */
 
 class FridgeFragment : Fragment() {
@@ -39,40 +41,6 @@ class FridgeFragment : Fragment() {
 
         return view
     }
-
-    /*
-    //handle item clicks of menu
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            com.example.yamyam.R.id.plusItem -> {
-                Toast.makeText(activity, "추가", Toast.LENGTH_SHORT).show()
-
-                // + 버튼 이벤트 추가하기
-                // 냉장고 상/하 구분짓기
-
-
-                
-
-
-                return true
-            }
-            com.example.yamyam.R.id.minusItem -> {
-                Toast.makeText(activity, "삭제", Toast.LENGTH_SHORT).show()
-
-                // - 버튼 이벤트 추가하기
-                // 냉장고 상/하 구분짓기
-
-
-
-
-
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }*/
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -105,13 +73,13 @@ class FridgeFragment : Fragment() {
         /* 툴바 아이템 클릭 리스너 */
         setToolBarItemClickListener()
         /* set + - 버튼 클릭 리스너 */
-        setClickListenerToButtons()
+        //setClickListenerToButtons()
         /*위 아래 리사이클러 뷰에 어댑터 붙임*/
         setAdapter()
         /* 저장된 파일에서 불러옴 */
         loadFromSavedFile()
         /* 여기서 먼저 임시로 ItemTouchHelper 를 붙여야 맨 처음 어플 실행시 이미지가 정상적으로 로딩된다 */
-        setItemTouchHelper(null, null, null, null, null)
+        setItemTouchHelper(null, null, null, null, null, -1)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -122,18 +90,19 @@ class FridgeFragment : Fragment() {
         val expirationDate_year=  data.getIntExtra("expirationDate_year",0)
         val expirationDate_month=  data.getIntExtra("expirationDate_month",0)
         val expirationDate_date=  data.getIntExtra("expirationDate_date",0)
+        val upperOrLower = data.getIntExtra("upperOrLower", 0)
 
         //loadMaterialList(file)
         //나중에 변수명 바꿀것, 변수명뭐로하지
         var tmpDate = materialExpirationDate(expirationDate_year, expirationDate_month, expirationDate_date)
         /* 아이템 터치 헬퍼 붙임 */
-        setItemTouchHelper(requestCode, resultCode, nameOfMaterial!!, image, tmpDate)
+        setItemTouchHelper(requestCode, resultCode, nameOfMaterial!!, image, tmpDate, upperOrLower)
         //json 파일에 upperMaterials 리스트를 저장하자
         upperAdapter!!.writeJSONtoFile(upperFileName)
         lowerAdapter!!.writeJSONtoFile(lowerFileName)
     }
 
-    private fun setItemTouchHelper(requestCode: Int?, resultCode: Int?, nameOfMaterial : String?, image: Int?, expirationDate : materialExpirationDate?){
+    private fun setItemTouchHelper(requestCode: Int?, resultCode: Int?, nameOfMaterial : String?, image: Int?, expirationDate : materialExpirationDate?, upperOrLower :Int){
         /* MaterialItemTouchHelper 에 callback 을 등록, recycler 뷰에 붙여줌
         *  상하좌우 드래그설정
         spanCount 가 열 개수인듯*/
@@ -152,12 +121,12 @@ class FridgeFragment : Fragment() {
         lowerRecyclerView.setHasFixedSize(true)
 
         //upperBody 에 추가
-        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
+        if (resultCode == AppCompatActivity.RESULT_OK &&  upperOrLower == 0){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
             upperMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
         }
         //lowerBody 에 추가
-        else if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 1){
+        else if(resultCode == AppCompatActivity.RESULT_OK && upperOrLower == 1){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
             lowerMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
         }
@@ -184,7 +153,7 @@ class FridgeFragment : Fragment() {
             true
         }
     }
-
+/*
     private fun setClickListenerToButtons(){
         upperPlusButton.setOnClickListener {
             val intent = Intent(activity, MaterialInputActivity::class.java)
@@ -214,6 +183,8 @@ class FridgeFragment : Fragment() {
             }
         }
     }
+
+ */
 
     private fun setAdapter(){
         lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList, lowerFileName)

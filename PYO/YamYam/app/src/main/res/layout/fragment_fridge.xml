@@ -48,7 +48,7 @@
 <!--        app:layout_constraintTop_toTopOf="parent"-->
 <!--        app:layout_constraintVertical_bias="0.850" />-->
 
-    <Button
+<!--    <Button
         android:id="@+id/lowerPlusButton"
         android:layout_width="50dp"
         android:layout_height="0dp"
@@ -102,7 +102,7 @@
         android:textSize="36sp"
         app:layout_constraintLeft_toRightOf="@id/upperPlusButton"
         app:layout_constraintRight_toRightOf="@id/upperRecyclerView"
-        app:layout_constraintTop_toTopOf="@id/upperRecyclerView" />
+        app:layout_constraintTop_toTopOf="@id/upperRecyclerView" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/upperRecyclerView"
