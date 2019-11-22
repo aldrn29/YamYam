@@ -155,16 +155,12 @@ class FridgeFragment : Fragment() {
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 0){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
             upperMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
-            //Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
-            // upperAdapter!!.checkExpirationDate(Material(nameOfMaterial!!, image!!, expirationDate))        //추가하고 유통기한 체크
         }
         //lowerBody 에 추가
         else if(resultCode == AppCompatActivity.RESULT_OK && requestCode == 1){
             //inputMaterialActivity 에서 넘긴 이름과, foodImage
             lowerMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
-            //Toast.makeText(activity,"$nameOfMaterial 추가완료", Toast.LENGTH_SHORT).show()
         }
-        upperAdapter!!.notifyDataSetChanged()
     }
 
     private fun setToolBarItemClickListener(){

@@ -5,7 +5,8 @@ package com.example.fridge
 * 10.30 seekbar 범위 조절, 유통기한 날짜로 표시, 임시이미지가 아닌 이미지로 변경
 * 11.14 foodList(오른쪽이미지)클릭시 텍스트 바로 들어가도록
 * 11.15 코드 정리
-* 11.17 cal 를 쪼개서 year, month, date 로 넘김*/
+* 11.17 cal 를 쪼개서 year, month, date 로 넘김
+* 11.22 냉동 냉장을 선택하는 checkBox 추가, 냉동/냉장 중복 체크 불가능하도록 설정*/
 
 
 import android.content.Intent
@@ -42,7 +43,8 @@ class MaterialInputActivity : AppCompatActivity() {
         setListenerToCategorys()
         //seekBar 설정
         setSeekBar()
-
+        //checkBox 리스너 설정
+        setListenersToCheckBoxes()
 
         val resultIntent = Intent(this, MainActivity::class.java)
         addButton.setOnClickListener{
@@ -127,6 +129,20 @@ class MaterialInputActivity : AppCompatActivity() {
                 material_text.setText(foodList[selectedFoodPosition].name)      //오른쪽 클리하면 그냥 텍스트가 바로 들어가도록 설정
 
             }
+        }
+    }
+
+    /* checkBox Listener */
+    private fun setListenersToCheckBoxes() {
+        /* 냉동 냉장 둘 중 하나만 선택가능 하도록 */
+        upperCheckBox.setOnClickListener {
+            if(lowerCheckBox.isChecked)
+                lowerCheckBox.isChecked = false
+
+        }
+        lowerCheckBox.setOnClickListener {
+            if(upperCheckBox.isChecked)
+                upperCheckBox.isChecked = false
         }
     }
 

@@ -10,6 +10,7 @@
         android:id="@+id/material_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="재료 이름"
@@ -23,6 +24,7 @@
         android:id="@+id/expirationDate_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
         android:ems="10"
         android:hint="유통 기한"
         android:textAlignment="center"
@@ -83,5 +85,28 @@
         android:progressDrawable="@drawable/seekbar_seekbar1"
         app:layout_constraintTop_toBottomOf="@id/foodCategory"
          />
+
+    <CheckBox
+        android:id="@+id/upperCheckBox"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:buttonTint="#000000"
+        android:text="냉동"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/material_text"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/lowerCheckBox"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:buttonTint="#000000"
+        android:text="냉장"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/expirationDate_text"
+        app:layout_constraintTop_toTopOf="@id/upperCheckBox"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
