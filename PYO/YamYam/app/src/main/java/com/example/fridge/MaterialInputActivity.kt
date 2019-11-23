@@ -72,14 +72,17 @@ class MaterialInputActivity : AppCompatActivity() {
         foodList.add(Category("소고기", R.drawable.beef))
         foodList.add(Category("돼지고기", R.drawable.pork))
         foodList.add(Category("닭고기", R.drawable.chicken))
+        foodList.add(Category("닭가슴살", R.drawable.chicken_breast))
+        foodList.add(Category("베이컨", R.drawable.bacon))
+        foodList.add(Category("햄", R.drawable.ham))
         foodCategoryAdapter = CategoryAdapter(this, foodList)
         foodCategory.adapter = foodCategoryAdapter
 
         //category image load(왼쪽)
-        categoryList.add(Category("육류", R.drawable.meat2))
-        categoryList.add(Category("어패류", R.drawable.fish))
+        categoryList.add(Category("육류", R.drawable.beef))
+        categoryList.add(Category("어패류", R.drawable.anchovy))
         categoryList.add(Category("유제품", R.drawable.milk))
-        categoryList.add(Category("야채", R.drawable.vegetable))
+        categoryList.add(Category("채소", R.drawable.broccoli))
         categoryList.add(Category("과일", R.drawable.apple))
         categoryAdapter = CategoryAdapter(this, categoryList)
         category.adapter = categoryAdapter
@@ -94,28 +97,46 @@ class MaterialInputActivity : AppCompatActivity() {
                 foodList.add(Category("소고기", R.drawable.beef))
                 foodList.add(Category("돼지고기", R.drawable.pork))
                 foodList.add(Category("닭고기", R.drawable.chicken))
+                foodList.add(Category("닭가슴살", R.drawable.chicken_breast))
+                foodList.add(Category("베이컨", R.drawable.bacon))
+                foodList.add(Category("햄", R.drawable.ham))
             } //어패류
             1 -> {
                 foodList.add(Category("새우", R.drawable.shrimp))
-                foodList.add(Category("랍스터", R.drawable.lobster))
+                foodList.add(Category("멸치", R.drawable.anchovy))
                 foodList.add(Category("꽃게", R.drawable.crab))
             } //유제품
             2 -> {
                 foodList.add(Category("우유", R.drawable.milk))
                 foodList.add(Category("계란", R.drawable.egg))
                 foodList.add(Category("치즈", R.drawable.cheese))
-            } //야채
+            } //채소
             3 -> {
+                foodList.add(Category("브로콜리", R.drawable.broccoli))
+                foodList.add(Category("당근", R.drawable.carrot))
+                foodList.add(Category("대파", R.drawable.green_onion))
                 foodList.add(Category("토마토", R.drawable.tomato))
                 foodList.add(Category("양파", R.drawable.onion))
+                foodList.add(Category("배추", R.drawable.chinese_cabbage))
+                foodList.add(Category("양배추", R.drawable.cabbage))
+                foodList.add(Category("파프리카", R.drawable.paprica))
+                foodList.add(Category("콩나물", R.drawable.bean_sprout))
+                foodList.add(Category("콩", R.drawable.bean))
+                foodList.add(Category("고추", R.drawable.chili))
+                foodList.add(Category("가지", R.drawable.eggplant))
+                foodList.add(Category("마늘", R.drawable.garlic))
+                foodList.add(Category("무", R.drawable.radish))
+                foodList.add(Category("호박", R.drawable.pumpkin))
+                foodList.add(Category("애호박", R.drawable.green_pumpkin))
+                foodList.add(Category("다시마", R.drawable.kelp))
+                foodList.add(Category("상추", R.drawable.lettuce))
+                foodList.add(Category("시금치", R.drawable.spinach))
+                foodList.add(Category("두부", R.drawable.tofu))
             } //과일
             4 -> {
                 foodList.add(Category("사과", R.drawable.apple))
-                foodList.add(Category("배", R.drawable.pear))
-                foodList.add(Category("오렌지", R.drawable.orange))
+                foodList.add(Category("레몬", R.drawable.lemon))
                 foodList.add(Category("딸기", R.drawable.strawberry))
-                foodList.add(Category("포도", R.drawable.grape))
-                foodList.add(Category("수박", R.drawable.watermelon))
            }
         }
         foodCategoryAdapter?.notifyDataSetChanged()                     //Item을 remove하고 나서 다시 알려줘야 refresh됨
