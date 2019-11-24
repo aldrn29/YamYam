@@ -73,10 +73,10 @@
         app:layout_constraintTop_toBottomOf="@+id/editMaterial" />
 
     <Button
-        android:id="@+id/creatBtn"
+        android:id="@+id/createBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Creat"
+        android:text="Create"
         android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

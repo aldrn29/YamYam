@@ -1,25 +1,35 @@
 package com.example.recipe
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yamyam.R
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_edit_recipe.*
+import kotlinx.android.synthetic.main.fragment_recipelist.*
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 class EditRecipe : AppCompatActivity() {
     //데이터베이스 인스턴스
     private lateinit var image : String
     private lateinit var recipeDB: DatabaseReference
+    private var filePath : Uri? = null
 //    var editName = findViewById<EditText>(R.id.editName)
 //    var editMaterial = findViewById<EditText>(R.id.editMaterial)
 //    var editDescription = findViewById<EditText>(R.id.editDescription)
@@ -33,6 +43,7 @@ class EditRecipe : AppCompatActivity() {
 
         // 이안에 꼭 선언해야함 안하면 안뜸
         val editImgBtn: ImageButton = findViewById(R.id.editImgBtn)
+        val createBtn : Button = findViewById(R.id.createBtn)
 
 
         editImgBtn.setOnClickListener { openGallery() }
@@ -41,9 +52,8 @@ class EditRecipe : AppCompatActivity() {
         recipeDB = FirebaseDatabase.getInstance().reference
 
 //        creat 버튼 누를시 입력된 값으로 객체 생성해야함
-        creatBtn.setOnClickListener {
-            writeRecipe(image,editName.text.toString(),editDescription.text.toString())
-            finish()
+        createBtn.setOnClickListener {
+            writeRecipe("Temp",editName.text.toString(),editDescription.text.toString())
         }
 
     }
@@ -51,11 +61,78 @@ class EditRecipe : AppCompatActivity() {
     private fun openGallery() {
         val intent: Intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.setType("image/*")
-        startActivityForResult(intent, OPEN_GALLERY)
+        startActivityForResult(Intent.createChooser(intent, "Select image"), OPEN_GALLERY)
     }
 
 
+    @Override
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode == Activity.RESULT_OK && requestCode == OPEN_GALLERY) {
+            filePath = data!!.data
+            Log.d(TAG, "uri:" + filePath.toString())
+            try{
+                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, filePath)
+                editImgBtn!!.setImageBitmap(bitmap)
+            }catch(e:Exception) {
+                e.printStackTrace()
+            }
+
+        } else {
+            Log.d("ActivityResult","Wrong")
+        }
+    }
+
     private fun writeRecipe(image : String, name : String, description: String) {
+
+        //지금까지 왜 안됐을까.. 우선 스토리지 주소를 입력하지 않았었고 어쩌면 성공 실패 리스너가 필수일지도 모른다.
+        //Progress Dialog & Upload to Storage
+        if (filePath != null) {
+
+            val progressDialog = ProgressDialog(this)
+            progressDialog.setTitle("업로드중...")
+            progressDialog.show()
+
+
+            val storage = FirebaseStorage.getInstance()
+
+            val formatter = SimpleDateFormat("yyyyMMHH_mmss")
+            val now = Date()
+            val filename = formatter.format(now) + ".png"
+            //storage 주소와 폴더 파일명을 지정해 준다.
+            val storageRef = storage.getReferenceFromUrl("gs://yamyam-6690a.appspot.com/")
+                .child("images/$filename")
+
+            storageRef.putFile(filePath!!)
+                //완료시 그런데 dialog.dismiss 전에 activity finish를 하면 에러가 발생한다
+                .addOnSuccessListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(applicationContext, "업로드 완료!", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                //실패시
+                .addOnFailureListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(applicationContext, "업로드 실패!", Toast.LENGTH_SHORT).show()
+                }
+                //진행중
+                .addOnProgressListener { taskSnapshot ->
+                    val progress =
+                        (100 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toDouble()
+                    //dialog에 진행률을 퍼센트로 출력해 준다
+                    progressDialog.setMessage("Uploaded " + progress.toInt() + "% ...")
+                }
+        } else {
+            Toast.makeText(applicationContext, "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show()
+        }
+
+
+
+
+
+
         val key = recipeDB.child("recipes").push().key
         if (key == null) {
             Log.w(TAG, "Couldn't get push key for recipes")
@@ -72,30 +149,7 @@ class EditRecipe : AppCompatActivity() {
         recipeDB.updateChildren(childUpdates)
     }
 
-    @Override
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if(resultCode == Activity.RESULT_OK) {
-            if (requestCode == OPEN_GALLERY) {
-
-                var currentImageUrl : Uri? = data?.data
-
-                try{
-                    var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUrl)
-                    editImgBtn.setImageBitmap(bitmap)
-                    var byteArrayOutput = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutput)
-                    var imageByte : ByteArray = byteArrayOutput.toByteArray()
-                    image = Base64.encodeToString(imageByte, Base64.NO_WRAP)
-                }catch(e:Exception) {
-                    e.printStackTrace()
-                }
-            }
-        } else {
-            Log.d("ActivityResult","Wrong")
-        }
-    }
 
     // companion object 내에 선언된 속성과 함수는 {클래스명}.{필드/함수 이름} 형태로 바로 호출할 수 있다. 자바 static 개념
     companion object {
