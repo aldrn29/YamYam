@@ -30,7 +30,7 @@
             android:textSize="19sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText,RtlSymmetry"
-            android:paddingStart="80dp"/>
+            android:paddingStart="40dp"/>
 
 
     </androidx.appcompat.widget.Toolbar>

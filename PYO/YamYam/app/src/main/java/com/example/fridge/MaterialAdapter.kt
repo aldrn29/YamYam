@@ -8,6 +8,8 @@ package com.example.fridge
 * 11.19 유통기한을 체크해서 남은 기간에 따른 배경색 변경 함수
 *       bind 에서 유통기한 체크
 *       유통기한 체크함수 배경색이 i-1따라가는 문제 해결
+* 11.24 매개변수에 검색을 위한 String array list 하나 더 선언해서 검색을 위한 Material 의 이름을 넣는다
+*       재료가 선택되었을 경우 배경색을 white 로 바꿈
 * */
 
 import android.content.Context
@@ -28,7 +30,7 @@ import java.util.zip.Inflater
 import kotlin.collections.ArrayList
 
 
-class MaterialAdapter (val context: Context, private val MaterialsList : ArrayList<Material>, val fileName: String) : RecyclerView.Adapter<MaterialAdapter.Holder>() {
+class MaterialAdapter (val context: Context, private val MaterialsList : ArrayList<Material>, val fileName: String, var materialNameArrayToSearch: ArrayList<String>) : RecyclerView.Adapter<MaterialAdapter.Holder>() {
     //화면을 최초 로딩하여 만들어진 View 가 없는 경우, xml 파일을 inflate 하여 ViewHolder 를 생성한다.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         //val materialView = LayoutInflater.from(context).inflate(R.layout.entry_material, parent, false)
@@ -44,7 +46,6 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.bind(MaterialsList[position], context, MaterialsList)
         //여기서 유통기한 체크하니까 이상하게 꼬이던게 없어졌네? 응아니야~
-        //holder.checkExpirationDate(MaterialsList[position])
     }
 
     inner class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
@@ -52,18 +53,33 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
         val materialName = itemView?.findViewById<TextView>(R.id.nameMaterial)
 
         /* bind 함수는 ViewHolder 와 클래스의 각 변수를 연동하는 역할을 한다 */
-        fun bind(material: Material, context: Context, MaterialsList: ArrayList<Material> ) {
+        fun bind(material: Material, context: Context, MaterialsList: ArrayList<Material>) {
             materialImg?.setImageResource(material.image!!)
             materialName?.text = material.name
+            checkExpirationDate(material, itemView)
 
-
-            /*여기서 아이템 삭제 처리*/
             itemView.setOnClickListener{
-                if(isClicked == true) {
+                /*여기서 아이템 삭제 처리*/
+                if(isMinusClicked == true) {
                     //Toast.makeText(itemView.context, "클릭함", Toast.LENGTH_SHORT).show()
                     //checkExpirationDateList(MaterialsList, itemView)
                     removeItem(material)
-                    checkExpirationDate(material, itemView)
+                }
+                //검색버튼이 눌렸을 경우 클릭된 재료의 이름을 배열에 넣는다
+                else if(isSearchClicked == true) {
+                    if(material.isSelected == false) {
+                        materialNameArrayToSearch.add(material.name.toString())
+                        //Toast.makeText(itemView.context, "${materialNameArrayToSearch}", Toast.LENGTH_SHORT).show()
+                        itemView.setBackgroundColor(Color.WHITE)
+                        material.isSelected = true
+                    }
+                    //재료를 선택했는데 또 선택할 경우 재료의 이름을 배열에서 빼고 백그라운드 색상 원래대로
+                    else if(material.isSelected == true) {
+                        materialNameArrayToSearch.remove(material.name.toString())
+                        //Toast.makeText(itemView.context, "${materialNameArrayToSearch}", Toast.LENGTH_SHORT).show()
+                        checkExpirationDate(material, itemView)
+                        material.isSelected = false
+                    }
                 }
             }
             checkExpirationDate(material, itemView)
@@ -71,9 +87,14 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
     }
 
     /* isClicked 는 버튼의 눌림 여부를 알아서, 마이너스 버튼이 눌린 상태에서 클릭시에만 아이템을 삭제하기 위함*/
-    var isClicked : Boolean = false
-    fun setIsClicked(isClicked :Boolean){
-        this.isClicked = isClicked
+    var isMinusClicked : Boolean = false
+    fun setIsMinusClicked(isMinusClicked :Boolean){
+        this.isMinusClicked = isMinusClicked
+    }
+
+    var isSearchClicked : Boolean = false
+    fun setIsSearchClicked(isSearchClicked: Boolean){
+        this.isSearchClicked = isSearchClicked
     }
 
     /* 아이템삭제함수*/
