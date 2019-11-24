@@ -8,14 +8,14 @@
     <item
         android:id="@+id/minusItem"
         android:icon="@drawable/menu_minus"
-        android:title="minus"
+        android:title="@string/minus"
         app:iconTint="#7099CC"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/plusItem"
         android:icon="@drawable/menu_plus"
-        android:title="plus"
+        android:title="@string/plus"
         app:iconTint="#7099CC"
         app:showAsAction="always"/>
 

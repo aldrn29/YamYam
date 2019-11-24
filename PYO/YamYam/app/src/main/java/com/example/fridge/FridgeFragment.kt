@@ -4,6 +4,7 @@ package com.example.fridge
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -24,6 +25,7 @@ import java.io.File
 11.19 저장된 파일에서 불러오는 거 함수 따로 정의, 처음 실행시 Material 이 load 되지 않았던 문제 해결
 11.22 MaterialInputActivity 에서 냉동 냉장 체크박스 체크내용 Intent 로 받아와서 냉동/냉장에 추가되도록 설정
     기존 + - 버튼 기능제거(주석)
+11.24 툴바 아이템 클릭 리스너 없애고  onOptionsItemSelected 로 통합
  */
 
 class FridgeFragment : Fragment() {
@@ -35,6 +37,8 @@ class FridgeFragment : Fragment() {
     var lowerMaterialsList = ArrayList<Material>()
     val upperFileName = "upperSavedMaterial.json"    //자꾸 fileNotFoundException (Read-only file system) 랑 permission denied 떠서 권한이 없는줄알고
     val lowerFileName = "lowerSavedMaterial.json"
+    var MaterialNameArrayToSearch = ArrayList<String>()
+   // var lowerMaterialNameArrayToSearch = ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
@@ -47,31 +51,13 @@ class FridgeFragment : Fragment() {
         // toolbar 초기화
         val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(com.example.yamyam.R.id.toolbar)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        //(activity as AppCompatActivity).supportActionBar?.title = "냉장고"
+
+        //왼쪽에 검색버튼을 추가하기위해 홈버튼을 만들고 그 홈버튼의 이미지를 검색으로 바꾼다(id는 그대로 home)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(R.drawable.tab_search_blue)
+
         setHasOptionsMenu(true)
 
-
-//        val temporaryButton : Button = view.findViewById(com.example.yamyam.R.id.temporaryButton)
-//
-//        //임시 버튼 하단 탭 구성전에 임시로 사용중 버튼 위치상 첫번째 냉동고 기입 식재료명 가려짐
-//        temporaryButton.setOnClickListener {
-//            // RecipeSerachActivity로 이동
-//            //val intent = Intent(activity, RecipeSerachActivity::class.java)
-//            //startActivity(intent)
-//
-//            // 탭 메뉴 변경
-//            val bottomNavigationView : BottomNavigationView = (activity as MainActivity).findViewById(
-//                com.example.yamyam.R.id.navigationView)
-//            bottomNavigationView.menu.findItem(com.example.yamyam.R.id.recipeItem).isChecked = true
-//
-//            // RecipeFragment 로 화면이동
-//            val transaction : FragmentTransaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
-//            transaction.add(com.example.yamyam.R.id.act_fragment, RecipeFragment())
-//            transaction.commit()
-//        }
-
-        /* 툴바 아이템 클릭 리스너 */
-        setToolBarItemClickListener()
         /* set + - 버튼 클릭 리스너 */
         //setClickListenerToButtons()
         /*위 아래 리사이클러 뷰에 어댑터 붙임*/
@@ -132,27 +118,41 @@ class FridgeFragment : Fragment() {
         }
     }
 
-    private fun setToolBarItemClickListener(){
-        toolbar.setOnMenuItemClickListener {
-            if(it.itemId == R.id.plusItem){
-                val intent = Intent(activity, MaterialInputActivity::class.java)
-                startActivityForResult(intent, 0)       //request Code 0은 upperBody
-            }
-            else if(it.itemId == R.id.minusItem){
-                if (upperAdapter?.isClicked == false) {  //안눌린 상태
-                    view?.setBackgroundColor(-0x777778)
-                    upperAdapter?.setIsClicked(true)
-                    lowerAdapter?.setIsClicked(true)
-                }
-                else if (upperAdapter?.isClicked == true) { //눌린상태
-                    view?.setBackgroundColor(-0x1)
-                    upperAdapter?.setIsClicked(false)
-                    lowerAdapter?.setIsClicked(false)
-                }
-            }
-            true
+    /* 툴바 선택 */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.plusItem){
+            val intent = Intent(activity, MaterialInputActivity::class.java)
+            startActivityForResult(intent, 0)       //request Code 0은 upperBody
         }
+        else if(item.itemId == R.id.minusItem){
+            if (upperAdapter?.isMinusClicked == false) {     //안눌린 상태
+                view?.setBackgroundColor(-0x777778)         //gray
+                upperAdapter?.setIsMinusClicked(true)
+                lowerAdapter?.setIsMinusClicked(true)
+            }
+            else if (upperAdapter?.isMinusClicked == true) { //눌린상태
+                view?.setBackgroundColor(-0x1)               //white
+                upperAdapter?.setIsMinusClicked(false)
+                lowerAdapter?.setIsMinusClicked(false)
+            }
+        }
+        else if(item.itemId == android.R.id.home) {       //좌측 상단 검색
+            if(upperAdapter?.isSearchClicked == false) {
+                MaterialNameArrayToSearch = ArrayList<String>() //초기화
+                //lowerMaterialNameArrayToSearch = ArrayList<String>()
+                upperAdapter?.setIsSearchClicked(true)
+                lowerAdapter?.setIsSearchClicked(true)
+                Toast.makeText(requireContext(), "선택하는 재료들로 레시피를 검색합니다", Toast.LENGTH_SHORT).show()
+            }
+            else if(upperAdapter?.isSearchClicked == true){
+                upperAdapter?.setIsSearchClicked(false)
+                lowerAdapter?.setIsSearchClicked(false)
+                //선택된 재료들로 레시피를 검색한 검색결과 프래그먼트로 넘어감
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
+
 /*
     private fun setClickListenerToButtons(){
         upperPlusButton.setOnClickListener {
@@ -187,8 +187,8 @@ class FridgeFragment : Fragment() {
  */
 
     private fun setAdapter(){
-        lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList, lowerFileName)
-        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList, upperFileName)
+        lowerAdapter = MaterialAdapter(requireContext(), lowerMaterialsList, lowerFileName, MaterialNameArrayToSearch)
+        upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList, upperFileName, MaterialNameArrayToSearch)
         upperRecyclerView.adapter = upperAdapter
         lowerRecyclerView.adapter = lowerAdapter
         upperAdapter!!.notifyDataSetChanged()   //여기가 답이였네, 왜 드래그로 위치 바꿔도 안바뀌나 3일 내내 고민
