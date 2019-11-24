@@ -102,8 +102,8 @@ class MaterialInputActivity : AppCompatActivity() {
                 foodList.add(Category("햄", R.drawable.ham))
             } //어패류
             1 -> {
-                foodList.add(Category("새우", R.drawable.shrimp))
                 foodList.add(Category("멸치", R.drawable.anchovy))
+                foodList.add(Category("새우", R.drawable.shrimp))
                 foodList.add(Category("꽃게", R.drawable.crab))
             } //유제품
             2 -> {
