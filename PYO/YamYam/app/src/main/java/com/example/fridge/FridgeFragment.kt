@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.yamyam.R
+import com.example.yamyam.SearchResultActivity
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import java.io.File
 
@@ -138,8 +139,7 @@ class FridgeFragment : Fragment() {
         }
         else if(item.itemId == android.R.id.home) {       //좌측 상단 검색
             if(upperAdapter?.isSearchClicked == false) {
-                MaterialNameArrayToSearch = ArrayList<String>() //초기화
-                //lowerMaterialNameArrayToSearch = ArrayList<String>()
+                //MaterialNameArrayToSearch = ArrayList<String>() //초기화
                 upperAdapter?.setIsSearchClicked(true)
                 lowerAdapter?.setIsSearchClicked(true)
                 Toast.makeText(requireContext(), "선택하는 재료들로 레시피를 검색합니다", Toast.LENGTH_SHORT).show()
@@ -147,7 +147,13 @@ class FridgeFragment : Fragment() {
             else if(upperAdapter?.isSearchClicked == true){
                 upperAdapter?.setIsSearchClicked(false)
                 lowerAdapter?.setIsSearchClicked(false)
+                //선택된 재료로 검색하기 버튼 나오게하기?
                 //선택된 재료들로 레시피를 검색한 검색결과 프래그먼트로 넘어감
+                var searchIntent  = Intent(activity, SearchResultActivity::class.java)
+                //searchIntent.putExtra("MaterialNameArrayToSearch", MaterialNameArrayToSearch)
+                //Toast.makeText(requireContext(), "${MaterialNameArrayToSearch}", Toast.LENGTH_SHORT).show()
+                searchIntent.putStringArrayListExtra("MaterialNameArrayToSearch", MaterialNameArrayToSearch)
+                startActivity(searchIntent)
             }
         }
         return super.onOptionsItemSelected(item)

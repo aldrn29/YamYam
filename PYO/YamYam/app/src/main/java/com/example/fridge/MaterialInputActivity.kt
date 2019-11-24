@@ -32,6 +32,7 @@ class MaterialInputActivity : AppCompatActivity() {
     var categoryList = ArrayList<Category>()               //category(왼쪽)에 표시되는 카테고리 리스트
     var selectedFoodPosition: Int = 0                      //선택된 foodImage 포지션
     var upperOrLowerChecked :Int? = null                   //냉장(upper) == 0  냉동(lower) == 1
+    val cal : Calendar = Calendar.getInstance()            //유통기한 표시용 날짜
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +43,6 @@ class MaterialInputActivity : AppCompatActivity() {
         //셋 리스너
         setListenerToCategorys()
         //seekBar 설정
-        val cal : Calendar = Calendar.getInstance()            //유통기한 표시용 날짜
         setSeekBar(cal)
         //checkBox 리스너 설정
         setListenersToCheckBoxes()

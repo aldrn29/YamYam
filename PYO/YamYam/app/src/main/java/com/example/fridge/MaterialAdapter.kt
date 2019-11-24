@@ -73,7 +73,7 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
                         itemView.setBackgroundColor(Color.WHITE)
                         material.isSelected = true
                     }
-                    //재료를 선택했는데 또 선택할 경우 재료의 이름을 배열에서 빼고 백그라운드 색상 원래대로
+                    //재료를 선택했는데 재선택 할 경우 재료의 이름을 배열에서 빼고 백그라운드 색상 원래대로
                     else if(material.isSelected == true) {
                         materialNameArrayToSearch.remove(material.name.toString())
                         //Toast.makeText(itemView.context, "${materialNameArrayToSearch}", Toast.LENGTH_SHORT).show()

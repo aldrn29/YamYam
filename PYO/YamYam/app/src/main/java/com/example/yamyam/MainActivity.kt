@@ -9,7 +9,10 @@ import com.example.fridge.FridgeFragment
 import com.example.recipe.RecipeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-/* 11.15 fragment 왔다갔다 해도 유지되도록 설정 */
+/* 11.15 fragment 왔다갔다 해도 유지되도록 설정
+*  11.25 기존에는 show 와 hide 를 이용해서 fridegeFragment 를 유지 했었지만
+*        gson 을 통해서 파일에 읽고 쓰고 하므로
+*        fridgeFragment 를 아예 새로 생성해서 표시하는게 초기화 관리에 용이하다*/
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +32,8 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.fridgeItem -> {
                     val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-                    if(fridgeFragment == null) {
-                        fridgeFragment = FridgeFragment()
-                        transaction.add(R.id.act_fragment, fridgeFragment!!)
-                    }
+                    fridgeFragment = FridgeFragment()
+                    transaction.add(R.id.act_fragment, fridgeFragment!!)
                     if(wishListFragment!= null)
                         transaction.hide(wishListFragment!!)
                     if(recipeFragment != null)
