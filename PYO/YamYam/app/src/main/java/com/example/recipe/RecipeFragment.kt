@@ -83,9 +83,12 @@ class RecipeFragment : Fragment() {
 
                     override fun onDataChange(p0: DataSnapshot) {
                         show_progress.visibility = if(itemCount == 0) View.VISIBLE else View.GONE
-                        holder.itemName.setText(model.name)
-                        Picasso.get().load(model.img).into(holder.itemImg)
-
+                        holder.itemName.text = model.name
+                        if (model.img!!.isEmpty()) {
+                            holder.itemImg.setImageResource(R.drawable.tomato)
+                        } else {
+                            Picasso.get().load(model.img).into(holder.itemImg)
+                        }
 //                        holder.itemView.setOnClickListener{
 //                            val intent = Intent(activity, Recipe::class.java)
 //                        }
