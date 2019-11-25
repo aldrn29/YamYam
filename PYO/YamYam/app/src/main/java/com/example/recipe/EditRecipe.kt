@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,8 @@ import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
+//재료 입력텍스트를 추가해주고 제료를 -material - 돼지고기
+//                                              - 양파 이런식으로
 
 class EditRecipe : AppCompatActivity() {
     //데이터베이스 인스턴스
@@ -44,16 +47,21 @@ class EditRecipe : AppCompatActivity() {
         // 이안에 꼭 선언해야함 안하면 안뜸
         val editImgBtn: ImageButton = findViewById(R.id.editImgBtn)
         val createBtn : Button = findViewById(R.id.createBtn)
+        var editMaterial = findViewById<EditText>(R.id.editMaterial)
+        var materialArray : MutableList<String> = mutableListOf<String>()
 
 
         editImgBtn.setOnClickListener { openGallery() }
-
 
         recipeDB = FirebaseDatabase.getInstance().reference
 
 //        creat 버튼 누를시 입력된 값으로 객체 생성해야함
         createBtn.setOnClickListener {
-            writeRecipe("Temp",editName.text.toString(),editDescription.text.toString())
+            //버튼이 눌리면 editMaterial 에 입력된 것들을 쪼개서 List<Stirng>에 넣는다
+            for(a in editMaterial.text.toString().split(",", " ").toTypedArray()) {
+                materialArray.add(a)
+            }
+            writeRecipe("Temp",editName.text.toString(),editDescription.text.toString(), materialArray)
         }
 
     }
@@ -85,7 +93,7 @@ class EditRecipe : AppCompatActivity() {
         }
     }
 
-    private fun writeRecipe(image : String, name : String, description: String) {
+    private fun writeRecipe(image : String, name : String, description: String, materialArray : List<String> ) {
 
         //지금까지 왜 안됐을까.. 우선 스토리지 주소를 입력하지 않았었고 어쩌면 성공 실패 리스너가 필수일지도 모른다.
         //Progress Dialog & Upload to Storage
@@ -129,17 +137,13 @@ class EditRecipe : AppCompatActivity() {
         }
 
 
-
-
-
-
         val key = recipeDB.child("recipes").push().key
         if (key == null) {
             Log.w(TAG, "Couldn't get push key for recipes")
             return
         }
 
-        val recipe = RecipeSource(image, name, description)
+        val recipe = RecipeSource(image, name, description, materialArray)
         val recipeValues = recipe.toMap()
 
         val childUpdates = HashMap<String, Any>()
