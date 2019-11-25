@@ -6,16 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fridge.MaterialAdapter
 
 
 class SearchResultRecipeAdapter (val context: Context, private val searchReusultRecipeList : ArrayList<SearchResultRecipe>) : RecyclerView.Adapter<SearchResultRecipeAdapter.Holder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultRecipeAdapter.Holder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflator = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val SearchResultRecipeView = inflator.inflate(R.layout.cardview, null)
-        return Holder(SearchResultRecipeView)
+        val searchResultRecipeView = inflator.inflate(R.layout.cardview, null)
+        return Holder(searchResultRecipeView)
     }
     override fun getItemCount(): Int {
         return searchReusultRecipeList.size
@@ -31,8 +32,9 @@ class SearchResultRecipeAdapter (val context: Context, private val searchReusult
 
         /* bind 함수는 ViewHolder 와 클래스의 각 변수를 연동하는 역할을 한다 */
         fun bind(recipe: SearchResultRecipe, context: Context, SearchResultReipeLists: ArrayList<SearchResultRecipe>) {
-            searchResultRecipeImg?.setImageResource(recipe.image!!)
+            //searchResultRecipeImg?.setImageResource(recipe.image!!)
             searchResultRecipeName?.text = recipe.name
+            Toast.makeText(itemView.context, "${recipe.name}", Toast.LENGTH_SHORT).show()
 
             itemView.setOnClickListener{
 
