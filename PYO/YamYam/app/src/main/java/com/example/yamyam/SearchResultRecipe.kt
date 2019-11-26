@@ -2,13 +2,13 @@ package com.example.yamyam
 
 class SearchResultRecipe {
     var name: String? = null
-    var image:String? = null
+    var imageUri:String? = null
     var materialArr : List<String>? = null
     var description : String? = null
 
-    constructor(name: String?, image: String?){
+    constructor(name: String?, imageUri: String?){
         this.name = name
-        this.image = image
+        this.imageUri = imageUri
     }
 
 }

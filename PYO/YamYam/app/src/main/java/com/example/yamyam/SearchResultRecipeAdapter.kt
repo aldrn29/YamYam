@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fridge.MaterialAdapter
+import com.squareup.picasso.Picasso
 
 
 class SearchResultRecipeAdapter (val context: Context, private val searchReusultRecipeList : ArrayList<SearchResultRecipe>) : RecyclerView.Adapter<SearchResultRecipeAdapter.Holder>() {
@@ -32,7 +33,13 @@ class SearchResultRecipeAdapter (val context: Context, private val searchReusult
 
         /* bind 함수는 ViewHolder 와 클래스의 각 변수를 연동하는 역할을 한다 */
         fun bind(recipe: SearchResultRecipe, context: Context, SearchResultReipeLists: ArrayList<SearchResultRecipe>) {
-            //searchResultRecipeImg?.setImageResource(recipe.image!!)
+            //searchResultRecipeImg?.setImageResource(
+            if(recipe.imageUri!!.isEmpty()){
+                searchResultRecipeImg!!.setImageResource(R.drawable.tomato)
+            }else {
+                Picasso.get().load(recipe.imageUri).into(searchResultRecipeImg)
+            }
+                //recipe.image!!)
             searchResultRecipeName?.text = recipe.name
             //Toast.makeText(itemView.context, "${recipe.name}", Toast.LENGTH_SHORT).show()
 

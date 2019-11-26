@@ -42,10 +42,10 @@ class SearchResultActivity : AppCompatActivity() {
         SearchResultAdapter = SearchResultRecipeAdapter(this, searchResultRecipeList)
 
         val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        //linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         SearchResultRecyclerview.adapter = SearchResultAdapter
-        SearchResultRecyclerview.setHasFixedSize(true)
         SearchResultRecyclerview.layoutManager =linearLayoutManager
+        SearchResultRecyclerview.setHasFixedSize(true)
 
         SearchResultAdapter?.notifyDataSetChanged()
 
@@ -65,11 +65,6 @@ class SearchResultActivity : AppCompatActivity() {
                             if(materialInFirebase == materialInMaterialNameArrayToSearch){
                                 //파이어베이스의 재료가 넘긴재료들 중 하나와 같고
                                 //todo: 중복검색을 막기위해 결과 레시피 리스트에 추가할 레시피의 이름이 없다면 add 해야함
-                                        searchResultRecipeList.add(SearchResultRecipe(
-                                            SnapShotRecipesChildren.child("name").getValue(String::class.java),
-                                            SnapShotRecipesChildren.child("img").getValue(String::class.java)
-                                        ))
-                                        SearchResultAdapter?.notifyDataSetChanged()
                                 //Toast.makeText(applicationContext, "${SnapShotRecipesChildren.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
                                 searchResultRecipeList.add(SearchResultRecipe(
                                     SnapShotRecipesChildren.child("name").getValue(String::class.java)!!,
