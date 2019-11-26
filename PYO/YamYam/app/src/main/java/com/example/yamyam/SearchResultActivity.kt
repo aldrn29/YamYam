@@ -70,6 +70,12 @@ class SearchResultActivity : AppCompatActivity() {
                                             SnapShotRecipesChildren.child("img").getValue(String::class.java)
                                         ))
                                         SearchResultAdapter?.notifyDataSetChanged()
+                                //Toast.makeText(applicationContext, "${SnapShotRecipesChildren.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
+                                searchResultRecipeList.add(SearchResultRecipe(
+                                    SnapShotRecipesChildren.child("name").getValue(String::class.java)!!,
+                                    SnapShotRecipesChildren.child("imageUri").getValue(String::class.java)!!
+                                ))
+                                SearchResultAdapter?.notifyDataSetChanged()
                             }
                         }
                     }
