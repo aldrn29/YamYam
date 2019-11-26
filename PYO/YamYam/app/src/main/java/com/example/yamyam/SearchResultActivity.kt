@@ -63,20 +63,22 @@ class SearchResultActivity : AppCompatActivity() {
                         val materialInFirebase = materialsListChildChildren.getValue(String::class.java)                           //파이어베이스 materialsList 안에 들어있는 재료
                         for(materialInMaterialNameArrayToSearch in MaterialNameArrayToSearch){                                     // frideFragment 에서 넘긴 재료 이름들이 파이어베이스 안의 레시피 재료들에 포함되어 있다면 searchResultRecipeList에 그 레시피의 필드?들을 다 가져온다
                             if(materialInFirebase == materialInMaterialNameArrayToSearch){
-                                //Toast.makeText(applicationContext, "${SnapShotRecipesChildren.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
-                                searchResultRecipeList.add(SearchResultRecipe(
-                                    SnapShotRecipesChildren.child("name").getValue(String::class.java)!!,
-                                    SnapShotRecipesChildren.child("img").getValue(String::class.java)!!
-                                ))
-                                SearchResultAdapter?.notifyDataSetChanged()
+                                //파이어베이스의 재료가 넘긴재료들 중 하나와 같고
+                                //todo: 중복검색을 막기위해 결과 레시피 리스트에 추가할 레시피의 이름이 없다면 add 해야함
+                                        searchResultRecipeList.add(SearchResultRecipe(
+                                            SnapShotRecipesChildren.child("name").getValue(String::class.java),
+                                            SnapShotRecipesChildren.child("img").getValue(String::class.java)
+                                        ))
+                                        SearchResultAdapter?.notifyDataSetChanged()
                             }
                         }
+                    }
+                }
                         //if(materialInFirebase != null)
                           //  StringList.add(materialInFirebase)        //재료 긁어오는 배열에 추가
-                    }
-                    //Toast.makeText(applicationContext, "$StringList", Toast.LENGTH_SHORT).show()
-                }
             }
+                    //Toast.makeText(applicationContext, "$StringList", Toast.LENGTH_SHORT).show()
+
             override fun onCancelled(error: DatabaseError) {
                 // Failed to read value
                 //Log.w(TAG, "Failed to read value.", error.toException())

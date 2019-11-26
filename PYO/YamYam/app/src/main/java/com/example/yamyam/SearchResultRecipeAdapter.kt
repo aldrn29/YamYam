@@ -34,7 +34,7 @@ class SearchResultRecipeAdapter (val context: Context, private val searchReusult
         fun bind(recipe: SearchResultRecipe, context: Context, SearchResultReipeLists: ArrayList<SearchResultRecipe>) {
             //searchResultRecipeImg?.setImageResource(recipe.image!!)
             searchResultRecipeName?.text = recipe.name
-            Toast.makeText(itemView.context, "${recipe.name}", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(itemView.context, "${recipe.name}", Toast.LENGTH_SHORT).show()
 
             itemView.setOnClickListener{
 

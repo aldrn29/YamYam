@@ -6,7 +6,7 @@ class SearchResultRecipe {
     var materialArr : List<String>? = null
     var description : String? = null
 
-    constructor(name: String, image: String){
+    constructor(name: String?, image: String?){
         this.name = name
         this.image = image
     }

@@ -58,7 +58,7 @@ class EditRecipe : AppCompatActivity() {
 //        creat 버튼 누를시 입력된 값으로 객체 생성해야함
         createBtn.setOnClickListener {
             //버튼이 눌리면 editMaterial 에 입력된 것들을 쪼개서 List<Stirng>에 넣는다
-            for(a in editMaterial.text.toString().split(",", " ").toTypedArray()) {
+            for(a in editMaterial.text.toString().split(",", "\\s").toTypedArray()) {
                 materialArray.add(a)
             }
             writeRecipe("Temp",editName.text.toString(),editDescription.text.toString(), materialArray)

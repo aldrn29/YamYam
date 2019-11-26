@@ -36,7 +36,8 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
         //val materialView = LayoutInflater.from(context).inflate(R.layout.entry_material, parent, false)
         val inflator = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val materialView = inflator.inflate(R.layout.entry_material, null)
-        return Holder(materialView)
+        val holder = Holder(materialView)
+        return holder
     }
     //RecyclerView 로 만들어지는 item 의 총 개수를 반환한다.
     override fun getItemCount(): Int {
@@ -174,7 +175,7 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
         if( (material.expirationDate!!.year == cal.time.year) and  (material.expirationDate!!.month == cal.time.month)){
             /* 유통기한 3일 이내 */
             if( (material.expirationDate!!.date - cal.time.date) <= 3){
-                Toast.makeText(context,"유통기한이 3일 이내로 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context,"유통기한이 3일 이내로 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
                 itemView.setBackgroundColor(Color.YELLOW)
             }
             /* 유통기한 3~7일 남았다면 */

@@ -145,15 +145,25 @@ class FridgeFragment : Fragment() {
                 Toast.makeText(requireContext(), "선택하는 재료들로 레시피를 검색합니다", Toast.LENGTH_SHORT).show()
             }
             else if(upperAdapter?.isSearchClicked == true){
+                Toast.makeText(requireContext(), "$MaterialNameArrayToSearch", Toast.LENGTH_SHORT).show()
+
+                upperRecyclerView.adapter = upperAdapter        //어댑터 다시 붙이면 adapter 의 bind 가 다시 실행되면서 배경색 초기화
+                lowerRecyclerView.adapter = lowerAdapter
                 upperAdapter?.setIsSearchClicked(false)
                 lowerAdapter?.setIsSearchClicked(false)
-                //선택된 재료로 검색하기 버튼 나오게하기?
-                //선택된 재료들로 레시피를 검색한 검색결과 프래그먼트로 넘어감
-                var searchIntent  = Intent(activity, SearchResultActivity::class.java)
+
+
                 //searchIntent.putExtra("MaterialNameArrayToSearch", MaterialNameArrayToSearch)
                 //Toast.makeText(requireContext(), "${MaterialNameArrayToSearch}", Toast.LENGTH_SHORT).show()
-                searchIntent.putStringArrayListExtra("MaterialNameArrayToSearch", MaterialNameArrayToSearch)
-                startActivity(searchIntent)
+                if((upperAdapter!!.materialNameArrayToSearch.isEmpty() == true) and (lowerAdapter!!.materialNameArrayToSearch.isEmpty() == true)) {
+                    Toast.makeText(requireContext(), "선택된 재료가 없어 검색을 종료합니다", Toast.LENGTH_LONG).show()
+                }
+                else if((upperAdapter!!.materialNameArrayToSearch.isEmpty() == false) or (lowerAdapter!!.materialNameArrayToSearch.isEmpty() == false)){
+                    var searchIntent  = Intent(activity, SearchResultActivity::class.java)
+                    searchIntent.putStringArrayListExtra("MaterialNameArrayToSearch", MaterialNameArrayToSearch)
+                    startActivity(searchIntent)
+                    MaterialNameArrayToSearch.clear()   //검색을 한번 실행하고 리스트 비워줘야함
+                }
             }
         }
         return super.onOptionsItemSelected(item)
