@@ -112,12 +112,32 @@ class EditRecipe : AppCompatActivity() {
 
 
             val uploadTask = storageRef.putFile(filePath!!)
-                //완료시 그런데 dialog.dismiss 전에 activity finish를 하면 에러가 발생한다
+            //완료시 그런데 dialog.dismiss 전에 activity finish를 하면 에러가 발생한다
             uploadTask.addOnSuccessListener {
-                    progressDialog.dismiss()
-                    Toast.makeText(applicationContext, "업로드 완료!", Toast.LENGTH_SHORT).show()
-                    finish()
+                var result = it.metadata!!.reference!!.downloadUrl
+                result.addOnSuccessListener {
+                    imageUri = it.toString()
+                    Log.w("image", it.toString())
+                    val key = recipeDB.child("recipes").push().key
+                    if (key == null) {
+                        Log.w(TAG, "Couldn't get push key for recipes")
+                        return@addOnSuccessListener
+                    }
+
+                    val recipe = RecipeSource(it.toString(), name, description, materialArray)
+                    val recipeValues = recipe.toMap()
+
+                    val childUpdates = HashMap<String, Any>()
+                    childUpdates["/recipes/$key"] = recipeValues
+//        childUpdates["/recipes/$name/$key"] = recipeValues
+
+                    recipeDB.updateChildren(childUpdates)
                 }
+
+                progressDialog.dismiss()
+                Toast.makeText(applicationContext, "업로드 완료!", Toast.LENGTH_SHORT).show()
+                finish()
+            }
                 //실패시
                 .addOnFailureListener {
                     progressDialog.dismiss()
@@ -128,45 +148,13 @@ class EditRecipe : AppCompatActivity() {
                     val progress =
                         (100 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toDouble()
                     //dialog에 진행률을 퍼센트로 출력해 준다
-                    progressDialog.setMessage("Uploaded " + progress.toInt() + "% ...")
+                    progressDialog.setMessage("Uploaded " + progress.toInt() + "% …")
                 }
-
-            val urlTask = uploadTask.continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
-                    }
-                }
-                storageRef.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val downloadUri = task.result.toString()
-                    imageUri = downloadUri
-
-                } else {
-                    // Handle failures
-                    // ...
-                }
-
-            }
         } else {
             Toast.makeText(applicationContext, "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show()
         }
 
-        val key = recipeDB.child("recipes").push().key
-        if (key == null) {
-            Log.w(TAG, "Couldn't get push key for recipes")
-            return
-        }
 
-        val recipe = RecipeSource(imageUri, name, description, materialArray)
-        val recipeValues = recipe.toMap()
-
-        val childUpdates = HashMap<String, Any>()
-        childUpdates["/recipes/$key"] = recipeValues
-//        childUpdates["/recipes/$name/$key"] = recipeValues
-
-        recipeDB.updateChildren(childUpdates)
     }
 
 
