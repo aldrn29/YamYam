@@ -55,6 +55,8 @@ class SearchResultActivity : AppCompatActivity() {
         val mRef = database.getReference("recipes")
         //Toast.makeText(applicationContext, "${mRef}", Toast.LENGTH_SHORT).show()
 
+
+        var contains = false
         mRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for(SnapShotRecipesChildren in dataSnapshot.children) {
@@ -64,13 +66,22 @@ class SearchResultActivity : AppCompatActivity() {
                         for(materialInMaterialNameArrayToSearch in MaterialNameArrayToSearch){                                     // frideFragment 에서 넘긴 재료 이름들이 파이어베이스 안의 레시피 재료들에 포함되어 있다면 searchResultRecipeList에 그 레시피의 필드?들을 다 가져온다
                             if(materialInFirebase == materialInMaterialNameArrayToSearch){
                                 //파이어베이스의 재료가 넘긴재료들 중 하나와 같고
-                                //todo: 중복검색을 막기위해 결과 레시피 리스트에 추가할 레시피의 이름이 없다면 add 해야함
+
+                                //중복검색을 막기위해 결과 레시피 리스트에 추가할 레시피의 이름이 없다면 add 해야함
+                                for(recipe in searchResultRecipeList){
+                                    if(recipe.name == SnapShotRecipesChildren.child("name").getValue(String::class.java)!!)
+                                        contains = true
+                                }
                                 //Toast.makeText(applicationContext, "${SnapShotRecipesChildren.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
-                                searchResultRecipeList.add(SearchResultRecipe(
+
+                                if(contains == false)
+                                {
+                                    searchResultRecipeList.add(SearchResultRecipe(
                                     SnapShotRecipesChildren.child("name").getValue(String::class.java)!!,
-                                    SnapShotRecipesChildren.child("imageUri").getValue(String::class.java)!!
-                                ))
+                                    SnapShotRecipesChildren.child("imageUri").getValue(String::class.java)!!))
+                                }
                                 SearchResultAdapter?.notifyDataSetChanged()
+                                contains = false
                             }
                         }
                     }

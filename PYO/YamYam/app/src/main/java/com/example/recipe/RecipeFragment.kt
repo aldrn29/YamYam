@@ -5,18 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
+import com.example.yamyam.SearchResultRecipe
+import com.example.yamyam.SearchResultRecipeAdapter
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_recipelist.*
 
 class RecipeFragment : Fragment() {
 
@@ -114,6 +114,35 @@ class RecipeFragment : Fragment() {
 //            startActivityForResult(editIntent,1)
             startActivity(editIntent)
         }
+
+        var searchRecipeName : String
+        searchBtn.setOnClickListener {
+            var searchResultRecipe =  ArrayList<SearchResultRecipe>()
+            var SearchResultAdapter : SearchResultRecipeAdapter? = null
+            searchResultRecipe.clear()
+            SearchResultAdapter = SearchResultRecipeAdapter(requireContext(), searchResultRecipe)
+            mRecylerview!!.adapter = SearchResultAdapter
+            searchRecipeName = editText.text.toString()
+            SearchResultAdapter.notifyDataSetChanged()
+            //searchRecipeNameInFirebase(ref, searchRecipeName, searchResultRecipe)
+            //Toast.makeText(requireContext(), "${searchResultRecipe?.name }", Toast.LENGTH_SHORT).show()
+            ref.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(recipes: DataSnapshot) {
+                    for(recipeName in recipes.children){
+                        //Toast.makeText(requireContext(), "${recipeName.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
+                        if(recipeName.child("name").getValue(String::class.java) == searchRecipeName){
+                            searchResultRecipe.add(SearchResultRecipe(recipeName.child("name").getValue(String::class.java) , recipeName.child("imageUri").getValue(String::class.java)))
+                            SearchResultAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+            })
+            SearchResultAdapter?.notifyDataSetChanged()
+        }
     }
 
 //    private fun itemClicked(){
@@ -128,7 +157,11 @@ class RecipeFragment : Fragment() {
 
 
     }
+}
+
+fun searchRecipeNameInFirebase(ref: DatabaseReference, searchRecipeName : String, searchResultRecipe : SearchResultRecipe?)
+{
 
 
-
+    //ref = FirebaseDatabase.getInstance().getReference().child("recipes")
 }
