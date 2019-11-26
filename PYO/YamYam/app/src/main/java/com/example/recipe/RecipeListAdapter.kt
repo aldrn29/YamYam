@@ -38,9 +38,9 @@
 //
 //            //foodImg의 setImageResource에 들어갈 이미지의 id를 파일명(String)으로 찾고,
 //            //이미지가 없는 경우 안드로이드 기본 아이콘을 표시한다
-//            if (recipeSource.img
+//            if (recipeSource.imageUri
 //                != null) {
-//                val resourceId = context.resources.getIdentifier(recipeSource.img, "drawable", context.packageName)
+//                val resourceId = context.resources.getIdentifier(recipeSource.imageUri, "drawable", context.packageName)
 //                itemView.recipeItemImg.setImageResource(resourceId)
 //            } else {
 //                itemView.recipeItemImg.setImageResource(R.mipmap.ic_launcher)

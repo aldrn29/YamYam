@@ -81,13 +81,15 @@ class RecipeFragment : Fragment() {
 
                     }
 
+                    //모델의 파라미터명과 같은 DB의 해당 자료를 가져온다 파라미터명 바꿀시 주의
                     override fun onDataChange(p0: DataSnapshot) {
                         show_progress.visibility = if(itemCount == 0) View.VISIBLE else View.GONE
                         holder.itemName.text = model.name
-                        if (model.img!!.isEmpty()) {
+                        if (model.imageUri!!.isEmpty()) {
+                            //기본 이미지
                             holder.itemImg.setImageResource(R.drawable.tomato)
                         } else {
-                            Picasso.get().load(model.img).into(holder.itemImg)
+                            Picasso.get().load(model.imageUri).into(holder.itemImg)
                         }
 //                        holder.itemView.setOnClickListener{
 //                            val intent = Intent(activity, Recipe::class.java)

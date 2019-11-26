@@ -3,12 +3,9 @@ package com.example.recipe
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -20,8 +17,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_edit_recipe.*
-import kotlinx.android.synthetic.main.fragment_recipelist.*
-import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -61,7 +56,7 @@ class EditRecipe : AppCompatActivity() {
             for(a in editMaterial.text.toString().split(",", " ").toTypedArray()) {
                 materialArray.add(a)
             }
-            writeRecipe("Temp",editName.text.toString(),editDescription.text.toString(), materialArray)
+            writeRecipe(editName.text.toString(),editDescription.text.toString(), materialArray)
         }
 
     }
@@ -93,7 +88,9 @@ class EditRecipe : AppCompatActivity() {
         }
     }
 
-    private fun writeRecipe(image : String, name : String, description: String, materialArray : List<String> ) {
+    private fun writeRecipe(name : String, description: String, materialArray : List<String> ) {
+
+        var imageUri : String = "No Image"
 
         //지금까지 왜 안됐을까.. 우선 스토리지 주소를 입력하지 않았었고 어쩌면 성공 실패 리스너가 필수일지도 모른다.
         //Progress Dialog & Upload to Storage
@@ -113,9 +110,10 @@ class EditRecipe : AppCompatActivity() {
             val storageRef = storage.getReferenceFromUrl("gs://yamyam-6690a.appspot.com/")
                 .child("images/$filename")
 
-            storageRef.putFile(filePath!!)
+
+            val uploadTask = storageRef.putFile(filePath!!)
                 //완료시 그런데 dialog.dismiss 전에 activity finish를 하면 에러가 발생한다
-                .addOnSuccessListener {
+            uploadTask.addOnSuccessListener {
                     progressDialog.dismiss()
                     Toast.makeText(applicationContext, "업로드 완료!", Toast.LENGTH_SHORT).show()
                     finish()
@@ -132,10 +130,28 @@ class EditRecipe : AppCompatActivity() {
                     //dialog에 진행률을 퍼센트로 출력해 준다
                     progressDialog.setMessage("Uploaded " + progress.toInt() + "% ...")
                 }
+
+            val urlTask = uploadTask.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                storageRef.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result.toString()
+                    imageUri = downloadUri
+
+                } else {
+                    // Handle failures
+                    // ...
+                }
+
+            }
         } else {
             Toast.makeText(applicationContext, "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show()
         }
-
 
         val key = recipeDB.child("recipes").push().key
         if (key == null) {
@@ -143,7 +159,7 @@ class EditRecipe : AppCompatActivity() {
             return
         }
 
-        val recipe = RecipeSource(image, name, description, materialArray)
+        val recipe = RecipeSource(imageUri, name, description, materialArray)
         val recipeValues = recipe.toMap()
 
         val childUpdates = HashMap<String, Any>()
