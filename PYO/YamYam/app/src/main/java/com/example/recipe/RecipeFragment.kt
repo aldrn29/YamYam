@@ -25,7 +25,7 @@ class RecipeFragment : Fragment() {
 
     lateinit var ref: DatabaseReference
 
-    lateinit var show_progress: ProgressBar
+    lateinit var showProgress: ProgressBar
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
@@ -47,7 +47,7 @@ class RecipeFragment : Fragment() {
 
         ref = FirebaseDatabase.getInstance().getReference().child("recipes")
 
-        show_progress = viewInflater.findViewById(R.id.progress_bar)
+        showProgress = viewInflater.findViewById(R.id.progress_bar)
 
         firebaseData()
 
@@ -83,7 +83,7 @@ class RecipeFragment : Fragment() {
 
                     //모델의 파라미터명과 같은 DB의 해당 자료를 가져온다 파라미터명 바꿀시 주의
                     override fun onDataChange(p0: DataSnapshot) {
-                        show_progress.visibility = if(itemCount == 0) View.VISIBLE else View.GONE
+                        showProgress.visibility = if(itemCount == 0) View.VISIBLE else View.GONE
                         holder.itemName.text = model.name
                         if (model.imageUri!!.isEmpty()) {
                             //기본 이미지
@@ -91,9 +91,15 @@ class RecipeFragment : Fragment() {
                         } else {
                             Picasso.get().load(model.imageUri).into(holder.itemImg)
                         }
-//                        holder.itemView.setOnClickListener{
-//                            val intent = Intent(activity, Recipe::class.java)
-//                        }
+                        holder.itemView.setOnClickListener{
+                            val intent = Intent(activity, Recipe::class.java)
+                            intent.putExtra("Firebase_Image", model.imageUri)
+                            intent.putExtra("Firebase_Title", model.name)
+                            //TODO 재료 리스트를 받아야하는데 mutableList가 받아지지 않음
+//                            intent.putStringArrayListExtra("Firebase_Materials", model.material)
+                            intent.putExtra("Firebase_Description", model.description)
+                            startActivity(intent)
+                        }
 
                     }
 
@@ -154,7 +160,6 @@ class RecipeFragment : Fragment() {
 
         internal var itemName: TextView = itemView.findViewById(R.id.recipeItemName)
         internal var itemImg: ImageView = itemView.findViewById(R.id.recipeItemImg)
-
 
     }
 }

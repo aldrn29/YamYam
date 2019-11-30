@@ -175,14 +175,14 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
         if( (material.expirationDate!!.year == cal.time.year) and  (material.expirationDate!!.month == cal.time.month)){
             /* 유통기한 3일 이내 */
             if( (material.expirationDate!!.date - cal.time.date) <= 3){
-                //Toast.makeText(context,"유통기한이 3일 이내로 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"유통기한이 3일 이내로 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
                 itemView.setBackgroundColor(Color.YELLOW)
             }
             /* 유통기한 3~7일 남았다면 */
             else if((material.expirationDate!!.date - cal.time.date) <= 7){
                 Toast.makeText(context, "year: 유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
-                //Toast.makeText(context, "year: ${cal.time.year}. ${cal.time.month}. ${cal.time.date}" +
-                //      "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "year: ${cal.time.year}. ${cal.time.month}. ${cal.time.date}" +
+                      "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
                 itemView.setBackgroundColor(Color.GRAY)
             }
         }

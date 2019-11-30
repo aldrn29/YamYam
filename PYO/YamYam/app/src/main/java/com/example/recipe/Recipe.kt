@@ -5,6 +5,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yamyam.R
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_recipe.*
 
 class Recipe : AppCompatActivity() {
 
@@ -12,16 +14,19 @@ class Recipe : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
 
-        val recipeImg = findViewById<ImageView>(R.id.recipeImg)
-        val name = findViewById<TextView>(R.id.recipeName)
-        val materialArr = findViewById<TextView>(R.id.materialArr)
-        val description = findViewById<TextView>(R.id.cookingDescription)
+        val bundle: Bundle? = intent.extras
+        val Image = bundle!!.getString("Firebase_Image")
+        val Title = bundle!!.getString("Firebase_Title")
+        val Materials = bundle!!.getString("Firebase_Materials")
+        val Description = bundle!!.getString("Firebase_Description")
+
 
 //      RecyclerView Item의 pos에 따라 바뀌여야함
-        recipeImg.setImageResource(R.drawable.hamburger)
-        name.setText("setText")
-        materialArr.setText("Materials")
-        description.setText("Description")
+
+        recipeName.text = Title
+        Picasso.get().load(Image).into(recipeImg)
+        materialArr.text = Materials
+        cookingDescription.text = Description
 
 
     }
