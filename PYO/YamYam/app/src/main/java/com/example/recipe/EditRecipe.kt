@@ -43,7 +43,7 @@ class EditRecipe : AppCompatActivity() {
         val editImgBtn: ImageButton = findViewById(R.id.editImgBtn)
         val createBtn : Button = findViewById(R.id.createBtn)
         var editMaterial = findViewById<EditText>(R.id.editMaterial)
-        var materialArray : MutableList<String> = mutableListOf<String>()
+        var materialArray  = mutableListOf<String>()
 
 
         editImgBtn.setOnClickListener { openGallery() }
@@ -123,8 +123,8 @@ class EditRecipe : AppCompatActivity() {
                         Log.w(TAG, "Couldn't get push key for recipes")
                         return@addOnSuccessListener
                     }
-
-                    val recipe = RecipeSource(it.toString(), name, description, materialArray)
+//description: String, imageUri: String, materials: List<String>, name: String)
+                    val recipe = RecipeSource( description, it.toString(), materialArray, name)
                     val recipeValues = recipe.toMap()
 
                     val childUpdates = HashMap<String, Any>()

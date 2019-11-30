@@ -26,13 +26,13 @@ import kotlin.collections.ArrayList
 
 class MaterialInputActivity : AppCompatActivity() {
 
-    var foodCategoryAdapter: CategoryAdapter? = null
-    var categoryAdapter: CategoryAdapter? = null
-    var foodList = ArrayList<Category>()                   //gridViewCategory(오른쪽)에 표시되는 음식리스트
-    var categoryList = ArrayList<Category>()               //category(왼쪽)에 표시되는 카테고리 리스트
-    var selectedFoodPosition: Int = 0                      //선택된 foodImage 포지션
-    var upperOrLowerChecked :Int? = null                   //냉장(upper) == 0  냉동(lower) == 1
-    val cal : Calendar = Calendar.getInstance()            //유통기한 표시용 날짜
+    private var foodCategoryAdapter: CategoryAdapter? = null
+    private var categoryAdapter: CategoryAdapter? = null
+    private var categoryList = ArrayList<Category>()               //category(왼쪽)에 표시되는 카테고리 리스트
+    var foodList = ArrayList<Category>()                           //gridViewCategory(오른쪽)에 표시되는 음식리스트
+    var selectedFoodPosition: Int = 0                              //선택된 foodImage 포지션
+    private var upperOrLowerChecked :Int? = null                   //냉장(upper) == 0  냉동(lower) == 1
+    private val cal : Calendar = Calendar.getInstance()            //유통기한 표시용 날짜
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +41,9 @@ class MaterialInputActivity : AppCompatActivity() {
         //초기 이미지 load
         initialImageLoad()
         //셋 리스너
-        setListenerToCategorys()
+        setListeners()
         //seekBar 설정
         setSeekBar(cal)
-        //checkBox 리스너 설정
-        setListenersToCheckBoxes()
 
         //추가
         val resultIntent = Intent(this, MainActivity::class.java)
@@ -142,8 +140,8 @@ class MaterialInputActivity : AppCompatActivity() {
         foodCategoryAdapter?.notifyDataSetChanged()                     //Item을 remove하고 나서 다시 알려줘야 refresh됨
     }
 
-    /*foodCategory, Category 설정*/
-    private fun setListenerToCategorys(){
+    /*foodCategory, Category, CheckBox 설정*/
+    private fun setListeners(){
         //category 아이템 클릭
         category.onItemClickListener = object : AdapterView.OnItemClickListener {
             override fun onItemClick(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -158,10 +156,7 @@ class MaterialInputActivity : AppCompatActivity() {
 
             }
         }
-    }
-
-    /* checkBox Listener */
-    private fun setListenersToCheckBoxes() {
+        /* checkBox Listener */
         /* 냉동 냉장 둘 중 하나만 선택가능 하도록 */
         upperCheckBox.setOnClickListener {
             if(lowerCheckBox.isChecked) {
@@ -182,14 +177,14 @@ class MaterialInputActivity : AppCompatActivity() {
         seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 cal.time = Date()
-                val df: DateFormat = SimpleDateFormat("yyyy-MM-dd") as DateFormat
+                val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
                 //유통기한 증가 범위 조절
-                if(p1<100)
-                    cal.add(Calendar.DATE, p1/2)
-                else if(p1<150)
-                    cal.add(Calendar.DATE, p1 - 50)
-                else if(p1<=200)
-                    cal.add(Calendar.DATE, (p1-150)*10+100)
+                when {
+                    p1<100 -> cal.add(Calendar.DATE, p1/2)
+                    p1<150 -> cal.add(Calendar.DATE, p1 - 50)
+                    p1<=200 -> cal.add(Calendar.DATE, (p1-150)*10+100)
+                    //seekBar 값 받아서 expirationDate_text 텍스트뷰에 표시
+                }
                 expirationDate_text.setText(df.format(cal.time).toString())     //seekBar 값 받아서 expirationDate_text 텍스트뷰에 표시
             }
             override fun onStartTrackingTouch(p0: SeekBar?) {

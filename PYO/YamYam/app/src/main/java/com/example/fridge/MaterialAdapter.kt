@@ -26,11 +26,10 @@ import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.File
 import java.util.*
-import java.util.zip.Inflater
 import kotlin.collections.ArrayList
 
 
-class MaterialAdapter (val context: Context, private val MaterialsList : ArrayList<Material>, val fileName: String, var materialNameArrayToSearch: ArrayList<String>) : RecyclerView.Adapter<MaterialAdapter.Holder>() {
+class MaterialAdapter (val context: Context, private val MaterialsList : ArrayList<Material>, private val fileName: String, var materialNameArrayToSearch: ArrayList<String>) : RecyclerView.Adapter<MaterialAdapter.Holder>() {
     //화면을 최초 로딩하여 만들어진 View 가 없는 경우, xml 파일을 inflate 하여 ViewHolder 를 생성한다.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         //val materialView = LayoutInflater.from(context).inflate(R.layout.entry_material, parent, false)
@@ -109,7 +108,7 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
 
     /*아이템 스왑*/
     fun swapItems(fromPosition: Int, toPosition: Int) {
-        var tmpMaterial : Material
+        val tmpMaterial : Material
         if (fromPosition < toPosition) {
             tmpMaterial = MaterialsList[fromPosition]
             for (i in fromPosition until toPosition) {
@@ -129,14 +128,14 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
 
     /* JSONFile에서 load 하는 함수 */
     fun loadMaterialList(fileName: String){
-        var gson = Gson()
+        val gson = Gson()
         //Read the json file
-        val file = File(context?.cacheDir, fileName)
+        val file = File(context.cacheDir, fileName)
         val bufferedReader: BufferedReader = file.bufferedReader()
         //bufferedReader 에서 텍스트를 읽고 inputString 에 저장
         val inputString = bufferedReader.use { it.readText() }
         //json 파일에 저장되어 있던 String 들을 다시 Material 로
-        var restoredMaterial = gson.fromJson(inputString, Array<Material>::class.java)
+        val restoredMaterial = gson.fromJson(inputString, Array<Material>::class.java)
 
         //load
         for(i in restoredMaterial){
@@ -147,16 +146,16 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
 
     /* JSONFile 에 write 하는 함수 */
     fun writeJSONtoFile(fileName: String){
-        var gson = Gson()
-        var jsonString:String = gson.toJson(MaterialsList)
+        val gson = Gson()
+        val jsonString:String = gson.toJson(MaterialsList)
         //Toast.makeText(activity,"$jsonString", Toast.LENGTH_SHORT).show()
-        val file = File(context?.cacheDir, fileName)
+        val file = File(context.cacheDir, fileName)
         file.writeText(jsonString)
     }
 
     /*유통기간 체크하는 함수 마테리얼 넘겨서 비교하자*/
     fun checkExpirationDate(material: Material, itemView: View){
-        var cal : Calendar = Calendar.getInstance()
+        val cal : Calendar = Calendar.getInstance()
         cal.time = Date()                               //현재 날짜 가져옴
         itemView.setBackgroundColor(Color.argb(0,0,0,0))        // 기본 백그라운드 색상을 공백으로
 

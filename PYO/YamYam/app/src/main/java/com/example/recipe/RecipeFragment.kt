@@ -123,7 +123,7 @@ class RecipeFragment : Fragment() {
 
         var searchRecipeName : String
         searchBtn.setOnClickListener {
-            var searchResultRecipe =  ArrayList<SearchResultRecipe>()
+            var searchResultRecipe =  ArrayList<RecipeSource>()
             var SearchResultAdapter : SearchResultRecipeAdapter? = null
             searchResultRecipe.clear()
             SearchResultAdapter = SearchResultRecipeAdapter(requireContext(), searchResultRecipe)
@@ -137,7 +137,8 @@ class RecipeFragment : Fragment() {
                     for(recipeName in recipes.children){
                         //Toast.makeText(requireContext(), "${recipeName.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
                         if(recipeName.child("name").getValue(String::class.java) == searchRecipeName){
-                            searchResultRecipe.add(SearchResultRecipe(recipeName.child("name").getValue(String::class.java) , recipeName.child("imageUri").getValue(String::class.java)))
+                            //description: String, imageUri: String, materials: List<String>, name: String)
+                            //searchResultRecipe.add(SearchResultRecipe(recipeName.child("name").getValue(String::class.java) , recipeName.child("imageUri").getValue(String::class.java)))
                             SearchResultAdapter.notifyDataSetChanged()
                         }
                     }

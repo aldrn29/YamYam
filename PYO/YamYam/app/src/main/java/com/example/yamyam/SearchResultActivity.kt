@@ -2,18 +2,12 @@ package com.example.yamyam
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.recyclerview.widget.GridLayoutManager
-import com.example.recipe.RecipeFragment
-import com.example.recipe.RecipeSource
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_search_result.*
 import com.google.firebase.database.DataSnapshot
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.recipe.RecipeSource
 
 
 /* 11.25 파이어베이스에서 재료를 읽어와야 하는데 재료가 없네... 그래서 일단 이름 긁어옴...
@@ -25,69 +19,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 class SearchResultActivity : AppCompatActivity() {
 
-    //lateinit var recipeDB: DatabaseReference
-    val database = FirebaseDatabase.getInstance()
-    var searchResultRecipeList = ArrayList<SearchResultRecipe>()
-    var StringList = ArrayList<String>()
-    var SearchResultAdapter : SearchResultRecipeAdapter? = null
-    var position = 0
+    private val database = FirebaseDatabase.getInstance()
+    private var searchResultRecipeList = ArrayList<RecipeSource>()
+    var searchResultAdapter : SearchResultRecipeAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_result)
 
-        var MaterialNameArrayToSearch = intent.getStringArrayListExtra("MaterialNameArrayToSearch")     // fridge_fragment 에서 가져온 재료 이름들
+        val materialNameArrayToSearch = intent.getStringArrayListExtra("MaterialNameArrayToSearch")     // fridge_fragment 에서 가져온 재료 이름들
         //Toast.makeText(applicationContext, "${MaterialNameArrayToSearch}", Toast.LENGTH_SHORT).show()
-
-        SearchResultAdapter = SearchResultRecipeAdapter(this, searchResultRecipeList)
-
         val linearLayoutManager = LinearLayoutManager(this)
         //linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        SearchResultRecyclerview.adapter = SearchResultAdapter
+        searchResultAdapter = SearchResultRecipeAdapter(this, searchResultRecipeList)
+        SearchResultRecyclerview.adapter = searchResultAdapter
         SearchResultRecyclerview.layoutManager =linearLayoutManager
         SearchResultRecyclerview.setHasFixedSize(true)
-
-        SearchResultAdapter?.notifyDataSetChanged()
-
-        //var recipeDB = FirebaseDatabase.getInstance().reference
-        //recipeDB.child("test").push().setValue("abc")
+        searchResultAdapter?.notifyDataSetChanged()
 
         val mRef = database.getReference("recipes")
-        //Toast.makeText(applicationContext, "${mRef}", Toast.LENGTH_SHORT).show()
 
-
-        var contains = false
         mRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for(SnapShotRecipesChildren in dataSnapshot.children) {
-                    val materialsListChild  = SnapShotRecipesChildren.child("materialsList")
-                    for(materialsListChildChildren in materialsListChild.children){
-                        val materialInFirebase = materialsListChildChildren.getValue(String::class.java)                           //파이어베이스 materialsList 안에 들어있는 재료
-                        for(materialInMaterialNameArrayToSearch in MaterialNameArrayToSearch){                                     // frideFragment 에서 넘긴 재료 이름들이 파이어베이스 안의 레시피 재료들에 포함되어 있다면 searchResultRecipeList에 그 레시피의 필드?들을 다 가져온다
-                            if(materialInFirebase == materialInMaterialNameArrayToSearch){
-                                //파이어베이스의 재료가 넘긴재료들 중 하나와 같고
-
-                                //중복검색을 막기위해 결과 레시피 리스트에 추가할 레시피의 이름이 없다면 add 해야함
-                                for(recipe in searchResultRecipeList){
-                                    if(recipe.name == SnapShotRecipesChildren.child("name").getValue(String::class.java)!!)
-                                        contains = true
-                                }
-                                //Toast.makeText(applicationContext, "${SnapShotRecipesChildren.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
-
-                                if(contains == false)
-                                {
-                                    searchResultRecipeList.add(SearchResultRecipe(
-                                    SnapShotRecipesChildren.child("name").getValue(String::class.java)!!,
-                                    SnapShotRecipesChildren.child("imageUri").getValue(String::class.java)!!))
-                                }
-                                SearchResultAdapter?.notifyDataSetChanged()
-                                contains = false
-                            }
-                        }
-                    }
-                }
-                        //if(materialInFirebase != null)
-                          //  StringList.add(materialInFirebase)        //재료 긁어오는 배열에 추가
+                //firebase 에서 검색
+                searchRecipeFromFirebase(dataSnapshot, materialNameArrayToSearch)
             }
                     //Toast.makeText(applicationContext, "$StringList", Toast.LENGTH_SHORT).show()
 
@@ -96,7 +51,46 @@ class SearchResultActivity : AppCompatActivity() {
                 //Log.w(TAG, "Failed to read value.", error.toException())
             }
         })
+    }
 
+    /* 재료의 이름들이 담긴 ArrayList 를 받아서 firebase 에서 검색하는 함수 */
+    fun searchRecipeFromFirebase(dataSnapshot: DataSnapshot, materialNameArrayList :ArrayList<String>){
+        var contains = false
+
+        for(dataSnapshotChild in dataSnapshot.children) {
+            val dataSnapshotChildChild  = dataSnapshotChild.child("materialsList")
+            for(dataSnapshotChildChildChild in dataSnapshotChildChild.children){
+                val materialInFirebase = dataSnapshotChildChildChild.getValue(String::class.java)                           //파이어베이스 materialsList 안에 들어있는 재료
+                // fridgeFragment 에서 넘긴 재료 이름들이 파이어베이스 안의 레시피 재료들에 포함되어 있다면 searchResultRecipeList 에 그 레시피의 필드?들을 다 가져온다
+                for(materialNameInArrayList in materialNameArrayList){
+                    if(materialInFirebase == materialNameInArrayList){////파이어베이스의 재료가 넘긴재료들 중 하나와 같고
+                        //중복검색을 막기위해 결과 레시피 리스트에 추가할 레시피의 이름이 없다면 add 해야함
+                        for(recipe in searchResultRecipeList){
+                            if(recipe.name == dataSnapshotChild.child("name").getValue(String::class.java)!!)
+                                contains = true
+                        }
+                        //Toast.makeText(applicationContext, "${SnapShotRecipesChildren.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
+                        if(contains == false) {
+                            //재료 받아오기..하나씩..
+                            var materialListInFirebase  = ArrayList<String>()
+                            for(material in dataSnapshotChild.child("materialsList").children){
+                                materialListInFirebase.add(material.getValue(String::class.java)!!)
+                            }
+                            searchResultRecipeList.add(RecipeSource(
+                                dataSnapshotChild.child("description").getValue(String::class.java)!!,
+                                dataSnapshotChild.child("imageUri").getValue(String::class.java)!!,
+                                materialListInFirebase,
+                                dataSnapshotChild.child("name").getValue(String::class.java)!!
+
+                            ))
+                                //add(RecipeSource(dataSnapshotChild.child("imageUri").getValue(String::class.java)!!, dataSnapshotChild.child("name").getValue(String::class.java)!!, dataSnapshotChild.child("description").getValue(String::class.java)!!), tmpList)
+                        }
+                        searchResultAdapter?.notifyDataSetChanged()
+                        contains = false
+                    }
+                }
+            }
+        }
     }
 
 

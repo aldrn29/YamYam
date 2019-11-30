@@ -32,17 +32,17 @@ import java.io.File
 class FridgeFragment : Fragment() {
 
     //var upperAdapter: notUseMaterialAdapter? = null
-    var lowerAdapter: MaterialAdapter? = null
-    var upperAdapter : MaterialAdapter? = null
-    var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
-    var lowerMaterialsList = ArrayList<Material>()
-    val upperFileName = "upperSavedMaterial.json"    //자꾸 fileNotFoundException (Read-only file system) 랑 permission denied 떠서 권한이 없는줄알고
-    val lowerFileName = "lowerSavedMaterial.json"
-    var MaterialNameArrayToSearch = ArrayList<String>()
+    private var lowerAdapter: MaterialAdapter? = null
+    private var upperAdapter : MaterialAdapter? = null
+    private var upperMaterialsList: java.util.ArrayList<Material> = ArrayList<Material>()
+    private var lowerMaterialsList = ArrayList<Material>()
+    private val upperFileName = "upperSavedMaterial.json"    //자꾸 fileNotFoundException (Read-only file system) 랑 permission denied 떠서 권한이 없는줄알고
+    private val lowerFileName = "lowerSavedMaterial.json"
+    private var MaterialNameArrayToSearch = ArrayList<String>()
    // var lowerMaterialNameArrayToSearch = ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(com.example.yamyam.R.layout.fragment_fridge, container, false)
+        val view = inflater.inflate(R.layout.fragment_fridge, container, false)
 
         return view
     }
@@ -50,7 +50,7 @@ class FridgeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // toolbar 초기화
-        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(com.example.yamyam.R.id.toolbar)
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
         //왼쪽에 검색버튼을 추가하기위해 홈버튼을 만들고 그 홈버튼의 이미지를 검색으로 바꾼다(id는 그대로 home)
@@ -66,7 +66,7 @@ class FridgeFragment : Fragment() {
         /* 저장된 파일에서 불러옴 */
         loadFromSavedFile()
         /* 여기서 먼저 임시로 ItemTouchHelper 를 붙여야 맨 처음 어플 실행시 이미지가 정상적으로 로딩된다 */
-        setItemTouchHelper(null, null, null, null, null, -1)
+        setItemTouchHelper(null, null, null, null, -1)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -81,15 +81,15 @@ class FridgeFragment : Fragment() {
 
         //loadMaterialList(file)
         //나중에 변수명 바꿀것, 변수명뭐로하지
-        var tmpDate = materialExpirationDate(expirationDate_year, expirationDate_month, expirationDate_date)
+        val tmpDate = materialExpirationDate(expirationDate_year, expirationDate_month, expirationDate_date)
         /* 아이템 터치 헬퍼 붙임 */
-        setItemTouchHelper(requestCode, resultCode, nameOfMaterial!!, image, tmpDate, upperOrLower)
+        setItemTouchHelper(resultCode, nameOfMaterial!!, image, tmpDate, upperOrLower)
         //json 파일에 upperMaterials 리스트를 저장하자
         upperAdapter!!.writeJSONtoFile(upperFileName)
         lowerAdapter!!.writeJSONtoFile(lowerFileName)
     }
 
-    private fun setItemTouchHelper(requestCode: Int?, resultCode: Int?, nameOfMaterial : String?, image: Int?, expirationDate : materialExpirationDate?, upperOrLower :Int){
+    private fun setItemTouchHelper(resultCode: Int?, nameOfMaterial : String?, image: Int?, expirationDate : materialExpirationDate?, upperOrLower :Int){
         /* MaterialItemTouchHelper 에 callback 을 등록, recycler 뷰에 붙여줌
         *  상하좌우 드래그설정
         spanCount 가 열 개수인듯*/
@@ -159,7 +159,7 @@ class FridgeFragment : Fragment() {
                     Toast.makeText(requireContext(), "선택된 재료가 없어 검색을 종료합니다", Toast.LENGTH_LONG).show()
                 }
                 else if((upperAdapter!!.materialNameArrayToSearch.isEmpty() == false) or (lowerAdapter!!.materialNameArrayToSearch.isEmpty() == false)){
-                    var searchIntent  = Intent(activity, SearchResultActivity::class.java)
+                    val searchIntent  = Intent(activity, SearchResultActivity::class.java)
                     searchIntent.putStringArrayListExtra("MaterialNameArrayToSearch", MaterialNameArrayToSearch)
                     startActivity(searchIntent)
                     MaterialNameArrayToSearch.clear()   //검색을 한번 실행하고 리스트 비워줘야함

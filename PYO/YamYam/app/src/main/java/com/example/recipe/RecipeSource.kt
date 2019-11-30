@@ -7,15 +7,13 @@ class RecipeSource{
     var imageUri : String? = null
     var name : String? = null
     var description: String? = null
-    var material : List<String>? = null
+    var materials : List<String>? = null
 
-    constructor():this("","","", listOf("")){}
-
-    constructor(imageUri: String, name: String, description: String, material: List<String>) {
-        this.imageUri = imageUri
-        this.name = name
+    constructor(description: String, imageUri: String, materials: List<String>, name: String) {
         this.description = description
-        this.material = material
+        this.imageUri = imageUri
+        this.materials = materials
+        this.name = name
     }
 
     @Exclude
@@ -24,7 +22,7 @@ class RecipeSource{
             "imageUri" to imageUri,
             "name" to name,
             "description" to description,
-            "materialsList" to material
+            "materialsList" to materials
         )
     }
 
