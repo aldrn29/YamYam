@@ -38,8 +38,7 @@ class MainActivity : AppCompatActivity() {
                         transaction.hide(wishListFragment!!)
                     if(recipeFragment != null)
                         transaction.hide(recipeFragment!!)
-                    transaction.show(fridgeFragment!!)
-                    transaction.commit()
+                    transaction.show(fridgeFragment!!).commit()
                 }
                 R.id.wishlistItem -> {
                     val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -51,8 +50,7 @@ class MainActivity : AppCompatActivity() {
                         transaction.hide(fridgeFragment!!)
                     if(recipeFragment != null)
                         transaction.hide(recipeFragment!!)
-                    transaction.show(wishListFragment!!)
-                    transaction.commit()
+                    transaction.show(wishListFragment!!).commit()
                 }
                 R.id.recipeItem -> {
                     val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -64,8 +62,7 @@ class MainActivity : AppCompatActivity() {
                         transaction.hide(fridgeFragment!!)
                     if(wishListFragment != null)
                         transaction.hide(wishListFragment!!)
-                    transaction.show(recipeFragment!!)
-                    transaction.commit()
+                    transaction.show(recipeFragment!!).commit()
                 }
             }
             return@setOnNavigationItemSelectedListener true

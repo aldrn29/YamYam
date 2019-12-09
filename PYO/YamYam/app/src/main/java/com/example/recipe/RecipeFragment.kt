@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
-import com.example.yamyam.SearchResultRecipe
-import com.example.yamyam.SearchResultRecipeAdapter
+import com.example.yamyam.searchResult.SearchResultRecipe
+import com.example.yamyam.searchResult.SearchResultRecipeAdapterActivity
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
@@ -124,9 +124,12 @@ class RecipeFragment : Fragment() {
         var searchRecipeName : String
         searchBtn.setOnClickListener {
             var searchResultRecipe =  ArrayList<RecipeSource>()
-            var SearchResultAdapter : SearchResultRecipeAdapter? = null
+            var SearchResultAdapter : SearchResultRecipeAdapterActivity? = null
             searchResultRecipe.clear()
-            SearchResultAdapter = SearchResultRecipeAdapter(requireContext(), searchResultRecipe)
+            SearchResultAdapter = SearchResultRecipeAdapterActivity(
+                requireContext(),
+                searchResultRecipe
+            )
             mRecylerview!!.adapter = SearchResultAdapter
             searchRecipeName = editText.text.toString()
             SearchResultAdapter.notifyDataSetChanged()

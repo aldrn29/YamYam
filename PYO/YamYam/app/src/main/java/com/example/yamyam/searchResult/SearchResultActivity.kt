@@ -1,27 +1,26 @@
-package com.example.yamyam
+package com.example.yamyam.searchResult
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_search_result.*
 import com.google.firebase.database.DataSnapshot
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipe.RecipeSource
+import com.example.yamyam.R
 
 
 /* 11.25 파이어베이스에서 재료를 읽어와야 하는데 재료가 없네... 그래서 일단 이름 긁어옴...
         재료 리스트로 파이어베이스에 추가함
         선택된 재료로 파이어베이스에 등록된 레시피를 검색해서 검색결과 액티비티에 표시(좌측 상단 돋보기->재료선택->다시 좌측 상단 돋보기)
-
  */
 
 
 class SearchResultActivity : AppCompatActivity() {
 
     private val database = FirebaseDatabase.getInstance()
-    private var searchResultRecipeList = ArrayList<RecipeSource>()
-    var searchResultAdapter : SearchResultRecipeAdapter? = null
+    private var searchResultRecipeList = ArrayList<RecipeSource>()      //검색된 레시피들을 저장하는 ArraryList
+    var searchResultAdapter : SearchResultRecipeAdapterActivity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +30,7 @@ class SearchResultActivity : AppCompatActivity() {
         //Toast.makeText(applicationContext, "${MaterialNameArrayToSearch}", Toast.LENGTH_SHORT).show()
         val linearLayoutManager = LinearLayoutManager(this)
         //linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        searchResultAdapter = SearchResultRecipeAdapter(this, searchResultRecipeList)
+        searchResultAdapter = SearchResultRecipeAdapterActivity(this, searchResultRecipeList)
         SearchResultRecyclerview.adapter = searchResultAdapter
         SearchResultRecyclerview.layoutManager =linearLayoutManager
         SearchResultRecyclerview.setHasFixedSize(true)

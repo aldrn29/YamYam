@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.yamyam.R
-import com.example.yamyam.SearchResultActivity
+import com.example.yamyam.searchResult.SearchResultActivity
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import java.io.File
 

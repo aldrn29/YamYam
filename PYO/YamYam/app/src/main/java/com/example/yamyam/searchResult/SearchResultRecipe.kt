@@ -1,4 +1,4 @@
-package com.example.yamyam
+package com.example.yamyam.searchResult
 
 class SearchResultRecipe {
     var name: String? = null
