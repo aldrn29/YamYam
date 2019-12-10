@@ -10,8 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
+import com.example.yamyam.searchResult.SearchResultActivity
 import com.example.yamyam.searchResult.SearchResultRecipe
-import com.example.yamyam.searchResult.SearchResultRecipeAdapterActivity
+import com.example.yamyam.searchResult.SearchResultRecipeAdapter
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
@@ -22,6 +23,8 @@ class RecipeFragment : Fragment() {
 
     private var mRecylerview : RecyclerView? = null
     private var linearLayoutManager : LinearLayoutManager? = null
+    private var SearchResultAdapter : SearchResultRecipeAdapter? = null
+    private var searchResultRecipeList =  ArrayList<RecipeSource>()
 
     lateinit var ref: DatabaseReference
 
@@ -102,7 +105,6 @@ class RecipeFragment : Fragment() {
                         }
 
                     }
-
                 })
             }
         }
@@ -115,6 +117,7 @@ class RecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val editBtn: Button = view.findViewById(R.id.editBtn)
+
         editBtn.setOnClickListener {
             val editIntent = Intent(activity, EditRecipe::class.java)
 //            startActivityForResult(editIntent,1)
@@ -123,30 +126,18 @@ class RecipeFragment : Fragment() {
 
         var searchRecipeName : String
         searchBtn.setOnClickListener {
-            var searchResultRecipe =  ArrayList<RecipeSource>()
-            var SearchResultAdapter : SearchResultRecipeAdapterActivity? = null
-            searchResultRecipe.clear()
-            SearchResultAdapter = SearchResultRecipeAdapterActivity(
-                requireContext(),
-                searchResultRecipe
-            )
+            searchResultRecipeList.clear()
+            SearchResultAdapter = SearchResultRecipeAdapter(requireContext(), searchResultRecipeList)
             mRecylerview!!.adapter = SearchResultAdapter
-            searchRecipeName = editText.text.toString()
-            SearchResultAdapter.notifyDataSetChanged()
-            //searchRecipeNameInFirebase(ref, searchRecipeName, searchResultRecipe)
-            //Toast.makeText(requireContext(), "${searchResultRecipe?.name }", Toast.LENGTH_SHORT).show()
+            searchRecipeName = editText.text.toString()         //검색창에 작성한 레시피 이름
+            SearchResultAdapter!!.notifyDataSetChanged()
+
             ref.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(recipes: DataSnapshot) {
-                    for(recipeName in recipes.children){
-                        //Toast.makeText(requireContext(), "${recipeName.child("name").getValue(String::class.java)}", Toast.LENGTH_SHORT).show()
-                        if(recipeName.child("name").getValue(String::class.java) == searchRecipeName){
-                            //description: String, imageUri: String, materials: List<String>, name: String)
-                            //searchResultRecipe.add(SearchResultRecipe(recipeName.child("name").getValue(String::class.java) , recipeName.child("imageUri").getValue(String::class.java)))
-                            SearchResultAdapter.notifyDataSetChanged()
-                        }
-                    }
-                }
+                    //작성한 이름을 firebase 에서 검색
+                    searchRecipeFromFirebase(recipes, searchRecipeName)
 
+                }
                 override fun onCancelled(p0: DatabaseError) {
 
                 }
@@ -155,10 +146,6 @@ class RecipeFragment : Fragment() {
         }
     }
 
-//    private fun itemClicked(){
-//        val intent = Intent(activity, Recipe::class.java)
-//        startActivity(intent)
-//    }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -166,11 +153,24 @@ class RecipeFragment : Fragment() {
         internal var itemImg: ImageView = itemView.findViewById(R.id.recipeItemImg)
 
     }
-}
 
-fun searchRecipeNameInFirebase(ref: DatabaseReference, searchRecipeName : String, searchResultRecipe : SearchResultRecipe?)
-{
+    /*레시피 이름으로 파이어베이스에서 검색하는 함수*/
+    fun searchRecipeFromFirebase(dataSnapshot: DataSnapshot, searchRecipeName : String) {
+        for(dataSnapshotChild in dataSnapshot.children){
+            if(dataSnapshotChild.child("name").getValue(String::class.java) == searchRecipeName){
 
-
-    //ref = FirebaseDatabase.getInstance().getReference().child("recipes")
+                var materialListInFirebase  = ArrayList<String>()
+                for(material in dataSnapshotChild.child("materialsList").children){
+                    materialListInFirebase.add(material.getValue(String::class.java)!!)
+                }
+                searchResultRecipeList.add(RecipeSource(
+                    dataSnapshotChild.child("description").getValue(String::class.java)!!,
+                    dataSnapshotChild.child("imageUri").getValue(String::class.java)!!,
+                    materialListInFirebase,
+                    dataSnapshotChild.child("name").getValue(String::class.java)!!
+                ))
+                SearchResultAdapter?.notifyDataSetChanged()
+            }
+        }
+    }
 }
