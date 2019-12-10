@@ -31,38 +31,33 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.fridgeItem -> {
-                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    val tr : FragmentTransaction = supportFragmentManager.beginTransaction()
                     fridgeFragment = FridgeFragment()
-                    transaction.add(R.id.act_fragment, fridgeFragment!!)
-                    if(wishListFragment!= null)
-                        transaction.hide(wishListFragment!!)
-                    if(recipeFragment != null)
-                        transaction.hide(recipeFragment!!)
-                    transaction.show(fridgeFragment!!).commit()
+                    tr.add(R.id.act_fragment, fridgeFragment!!)
+
+                    if(wishListFragment!= null) tr.hide(wishListFragment!!)
+                    if(recipeFragment != null) tr.hide(recipeFragment!!)
+                    tr.show(fridgeFragment!!).commit()
                 }
                 R.id.wishlistItem -> {
-                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    val tr : FragmentTransaction = supportFragmentManager.beginTransaction()
                     if(wishListFragment == null) {
                         wishListFragment = WishListFragment()
-                        transaction.add(R.id.act_fragment, wishListFragment!!)
+                        tr.add(R.id.act_fragment, wishListFragment!!)
                     }
-                    if(fridgeFragment!= null)
-                        transaction.hide(fridgeFragment!!)
-                    if(recipeFragment != null)
-                        transaction.hide(recipeFragment!!)
-                    transaction.show(wishListFragment!!).commit()
+                    if (fridgeFragment!= null) tr.hide(fridgeFragment!!)
+                    if (recipeFragment != null) tr.hide(recipeFragment!!)
+                    tr.show(wishListFragment!!).commit()
                 }
                 R.id.recipeItem -> {
-                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    val tr : FragmentTransaction = supportFragmentManager.beginTransaction()
                     if(recipeFragment == null) {
                         recipeFragment = RecipeFragment()
-                        transaction.add(R.id.act_fragment, recipeFragment!!)
+                        tr.add(R.id.act_fragment, recipeFragment!!)
                     }
-                    if(fridgeFragment!= null)
-                        transaction.hide(fridgeFragment!!)
-                    if(wishListFragment != null)
-                        transaction.hide(wishListFragment!!)
-                    transaction.show(recipeFragment!!).commit()
+                    if (fridgeFragment!= null) tr.hide(fridgeFragment!!)
+                    if (wishListFragment != null) tr.hide(wishListFragment!!)
+                    tr.show(recipeFragment!!).commit()
                 }
             }
             return@setOnNavigationItemSelectedListener true

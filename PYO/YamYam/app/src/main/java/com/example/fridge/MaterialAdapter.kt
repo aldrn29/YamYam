@@ -194,7 +194,7 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
                 Toast.makeText(context, "year: ${cal.get(Calendar.YEAR)}. ${cal.get(Calendar.MONTH)+1}. ${cal.get(Calendar.DATE)}" +
                       "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
                 //itemView.setBackgroundColor(Color.GRAY)
-                materialView.setColorFilter(Color.parseColor("#3e4189"))
+                materialView.setColorFilter(Color.parseColor("#d0b900"))
             }
         }
     }
