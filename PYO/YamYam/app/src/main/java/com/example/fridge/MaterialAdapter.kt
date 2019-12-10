@@ -14,12 +14,16 @@ package com.example.fridge
 
 import android.content.Context
 import android.graphics.Color
+import android.media.Image
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
 import com.google.gson.Gson
@@ -27,7 +31,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 class MaterialAdapter (val context: Context, private val MaterialsList : ArrayList<Material>, private val fileName: String, var materialNameArrayToSearch: ArrayList<String>) : RecyclerView.Adapter<MaterialAdapter.Holder>() {
     //화면을 최초 로딩하여 만들어진 View 가 없는 경우, xml 파일을 inflate 하여 ViewHolder 를 생성한다.
@@ -155,34 +158,43 @@ class MaterialAdapter (val context: Context, private val MaterialsList : ArrayLi
 
     /*유통기간 체크하는 함수 마테리얼 넘겨서 비교하자*/
     fun checkExpirationDate(material: Material, itemView: View){
+
         val cal : Calendar = Calendar.getInstance()
-        cal.time = Date()                               //현재 날짜 가져옴
+        cal.time = Date() //현재 날짜 가져옴
+
+        val materialView = itemView.findViewById<ImageView>(R.id.imgMaterial)
         itemView.setBackgroundColor(Color.argb(0,0,0,0))        // 기본 백그라운드 색상을 공백으로
+        materialView.setColorFilter(Color.BLACK)
+
+        //println("재료날짜: ${material.expirationDate!!.year}. ${material.expirationDate!!.month}. ${material.expirationDate!!.date}")
 
         /*유통기한이 지났으면 */
-        if(material.expirationDate!!.year < cal.time.year ){
+        if(material.expirationDate!!.year < cal.get(Calendar.YEAR)){
             // 배경 검은색
-            Toast.makeText(context, "유통기한이 지남", Toast.LENGTH_SHORT).show()
-            itemView.setBackgroundColor(Color.BLACK)
+            Toast.makeText(context, "유통기한이 지났습니다", Toast.LENGTH_SHORT).show()
         }
-        else if(material.expirationDate!!.year == cal.time.year){
-            if(material.expirationDate!!.month < cal.time.month){
-                itemView.setBackgroundColor(Color.BLACK)
-                Toast.makeText(context, "유통기한이 지남", Toast.LENGTH_SHORT).show()
+        else if(material.expirationDate!!.year == cal.get(Calendar.YEAR)){
+            if(material.expirationDate!!.month < cal.get(Calendar.MONTH)+1){
+                Toast.makeText(context, "유통기한이 지났습니다", Toast.LENGTH_SHORT).show()
+                //itemView.setBackgroundColor(Color.BLACK)
+                materialView.setColorFilter(Color.GRAY)
             }
         }
-        if( (material.expirationDate!!.year == cal.time.year) and  (material.expirationDate!!.month == cal.time.month)){
+        if( (material.expirationDate!!.year == cal.get(Calendar.YEAR)) and  (material.expirationDate!!.month == cal.get(Calendar.MONTH)+1)){
             /* 유통기한 3일 이내 */
-            if( (material.expirationDate!!.date - cal.time.date) <= 3){
+            if( (material.expirationDate!!.date - cal.get(Calendar.DATE)) <= 3){
                 Toast.makeText(context,"유통기한이 3일 이내로 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
-                itemView.setBackgroundColor(Color.YELLOW)
+                //itemView.setBackgroundColor(Color.YELLOW)
+                materialView.setColorFilter(Color.parseColor("#8e3543"))
+
             }
             /* 유통기한 3~7일 남았다면 */
-            else if((material.expirationDate!!.date - cal.time.date) <= 7){
+            else if((material.expirationDate!!.date - cal.get(Calendar.DATE)) <= 7){
                 Toast.makeText(context, "year: 유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
-                Toast.makeText(context, "year: ${cal.time.year}. ${cal.time.month}. ${cal.time.date}" +
+                Toast.makeText(context, "year: ${cal.get(Calendar.YEAR)}. ${cal.get(Calendar.MONTH)+1}. ${cal.get(Calendar.DATE)}" +
                       "유통기한이 3~7일 남은 재료가 있습니다", Toast.LENGTH_SHORT).show()
-                itemView.setBackgroundColor(Color.GRAY)
+                //itemView.setBackgroundColor(Color.GRAY)
+                materialView.setColorFilter(Color.parseColor("#3e4189"))
             }
         }
     }
