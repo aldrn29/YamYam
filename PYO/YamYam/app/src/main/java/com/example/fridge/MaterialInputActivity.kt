@@ -54,9 +54,9 @@ class MaterialInputActivity : AppCompatActivity() {
             else{
                 resultIntent.putExtra("nameOfMaterial", material_text.text.toString())
                 resultIntent.putExtra("selectedFoodImage", foodList[selectedFoodPosition].image) //선택된 food image 를 넘긴다
-                resultIntent.putExtra("expirationDate_year", cal.time.year)
-                resultIntent.putExtra("expirationDate_month", cal.time.month)
-                resultIntent.putExtra("expirationDate_date", cal.time.date) //유통기한 쪼개서 넘기자 get~~Extra 로 calendar 못가져오는것 같음
+                resultIntent.putExtra("expirationDate_year", cal.get(Calendar.YEAR))
+                resultIntent.putExtra("expirationDate_month", cal.get(Calendar.MONTH)+1)
+                resultIntent.putExtra("expirationDate_date", cal.get(Calendar.DATE)) //유통기한 쪼개서 넘기자 get~~Extra 로 calendar 못가져오는것 같음
                 resultIntent.putExtra("upperOrLower", upperOrLowerChecked!!)
                 setResult(RESULT_OK, resultIntent)
                 finish()
