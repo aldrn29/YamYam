@@ -9,6 +9,8 @@ class RecipeSource{
     var description: String? = null
     var materials : List<String>? = null
 
+    constructor():this("","",listOf(),""){}
+
     constructor(description: String, imageUri: String, materials: List<String>, name: String) {
         this.description = description
         this.imageUri = imageUri
