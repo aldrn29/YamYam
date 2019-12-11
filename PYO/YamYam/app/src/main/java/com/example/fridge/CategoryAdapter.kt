@@ -1,6 +1,8 @@
 package com.example.fridge
 
-/*10.13 CategoryAdapter 정의
+/* MaterialInputActivity 에서 사용하는 어댑터
+
+* 10.13 CategoryAdapter 정의
 * */
 
 import android.content.Context
@@ -40,16 +42,4 @@ class CategoryAdapter : BaseAdapter {
 
         return CategoryView
     }
-/*
-        CategoryView.imgCategory.setOnClickListener {
-            val intent = Intent(context, MaterialInputActivity::class.java)
-            intent.putExtra("name", material.name)
-            intent.putExtra("image", material.image!!)
-            context!!.startActivity(intent)
-        }
-        materialView.imgMaterial.setImageResource(material.image!!)
-        materialView.tvName.text = material.name!!
-
-        return materialView
-    }*/
 }

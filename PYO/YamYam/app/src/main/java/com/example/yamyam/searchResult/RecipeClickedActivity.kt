@@ -16,8 +16,11 @@ import com.squareup.picasso.Picasso
 import java.io.BufferedReader
 import java.io.File
 
-/* 12.10 검색 결과가 클릭될경우 나타나는 액티비티
-   12.12 내부저장소에 저장된 파일을 사용해 위시리스트 추가(하트버튼) 삭제(하트버튼) 구현
+/* 레시피를 클릭할 경우 실행되는 액티비티
+   레시피의 이름, 방법 등 상세 내용이 표시됨
+
+    12.10 검색 결과가 클릭될경우 나타나는 액티비티
+    12.12 내부저장소에 저장된 파일을 사용해 위시리스트 추가(하트버튼) 삭제(하트버튼) 구현
  */
 class RecipeClickedActivity : AppCompatActivity()
 {

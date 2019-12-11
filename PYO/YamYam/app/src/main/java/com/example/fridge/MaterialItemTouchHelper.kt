@@ -3,7 +3,9 @@ package com.example.fridge
 import android.content.Context
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-
+/*
+    fridgeFragment 에서 재료의 위치변경을 위한 ItemTouchHelper
+ */
 class MaterialItemTouchHelper(adapter: MaterialAdapter, context: Context, dragDirs: Int, swipeDirs: Int) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs)
 {
     private val dragAdapter = adapter

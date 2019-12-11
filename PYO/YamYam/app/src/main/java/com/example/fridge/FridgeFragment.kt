@@ -17,8 +17,12 @@ import com.example.yamyam.searchResult.SearchResultActivity
 import kotlinx.android.synthetic.main.fragment_fridge.*
 import java.io.File
 
-/* 10.16
-임시 이미지가 아닌 MaterialInputActivity 에서 선택된 foodimage 가 들어가도록 변경
+/*
+냉장고 Fragment
+재료 추가, 삭제, 이동 역할을 수행
+좌측 상단의 검색을 누르고 재료를 선택한 후 다시 검색을 누르면 선택된 재료로 검색이 가능
+
+10.16 임시 이미지가 아닌 MaterialInputActivity 에서 선택된 foodimage 가 들어가도록 변경
 11.15 코드정리, 위아래 모두 리사이클러뷰로 변경
 11.17 객체생성할때 날짜도 받아서 생성하도록 만듦
     Intent 로 넘겨받은 year,month,date를 한번에 쓰기위한 data class materialExpirationDate 정의

@@ -4,7 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
 
-/*10.07 Material 클래스 정의
+/* 재료 Class
+
+* 10.07 Material 클래스 정의
 * Material 에 필드 추가 가능
 * 11.17 유통기한 필드추가
 * 11.24 재료 선택 검색을 위한 isSelected 필드 추가*/

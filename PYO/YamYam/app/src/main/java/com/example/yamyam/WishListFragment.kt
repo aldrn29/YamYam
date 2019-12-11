@@ -18,8 +18,11 @@ import java.io.BufferedReader
 import java.io.File
 
 /*
-    12.12 내부저장소에 저장된 파일을 읽어 위시리스트 표시
+    위시리스트 프래그먼트
+    위시리스트로 저장된 레시피들을 화면에 표시
+    위시리스트가 저장된 내부 파일로부터 읽어 표시, 관리
 
+    12.12 내부저장소에 저장된 파일을 읽어 위시리스트 표시
  */
 class WishListFragment : Fragment() {
 

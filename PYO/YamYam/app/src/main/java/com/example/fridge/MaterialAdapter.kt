@@ -1,6 +1,10 @@
 package com.example.fridge
 
-/*10.07 notUseMaterialAdapter 정의
+/* FridgeFragment 에서 사용하는 adapter
+재료의 삭제, 스왑, 유통기한 체크
+내부 저장소 파일에 재료를 load, store 하는 함수가 있음
+
+10.07 notUseMaterialAdapter 정의
 * 일단 name 과 image 만 intent 에 담아서 넘기도록 정의했는데 필요에 따라 늘릴 수 있음
 * 11.10~15 아이템 스왑처리
 * 11.15 bind 에서 아이템 삭제처리

@@ -1,5 +1,8 @@
 package com.example.yamyam.searchResult
 
+/*
+안씀 -> RecipeSource 로 통합
+ */
 class SearchResultRecipe {
     var name: String? = null
     var imageUri:String? = null

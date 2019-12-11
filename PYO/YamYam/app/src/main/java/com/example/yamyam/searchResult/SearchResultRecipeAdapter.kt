@@ -12,6 +12,8 @@ import com.example.recipe.RecipeSource
 import com.squareup.picasso.Picasso
 
 /*
+    WishListFragment, SearchResultActivity 에서 사용하는 어댑터
+    클릭할 경우 intent 클릭한 레시피의 정보를 담아 SearchResultActivity 를 실행시킴
     12.10 아이템을 클릭하면 액티비티(상세 레시피)가 나타나도록 설정
  */
 
