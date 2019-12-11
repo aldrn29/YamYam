@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
 import com.example.yamyam.searchResult.SearchResultRecipe
 import com.example.yamyam.searchResult.SearchResultRecipeAdapterActivity
+import com.example.yamyam.searchResult.SearchResultRecipeClicked
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
@@ -92,13 +93,17 @@ class RecipeFragment : Fragment() {
                             Picasso.get().load(model.imageUri).into(holder.itemImg)
                         }
                         holder.itemView.setOnClickListener{
-                            val intent = Intent(activity, Recipe::class.java)
-                            intent.putExtra("Firebase_Image", model.imageUri)
-                            intent.putExtra("Firebase_Title", model.name)
+                            val intent = Intent(context, SearchResultRecipeClicked::class.java)
+                            intent.putExtra("imageUri", model.imageUri)
+                            intent.putExtra("name", model.name)
+                            intent.putExtra("description", model.description)
                             //TODO 재료 리스트를 받아야하는데 mutableList가 받아지지 않음
-//                            intent.putStringArrayListExtra("Firebase_Materials", model.material)
-                            intent.putExtra("Firebase_Description", model.description)
-                            startActivity(intent)
+                            var materialsList = ArrayList<String>()
+                            for(i in model.materials!!){
+                                materialsList.add(i)
+                            }
+                            intent.putStringArrayListExtra("materialsList", materialsList)
+                            context!!.startActivity(intent)
                         }
 
                     }
@@ -168,9 +173,9 @@ class RecipeFragment : Fragment() {
     }
 }
 
-fun searchRecipeNameInFirebase(ref: DatabaseReference, searchRecipeName : String, searchResultRecipe : SearchResultRecipe?)
-{
-
-
-    //ref = FirebaseDatabase.getInstance().getReference().child("recipes")
-}
+//fun searchRecipeNameInFirebase(ref: DatabaseReference, searchRecipeName : String, searchResultRecipe : SearchResultRecipe?)
+//{
+//
+//
+//    //ref = FirebaseDatabase.getInstance().getReference().child("recipes")
+//}
