@@ -27,6 +27,7 @@ import java.io.File
 11.22 MaterialInputActivity 에서 냉동 냉장 체크박스 체크내용 Intent 로 받아와서 냉동/냉장에 추가되도록 설정
     기존 + - 버튼 기능제거(주석)
 11.24 툴바 아이템 클릭 리스너 없애고  onOptionsItemSelected 로 통합
+12.11 드래그 원활하게 수정, 함수 분리
  */
 
 class FridgeFragment : Fragment() {
@@ -65,13 +66,30 @@ class FridgeFragment : Fragment() {
         setAdapter()
         /* 저장된 파일에서 불러옴 */
         loadFromSavedFile()
-        /* 여기서 먼저 임시로 ItemTouchHelper 를 붙여야 맨 처음 어플 실행시 이미지가 정상적으로 로딩된다 */
-        setItemTouchHelper(null, null, null, null, -1)
+        /* 아이템 터치 헬퍼 붙임 */
+        setItemTouchHelper()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+
+        /* 재료 추가 */
+        addMaterial(resultCode, data)
+
+        //json 파일에 upperMaterials 리스트를 저장하자
+        upperAdapter!!.writeJSONtoFile(upperFileName)
+        lowerAdapter!!.writeJSONtoFile(lowerFileName)
+    }
+
+    /* 냉장,냉동 한꺼번에 notifyDataSetChanged */
+    private fun notifyDataSetChanged(){
+        upperAdapter?.notifyDataSetChanged()
+        lowerAdapter?.notifyDataSetChanged()
+    }
+
+    /* 재료 추가하는 함수 */
+    private fun addMaterial(resultCode: Int, data: Intent?){
         val nameOfMaterial : String? = data?.getStringExtra("nameOfMaterial")
         val image : Int = data!!.getIntExtra("selectedFoodImage", 0)
         val expirationDate_year=  data.getIntExtra("expirationDate_year",0)
@@ -79,17 +97,21 @@ class FridgeFragment : Fragment() {
         val expirationDate_date=  data.getIntExtra("expirationDate_date",0)
         val upperOrLower = data.getIntExtra("upperOrLower", 0)
 
-        //loadMaterialList(file)
-        //나중에 변수명 바꿀것, 변수명뭐로하지
-        val tmpDate = materialExpirationDate(expirationDate_year, expirationDate_month, expirationDate_date)
-        /* 아이템 터치 헬퍼 붙임 */
-        setItemTouchHelper(resultCode, nameOfMaterial!!, image, tmpDate, upperOrLower)
-        //json 파일에 upperMaterials 리스트를 저장하자
-        upperAdapter!!.writeJSONtoFile(upperFileName)
-        lowerAdapter!!.writeJSONtoFile(lowerFileName)
+        val expirationDate = materialExpirationDate(expirationDate_year, expirationDate_month, expirationDate_date)
+        //upperBody 에 추가
+        if (resultCode == AppCompatActivity.RESULT_OK &&  upperOrLower == 0){
+            //inputMaterialActivity 에서 넘긴 이름과, foodImage
+            upperMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
+        }
+        //lowerBody 에 추가
+        else if(resultCode == AppCompatActivity.RESULT_OK && upperOrLower == 1){
+            //inputMaterialActivity 에서 넘긴 이름과, foodImage
+            lowerMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
+        }
+        notifyDataSetChanged()
     }
 
-    private fun setItemTouchHelper(resultCode: Int?, nameOfMaterial : String?, image: Int?, expirationDate : materialExpirationDate?, upperOrLower :Int){
+    private fun setItemTouchHelper(){
         /* MaterialItemTouchHelper 에 callback 을 등록, recycler 뷰에 붙여줌
         *  상하좌우 드래그설정
         spanCount 가 열 개수인듯*/
@@ -106,17 +128,6 @@ class FridgeFragment : Fragment() {
         lowerRecyclerView.layoutManager = lowerManager
         lowerHelper.attachToRecyclerView(lowerRecyclerView)
         lowerRecyclerView.setHasFixedSize(true)
-
-        //upperBody 에 추가
-        if (resultCode == AppCompatActivity.RESULT_OK &&  upperOrLower == 0){
-            //inputMaterialActivity 에서 넘긴 이름과, foodImage
-            upperMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
-        }
-        //lowerBody 에 추가
-        else if(resultCode == AppCompatActivity.RESULT_OK && upperOrLower == 1){
-            //inputMaterialActivity 에서 넘긴 이름과, foodImage
-            lowerMaterialsList.add(Material(nameOfMaterial!!, image!!, expirationDate))
-        }
     }
 
     /* 툴바 선택 */
@@ -172,7 +183,7 @@ class FridgeFragment : Fragment() {
 /*
     private fun setClickListenerToButtons(){
         upperPlusButton.setOnClickListener {
-            val intent = Intent(activity, MaterialInputActivity::class.java)
+            val intent = Intent(activity, MaterialInputAc tivity::class.java)
             startActivityForResult(intent, 0)       //request Code 0은 upperBody
         }
         upperMinusButton.setOnClickListener {
@@ -207,8 +218,7 @@ class FridgeFragment : Fragment() {
         upperAdapter = MaterialAdapter(requireContext(), upperMaterialsList, upperFileName, MaterialNameArrayToSearch)
         upperRecyclerView.adapter = upperAdapter
         lowerRecyclerView.adapter = lowerAdapter
-        upperAdapter!!.notifyDataSetChanged()   //여기가 답이였네, 왜 드래그로 위치 바꿔도 안바뀌나 3일 내내 고민
-        lowerAdapter!!.notifyDataSetChanged()
+        notifyDataSetChanged()
     }
 
     /* 처음에 저장된 파일에서 불러오는 함수 */
@@ -219,10 +229,6 @@ class FridgeFragment : Fragment() {
             /* json 파일에서 저장되었던 material Lists 불러옴 */
             upperAdapter!!.loadMaterialList(upperFileName)
             upperAdapter!!.notifyDataSetChanged()
-            //upperAdapter!!.notifyItemRangeChanged(0, upperMaterialsList.size)
-            //upperRecyclerView.scrollToPosition(0);
-            //upperRecyclerView.scrollBy(0,0) 이거 스왑에다 적으면 되겠는데?
-            //upperRecyclerView.adapter = upperAdapter
         }
 
         if(File(context?.cacheDir, lowerFileName).exists()) {
@@ -230,7 +236,6 @@ class FridgeFragment : Fragment() {
             lowerAdapter!!.notifyDataSetChanged()
         }
     }
-
 
     /* 인텐트로 넘겨받은 날짜 한 데 모아둘 데이터클래스 */
     data class materialExpirationDate(var year: Int, var month: Int, var date: Int)
