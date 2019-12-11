@@ -96,10 +96,11 @@ class RecipeFragment : Fragment() {
                             Picasso.get().load(model.imageUri).into(holder.itemImg)
                         }
                         holder.itemView.setOnClickListener{
-                            val intent = Intent(context, SearchResultRecipeClicked::class.java)
+                            val intent = Intent(context, Recipe::class.java)
                             intent.putExtra("imageUri", model.imageUri)
                             intent.putExtra("name", model.name)
                             intent.putExtra("description", model.description)
+                            intent.putExtra("wish", model.wish)
                             //TODO 재료 리스트를 받아야하는데 mutableList가 받아지지 않음
                             var materialsList = ArrayList<String>()
                             for(i in model.materials!!){

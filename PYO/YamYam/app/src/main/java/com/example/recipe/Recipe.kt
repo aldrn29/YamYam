@@ -1,6 +1,5 @@
 package com.example.recipe
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yamyam.R
@@ -10,39 +9,34 @@ import android.widget.ToggleButton
 import com.google.firebase.database.*
 import com.google.firebase.database.DataSnapshot
 
-
-
-
 class Recipe : AppCompatActivity() {
 
     private lateinit var recipeDB: DatabaseReference
     private val database = FirebaseDatabase.getInstance()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
 
         val bundle: Bundle? = intent.extras
-        val Image = bundle!!.getString("Firebase_Image")
-        val Title = bundle!!.getString("Firebase_Title")
-        val Materials = bundle!!.getString("Firebase_Materials")
-        val Description = bundle!!.getString("Firebase_Description")
-        val Wish = bundle!!.getBoolean("Firebase_Wish")
+        val imageUri = bundle!!.getString("imageUri")
+        val name = bundle!!.getString("name")
+        val materialsList = bundle!!.getString("materialsList")
+        val description = bundle!!.getString("description")
+        val wish = bundle!!.getBoolean("wish")
 
         // RecyclerView Item의 pos에 따라 바뀌여야함
-        recipeName.text = Title
-        Picasso.get().load(Image).into(recipeImg)
-        materialArr.text = Materials
-        cookingDescription.text = Description
-
+        recipeName.text = name
+        Picasso.get().load(imageUri).into(recipeImg)
+        materialArr.text = materialsList
+        cookingDescription.text = description
 
         // 토글버튼
         val heartBtn = this.findViewById(R.id.addWish) as ToggleButton
-        var touch = Wish
+        var touch = wish
 
         // Wish 값에 따라 보여지는 이미지
-        if (Wish) {
+        if (touch) {
             heartBtn.background = resources.getDrawable(R.drawable.tab_heart_on)
         } else {
             heartBtn.background = resources.getDrawable(R.drawable.tab_heart)
@@ -64,18 +58,18 @@ class Recipe : AppCompatActivity() {
             var recipeRef = database.getReference("recipes")
             var start = false
 
+            // 토글에 따라 값 업데이트하기
             recipeRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if (start) return
 
-                    //firebase에서 name으로 검색해서 값을 바꿔주기
                     if (touch == true) {
-                        searchRecipeFromFirebase(dataSnapshot, Title!!, true)
+                        searchRecipeFromFirebase(dataSnapshot, name!!, true)
                     } else {
-                        searchRecipeFromFirebase(dataSnapshot, Title!!, false)
+                        searchRecipeFromFirebase(dataSnapshot, name!!, false)
                     }
                     start = true
-                    println("입력: " + touch)
+                    //println("입력: " + touch)
                 }
                 override fun onCancelled(error: DatabaseError) {
                 }
@@ -84,7 +78,8 @@ class Recipe : AppCompatActivity() {
 
     }
 
-
+    // firebase: name으로 검색해서 key 값 찾기
+    // database: wish 값으로 업데이트 하기
     fun searchRecipeFromFirebase(dataSnapshot: DataSnapshot, name : String, wish : Boolean) {
 
         for (dataSnapshotChild in dataSnapshot.children) {
