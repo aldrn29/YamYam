@@ -20,7 +20,7 @@ class SearchResultActivity : AppCompatActivity() {
 
     private val database = FirebaseDatabase.getInstance()
     private var searchResultRecipeList = ArrayList<RecipeSource>()      //검색된 레시피들을 저장하는 ArraryList
-    var searchResultAdapter : SearchResultRecipeAdapterActivity? = null
+    var searchResultAdapter : SearchResultRecipeAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ class SearchResultActivity : AppCompatActivity() {
         //Toast.makeText(applicationContext, "${MaterialNameArrayToSearch}", Toast.LENGTH_SHORT).show()
         val linearLayoutManager = LinearLayoutManager(this)
         //linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        searchResultAdapter = SearchResultRecipeAdapterActivity(this, searchResultRecipeList)
+        searchResultAdapter = SearchResultRecipeAdapter(this, searchResultRecipeList)
         SearchResultRecyclerview.adapter = searchResultAdapter
         SearchResultRecyclerview.layoutManager =linearLayoutManager
         SearchResultRecyclerview.setHasFixedSize(true)

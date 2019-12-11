@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso
 
 
 
-class SearchResultRecipeAdapterActivity (val context: Context, private val searchReusultRecipeList : ArrayList<RecipeSource>) : RecyclerView.Adapter<SearchResultRecipeAdapterActivity.Holder>() {
+class SearchResultRecipeAdapter (val context: Context, private val searchReusultRecipeList : ArrayList<RecipeSource>) : RecyclerView.Adapter<SearchResultRecipeAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflator = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -52,7 +52,6 @@ class SearchResultRecipeAdapterActivity (val context: Context, private val searc
 
             /* 뷰의 아이템을 클릭하면 레시피 화면이 뜨도록 */
             itemView.setOnClickListener {
-                //todo: activity_recipe 뜨게 하자, intent imageuri text 등등 넘기면 될듯
                 val intent = Intent(context, SearchResultRecipeClicked::class.java) //클릭하면 나타나는 액티비티로 넘길 인텐트
 
                 intent.putExtra("description", recipe.description)
