@@ -16,7 +16,11 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_recipelist.*
-
+/*
+DB에 저장되어 있는 레시피 리스트를 보여주는 Fragment
+레시피 이름을 검색할 수 있는 editText UI와 버튼, 새로 레시피 편집이 가능한 버튼,
+레시피 리스트를 보여주는 Firebase Recyclerview로 구성되어 있다.
+ */
 class RecipeFragment : Fragment() {
 
     private var mRecylerview : RecyclerView? = null
@@ -26,13 +30,8 @@ class RecipeFragment : Fragment() {
 
     lateinit var ref: DatabaseReference
 
+    //진척도 표시
     lateinit var showProgress: ProgressBar
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        firebaseData()
-//
-//    }
 
     //리사이클러뷰 초기화 하고 레이아웃을 초기화 해야함
     override fun onCreateView(inflater: LayoutInflater,
@@ -44,9 +43,9 @@ class RecipeFragment : Fragment() {
 
         linearLayoutManager = LinearLayoutManager(activity)
         mRecylerview = viewInflater.findViewById(R.id.recipe_list) as RecyclerView
-        mRecylerview?.layoutManager = linearLayoutManager
+        mRecylerview!!.layoutManager = linearLayoutManager
 
-        ref = FirebaseDatabase.getInstance().getReference().child("recipes")
+        ref = FirebaseDatabase.getInstance().reference.child("recipes")
 
         showProgress = viewInflater.findViewById(R.id.progress_bar)
 
@@ -87,7 +86,7 @@ class RecipeFragment : Fragment() {
                         showProgress.visibility = if(itemCount == 0) View.VISIBLE else View.GONE
                         holder.itemName.text = model.name
                         if (model.imageUri!!.isEmpty()) {
-                            //기본 이미지
+                            //고른 사진이 없을때 기본 이미지
                             holder.itemImg.setImageResource(R.drawable.tomato)
                         } else {
                             Picasso.get().load(model.imageUri).into(holder.itemImg)
@@ -98,8 +97,8 @@ class RecipeFragment : Fragment() {
                             intent.putExtra("name", model.name)
                             intent.putExtra("description", model.description)
                             intent.putExtra("wish", model.wish)
-                            //TODO 재료 리스트를 받아야하는데 mutableList가 받아지지 않음
                             var materialsList = ArrayList<String>()
+                            //TODO 여기 model.materials의 값이 안가져와진다. 그래서 재료리스트가 공백임
                             for(i in model.materials!!){
                                 materialsList.add(i)
                             }
