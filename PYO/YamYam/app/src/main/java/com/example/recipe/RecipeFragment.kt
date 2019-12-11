@@ -12,12 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
 import com.example.yamyam.searchResult.SearchResultActivity
 import com.example.yamyam.searchResult.SearchResultRecipe
-<<<<<<< HEAD
-import com.example.yamyam.searchResult.SearchResultRecipeAdapterActivity
 import com.example.yamyam.searchResult.SearchResultRecipeClicked
-=======
 import com.example.yamyam.searchResult.SearchResultRecipeAdapter
->>>>>>> b08a45ef8541a496fd50d47b682626a35fbc8f41
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.*
@@ -163,14 +159,14 @@ class RecipeFragment : Fragment() {
 
     }
 
-<<<<<<< HEAD
+
 //fun searchRecipeNameInFirebase(ref: DatabaseReference, searchRecipeName : String, searchResultRecipe : SearchResultRecipe?)
 //{
 //
 //
 //    //ref = FirebaseDatabase.getInstance().getReference().child("recipes")
 //}
-=======
+
     /*레시피 이름으로 파이어베이스에서 검색하는 함수*/
     fun searchRecipeFromFirebase(dataSnapshot: DataSnapshot, searchRecipeName : String) {
         for(dataSnapshotChild in dataSnapshot.children){
@@ -191,4 +187,3 @@ class RecipeFragment : Fragment() {
         }
     }
 }
->>>>>>> b08a45ef8541a496fd50d47b682626a35fbc8f41
