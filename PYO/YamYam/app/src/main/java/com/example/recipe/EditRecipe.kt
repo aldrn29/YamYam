@@ -45,7 +45,6 @@ class EditRecipe : AppCompatActivity() {
         var editMaterial = findViewById<EditText>(R.id.editMaterial)
         var materialArray  = mutableListOf<String>()
 
-
         editImgBtn.setOnClickListener { openGallery() }
 
         recipeDB = FirebaseDatabase.getInstance().reference
@@ -88,7 +87,7 @@ class EditRecipe : AppCompatActivity() {
         }
     }
 
-    private fun writeRecipe(name : String, description: String, materialArray : List<String> ) {
+    private fun writeRecipe(name : String, description: String, materialArray : List<String>, wish : Boolean = false) {
 
         var imageUri : String = "No Image"
 
@@ -124,7 +123,7 @@ class EditRecipe : AppCompatActivity() {
                         return@addOnSuccessListener
                     }
 //description: String, imageUri: String, materials: List<String>, name: String)
-                    val recipe = RecipeSource( description, it.toString(), materialArray, name)
+                    val recipe = RecipeSource(description, it.toString(), materialArray, name, wish)
                     val recipeValues = recipe.toMap()
 
                     val childUpdates = HashMap<String, Any>()

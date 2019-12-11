@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="110dp"
     android:id="@+id/CardView"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
@@ -16,18 +16,19 @@
         android:background="@android:color/white"
         android:baselineAligned="false"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="5dp"
+        >
 
         <ImageView
             android:id="@+id/recipeItemImg"
             android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_height="100dp"
             android:src="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/recipeItemName"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:layout_margin="20dp"
             android:layout_weight="1"
             android:text="Title"

@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#7099CC">
 
 
     <ImageView
@@ -52,13 +53,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialArr" />
 
-    <Button
+    <ToggleButton
         android:id="@+id/addWish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WISH"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/tab_heart"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="20dp"
+        android:textOn=""
+        android:textOff=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
