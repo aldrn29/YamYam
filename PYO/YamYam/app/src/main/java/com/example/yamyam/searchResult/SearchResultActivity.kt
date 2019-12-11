@@ -2,6 +2,7 @@ package com.example.yamyam.searchResult
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_search_result.*
 import com.google.firebase.database.DataSnapshot
@@ -9,10 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipe.RecipeSource
 import com.example.yamyam.R
 
-
 /* 11.25 파이어베이스에서 재료를 읽어와야 하는데 재료가 없네... 그래서 일단 이름 긁어옴...
         재료 리스트로 파이어베이스에 추가함
         선택된 재료로 파이어베이스에 등록된 레시피를 검색해서 검색결과 액티비티에 표시(좌측 상단 돋보기->재료선택->다시 좌측 상단 돋보기)
+   12.12 레이아웃 매니저를 리니어에서 그리드로 변경
  */
 
 
@@ -27,14 +28,14 @@ class SearchResultActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search_result)
 
         val materialNameArrayToSearch = intent.getStringArrayListExtra("MaterialNameArrayToSearch")     // fridge_fragment 에서 가져온 재료 이름들
-        //Toast.makeText(applicationContext, "${MaterialNameArrayToSearch}", Toast.LENGTH_SHORT).show()
-        val linearLayoutManager = LinearLayoutManager(this)
-        //linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        val SearchResultActivityLayoutManager = GridLayoutManager(this, 1)
+
         searchResultAdapter = SearchResultRecipeAdapter(this, searchResultRecipeList)
         SearchResultRecyclerview.adapter = searchResultAdapter
-        SearchResultRecyclerview.layoutManager =linearLayoutManager
+        SearchResultRecyclerview.layoutManager = SearchResultActivityLayoutManager
         SearchResultRecyclerview.setHasFixedSize(true)
         searchResultAdapter?.notifyDataSetChanged()
+
 
         val mRef = database.getReference("recipes")
 
@@ -80,7 +81,6 @@ class SearchResultActivity : AppCompatActivity() {
                                 dataSnapshotChild.child("imageUri").getValue(String::class.java)!!,
                                 materialListInFirebase,
                                 dataSnapshotChild.child("name").getValue(String::class.java)!!
-
                             ))
                                 //add(RecipeSource(dataSnapshotChild.child("imageUri").getValue(String::class.java)!!, dataSnapshotChild.child("name").getValue(String::class.java)!!, dataSnapshotChild.child("description").getValue(String::class.java)!!), tmpList)
                         }

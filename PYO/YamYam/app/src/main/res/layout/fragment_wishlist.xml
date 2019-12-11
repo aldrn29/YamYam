@@ -13,7 +13,7 @@
         android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recipe_list"
+        android:id="@+id/recipe_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         app:layout_constraintBottom_toBottomOf="parent"

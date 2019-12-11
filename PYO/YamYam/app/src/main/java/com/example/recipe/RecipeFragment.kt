@@ -10,9 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yamyam.R
-import com.example.yamyam.searchResult.SearchResultActivity
-import com.example.yamyam.searchResult.SearchResultRecipe
-import com.example.yamyam.searchResult.SearchResultRecipeClicked
 import com.example.yamyam.searchResult.SearchResultRecipeAdapter
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -181,7 +178,8 @@ class RecipeFragment : Fragment() {
                     dataSnapshotChild.child("description").getValue(String::class.java)!!,
                     dataSnapshotChild.child("imageUri").getValue(String::class.java)!!,
                     materialListInFirebase,
-                    dataSnapshotChild.child("name").getValue(String::class.java)!!
+                    dataSnapshotChild.child("name").getValue(String::class.java)!!,
+                    dataSnapshotChild.child("wish").getValue(Boolean::class.java)!!
                 ))
                 SearchResultAdapter?.notifyDataSetChanged()
             }

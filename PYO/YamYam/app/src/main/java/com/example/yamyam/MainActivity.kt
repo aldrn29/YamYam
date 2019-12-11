@@ -12,7 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 /* 11.15 fragment 왔다갔다 해도 유지되도록 설정
 *  11.25 기존에는 show 와 hide 를 이용해서 fridegeFragment 를 유지 했었지만
 *        gson 을 통해서 파일에 읽고 쓰고 하므로
-*        fridgeFragment 를 아예 새로 생성해서 표시하는게 초기화 관리에 용이하다*/
+*        fridgeFragment 를 아예 새로 생성해서 표시하는게 초기화 관리에 용이하다
+*  12.12 wishList 도 새로*/
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,10 +42,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.wishlistItem -> {
                     val tr : FragmentTransaction = supportFragmentManager.beginTransaction()
-                    if(wishListFragment == null) {
-                        wishListFragment = WishListFragment()
-                        tr.add(R.id.act_fragment, wishListFragment!!)
-                    }
+                    wishListFragment = WishListFragment()
+                    tr.add(R.id.act_fragment, wishListFragment!!)
+
                     if (fridgeFragment!= null) tr.hide(fridgeFragment!!)
                     if (recipeFragment != null) tr.hide(recipeFragment!!)
                     tr.show(wishListFragment!!).commit()
@@ -69,7 +69,4 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_actionbar, menu)
         return super.onCreateOptionsMenu(menu)
     }
-
-
-
 }

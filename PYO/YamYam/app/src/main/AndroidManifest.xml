@@ -34,7 +34,7 @@
         <activity android:name="com.example.yamyam.searchResult.SearchResultActivity" />
         <activity android:name="com.example.recipe.Recipe"/>
         <activity android:name="com.example.recipe.EditRecipe"/>
-        <activity android:name="com.example.yamyam.searchResult.SearchResultRecipeClicked" />
+        <activity android:name="com.example.yamyam.searchResult.RecipeClickedActivity" />
 
     </application>
 

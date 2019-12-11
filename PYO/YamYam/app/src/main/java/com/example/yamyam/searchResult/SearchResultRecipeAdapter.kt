@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso
 
 class SearchResultRecipeAdapter (val context: Context, private val searchReusultRecipeList : ArrayList<RecipeSource>) : RecyclerView.Adapter<SearchResultRecipeAdapter.Holder>() {
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflator = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val searchResultRecipeView = inflator.inflate(com.example.yamyam.R.layout.cardview, null)
@@ -52,20 +53,24 @@ class SearchResultRecipeAdapter (val context: Context, private val searchReusult
 
             /* 뷰의 아이템을 클릭하면 레시피 화면이 뜨도록 */
             itemView.setOnClickListener {
-                val intent = Intent(context, SearchResultRecipeClicked::class.java) //클릭하면 나타나는 액티비티로 넘길 인텐트
+                val intent = Intent(context, RecipeClickedActivity::class.java) //클릭하면 나타나는 액티비티로 넘길 인텐트
 
                 intent.putExtra("description", recipe.description)
                 intent.putExtra("imageUri", recipe.imageUri)
                 //재료들 쪼개서 ArrayList<String> 에 집어넣고 intent 에 담는다
-                var materialsList = ArrayList<String>()
+                val materialsList = ArrayList<String>()
                 for(i in recipe.materials!!){
                     materialsList.add(i)
                 }
                 intent.putStringArrayListExtra("materialsList", materialsList)
                 intent.putExtra("name", recipe.name)
+                intent.putExtra("wish", recipe.wish)
                 //잉 어댑터에서 액티비티 호출이 안되는줄 알았는데 되네?
                 context.startActivity(intent)
+
             }
         }
     }
+
+
 }
