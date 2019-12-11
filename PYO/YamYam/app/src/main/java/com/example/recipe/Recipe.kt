@@ -8,7 +8,12 @@ import kotlinx.android.synthetic.main.activity_recipe.*
 import android.widget.ToggleButton
 import com.google.firebase.database.*
 import com.google.firebase.database.DataSnapshot
-
+/*
+하나의 레시피 정보를 자세히 보여주는 API
+사용자가 RecipeFragment에 있는 레시피 아이템 하나를 클릭시 보여진다.
+레시피 사진, 이름, 재료명, 설명, 위시리스트 추가여부를 보여준다
+그 아이템에 해당하는 레시피의 DB를 가져와 사용자에게 보여준다.
+ */
 class Recipe : AppCompatActivity() {
 
     private lateinit var recipeDB: DatabaseReference

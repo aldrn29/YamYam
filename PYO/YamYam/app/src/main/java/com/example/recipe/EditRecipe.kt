@@ -20,18 +20,17 @@ import kotlinx.android.synthetic.main.activity_edit_recipe.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
-//재료 입력텍스트를 추가해주고 제료를 -material - 돼지고기
-//                                              - 양파 이런식으로
+/*
+요리 레시피에 대한 정보를 사용자가 직접 입력하여 데이터 베이스에 저장하는 API
+이미지 버튼을 눌러 디바이스 내 갤러리에 있는 사진을 가져온다
+나머지 요리 이름, 재료, 설명을 기입하고 이 정보들을 토대로 파이어베이스 스토리지에 사진을,
+이름, 재료, 설명, 이미지 URI를 DB에 저장한다
+ */
 
 class EditRecipe : AppCompatActivity() {
     //데이터베이스 인스턴스
-    private lateinit var image : String
     private lateinit var recipeDB: DatabaseReference
     private var filePath : Uri? = null
-//    var editName = findViewById<EditText>(R.id.editName)
-//    var editMaterial = findViewById<EditText>(R.id.editMaterial)
-//    var editDescription = findViewById<EditText>(R.id.editDescription)
-//    var creatBtn: Button = findViewById(R.id.creatBtn)
 
     private val OPEN_GALLERY = 1
 
@@ -43,13 +42,14 @@ class EditRecipe : AppCompatActivity() {
         val editImgBtn: ImageButton = findViewById(R.id.editImgBtn)
         val createBtn : Button = findViewById(R.id.createBtn)
         var editMaterial = findViewById<EditText>(R.id.editMaterial)
-        var materialArray  = mutableListOf<String>()
+        var materialArray = mutableListOf<String>()
 
         editImgBtn.setOnClickListener { openGallery() }
 
+        //파이어베이스 DB 참조
         recipeDB = FirebaseDatabase.getInstance().reference
 
-//        creat 버튼 누를시 입력된 값으로 객체 생성해야함
+        //create 버튼
         createBtn.setOnClickListener {
             //버튼이 눌리면 editMaterial 에 입력된 것들을 쪼개서 List<Stirng>에 넣는다
             for(a in editMaterial.text.toString().split(",", "\\s").toTypedArray()) {
@@ -60,6 +60,7 @@ class EditRecipe : AppCompatActivity() {
 
     }
 
+    //갤러리에서 사진정보를 가져온다
     private fun openGallery() {
         val intent: Intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.setType("image/*")
@@ -102,16 +103,17 @@ class EditRecipe : AppCompatActivity() {
 
             val storage = FirebaseStorage.getInstance()
 
+            //storage 주소와 폴더 파일명을 지정해 준다.
             val formatter = SimpleDateFormat("yyyyMMHH_mmss")
             val now = Date()
             val filename = formatter.format(now) + ".png"
-            //storage 주소와 폴더 파일명을 지정해 준다.
-            val storageRef = storage.getReferenceFromUrl("gs://yamyam-6690a.appspot.com/")
+            val storageRef = storage.getReferenceFromUrl("gs://yamyam-6690a.appspot.com/") //이부분이 없으면 저장할 수 없다 파이어베이스 주소
                 .child("images/$filename")
 
 
             val uploadTask = storageRef.putFile(filePath!!)
-            //완료시 그런데 dialog.dismiss 전에 activity finish를 하면 에러가 발생한다
+            //완료시 dialog.dismiss 전에 activity finish를 하면 에러가 발생한다
+            //it : UploadTask.TaskSnapshot
             uploadTask.addOnSuccessListener {
                 var result = it.metadata!!.reference!!.downloadUrl
                 result.addOnSuccessListener {
@@ -122,13 +124,11 @@ class EditRecipe : AppCompatActivity() {
                         Log.w(TAG, "Couldn't get push key for recipes")
                         return@addOnSuccessListener
                     }
-//description: String, imageUri: String, materials: List<String>, name: String)
                     val recipe = RecipeSource(description, it.toString(), materialArray, name, wish)
                     val recipeValues = recipe.toMap()
 
                     val childUpdates = HashMap<String, Any>()
                     childUpdates["/recipes/$key"] = recipeValues
-//        childUpdates["/recipes/$name/$key"] = recipeValues
 
                     recipeDB.updateChildren(childUpdates)
                 }
